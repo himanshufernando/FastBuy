@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">Fastbuy</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="search_products">Search Products</string>
+    <string name="retry">Retry</string>
+    <string name="failed_to_connect_to_server">Failed to connect to the server. please check your internet connection and try again</string>
+    <string name="more">More</string>
+    <string name="no_internet">No internet access or poor connection, please check your connection and retry.</string>
+    <string name="gift_wrapping_for_all_products_rs_200_00_add_gift_wrapping">Gift Wrapping for All Products (Rs.200.00):\nAdd gift wrapping</string>
+
+
+</resources>

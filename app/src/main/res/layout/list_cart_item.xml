@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="android.view.View" />
+
+
+
+        <variable
+            name="clickListener"
+            type="android.view.View.OnClickListener" />
+
+        <variable
+            name="product"
+            type="project.ceyloninnovationlabs.fastbuy.data.model.product.Product" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl_top_hits_main"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="1dp"
+        android:background="@color/white">
+
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/img1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="15dp"
+            android:src="@mipmap/ic_cart_close"
+            android:onClick="@{clickListener}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/txt1"
+            style="@style/app_content_gry_medium_14"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="20dp"
+            android:singleLine="true"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/img1"
+            android:text="Product" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/txt2"
+            style="@style/app_content_gry_light_14"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="end"
+            android:layout_marginEnd="10dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/txt1"
+            app:layout_constraintTop_toTopOf="@+id/txt1"
+            android:text="@{product.name}"
+            tools:text="USB PC Camera 720P Video Record HD Web Camera With MIC" />
+
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/txt10"
+            style="@style/app_content_gry_medium_14"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:gravity="end"
+            android:singleLine="true"
+            android:text="@string/gift_wrapping_for_all_products_rs_200_00_add_gift_wrapping"
+            app:layout_constraintEnd_toEndOf="@+id/txt2"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/txt2"
+            app:setIsGiftWrapping="@{product.giftWrapping}" />
+
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/txt3"
+            style="@style/app_content_gry_medium_14"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:singleLine="true"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/txt10"
+            android:text="Price" />
+
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/txt4"
+            style="@style/app_content_gry_light_14"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            android:gravity="end"
+            app:setSellingPrice="@{product.sale_price}"
+            app:layout_constraintBottom_toBottomOf="@+id/txt3"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/txt3"
+            tools:text="Rs.125000.00" />
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cl_item_qty"
+            android:layout_width="100dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="15dp"
+            android:background="@drawable/bg_empty_blue_border"
+            app:layout_constraintEnd_toEndOf="@+id/txt4"
+            app:layout_constraintTop_toBottomOf="@+id/txt4" />
+
+
+
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/edit_text_item_qty"
+            style="@style/app_content_gry_light_16"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="15dp"
+            android:layout_marginEnd="15dp"
+            android:background="@color/edittext_background"
+            android:inputType="number"
+            android:lines="1"
+            app:addItemQuantity="@{product.quantity}"
+            android:maxLines="1"
+            android:singleLine="true"
+            android:textColorHint="@color/app_text_gry"
+            app:layout_constraintBottom_toBottomOf="@+id/cl_item_qty"
+            app:layout_constraintEnd_toEndOf="@+id/cl_item_qty"
+            app:layout_constraintStart_toStartOf="@+id/cl_item_qty"
+            app:layout_constraintTop_toTopOf="@+id/cl_item_qty" />
+
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/txt5"
+            style="@style/app_content_gry_medium_14"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:singleLine="true"
+            android:text="Quantity"
+            app:layout_constraintBottom_toBottomOf="@+id/cl_item_qty"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/txt4" />
+
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/txt6"
+            style="@style/app_content_gry_medium_14"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:singleLine="true"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/cl_item_qty"
+            android:text="Subtotal" />
+
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/txt7"
+            style="@style/app_content_gry_light_14"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            android:gravity="end"
+            app:setCartSubtotel="@{product}"
+            app:layout_constraintBottom_toBottomOf="@+id/txt6"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/txt6"
+            tools:text="Rs.125000.00" />
+
+        <View
+            android:id="@+id/view_1"
+            android:layout_width="0dp"
+            android:layout_height="0.5dp"
+            android:layout_margin="10dp"
+            android:background="@color/black"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/txt7" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="20dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/view_1" >
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

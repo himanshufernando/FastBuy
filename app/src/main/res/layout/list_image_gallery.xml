@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="clickListener"
+            type="android.view.View.OnClickListener" />
+
+        <variable
+            name="Image"
+            type="project.ceyloninnovationlabs.fastbuy.data.model.product.Image" />
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="110dp"
+        android:layout_height="110dp"
+        android:layout_marginEnd="10dp">
+
+
+
+        <ProgressBar
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            app:layout_constraintBottom_toBottomOf="@+id/img_main"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/img_main"
+            app:layout_constraintTop_toTopOf="@+id/img_main" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:onClick="@{clickListener}"
+            android:id="@+id/img_main"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp"
+            app:setProductImageGallery="@{Image.src}"
+            android:src="@mipmap/ic_user_account"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+        <View
+            android:id="@+id/view_1"
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_marginTop="2dp"
+            app:setProductImageGalleryHighlighter="@{Image.select}"
+            android:background="@color/app_blue"
+            app:layout_constraintEnd_toEndOf="@+id/img_main"
+            app:layout_constraintStart_toStartOf="@+id/img_main"
+            app:layout_constraintTop_toBottomOf="@+id/img_main" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
