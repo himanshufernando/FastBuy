@@ -26,6 +26,25 @@
 
 
 
+    <action
+        android:id="@+id/fragment_activity_to_terms"
+        app:destination="@id/fragment_terms"
+        app:enterAnim="@anim/slide_left"
+        app:exitAnim="@anim/wait_anim"
+        app:popEnterAnim="@anim/wait_anim"
+        app:popExitAnim="@anim/slide_right" />
+
+
+    <action
+        android:id="@+id/fragment_returns_to_terms"
+        app:destination="@id/fragment_returns"
+        app:enterAnim="@anim/slide_left"
+        app:exitAnim="@anim/wait_anim"
+        app:popEnterAnim="@anim/wait_anim"
+        app:popExitAnim="@anim/slide_right" />
+
+
+
     <fragment
         android:id="@+id/fragment_splash"
         android:name="project.ceyloninnovationlabs.fastbuy.ui.fragment.splash.SplashFragment"
@@ -270,6 +289,77 @@
 
         <action
             android:id="@+id/fragment_contact_to_cart"
+            app:destination="@id/fragment_cart"
+            app:enterAnim="@anim/slide_left"
+            app:exitAnim="@anim/wait_anim"
+            app:popEnterAnim="@anim/wait_anim"
+            app:popExitAnim="@anim/slide_right" />
+    </fragment>
+
+
+    <fragment
+        android:id="@+id/fragment_terms"
+        android:name="project.ceyloninnovationlabs.fastbuy.ui.fragment.terms.TermsFragment"
+        android:label="Terms"
+        tools:layout="@layout/fragment_terms">
+
+
+        <action
+            android:id="@+id/fragment_terms_to_search"
+            app:destination="@id/fragment_search"
+            app:enterAnim="@anim/slide_left"
+            app:exitAnim="@anim/wait_anim"
+            app:popEnterAnim="@anim/wait_anim"
+            app:popExitAnim="@anim/slide_right" />
+
+
+        <action
+            android:id="@+id/fragment_terms_to_account"
+            app:destination="@id/fragment_account"
+            app:enterAnim="@anim/slide_left"
+            app:exitAnim="@anim/wait_anim"
+            app:popEnterAnim="@anim/wait_anim"
+            app:popExitAnim="@anim/slide_right" />
+
+
+        <action
+            android:id="@+id/fragment_terms_to_cart"
+            app:destination="@id/fragment_cart"
+            app:enterAnim="@anim/slide_left"
+            app:exitAnim="@anim/wait_anim"
+            app:popEnterAnim="@anim/wait_anim"
+            app:popExitAnim="@anim/slide_right" />
+    </fragment>
+
+
+
+    <fragment
+        android:id="@+id/fragment_returns"
+        android:name="project.ceyloninnovationlabs.fastbuy.ui.fragment.terms.TermsFragment"
+        android:label="Returns"
+        tools:layout="@layout/fragment_returns">
+
+
+        <action
+            android:id="@+id/fragment_returns_to_search"
+            app:destination="@id/fragment_search"
+            app:enterAnim="@anim/slide_left"
+            app:exitAnim="@anim/wait_anim"
+            app:popEnterAnim="@anim/wait_anim"
+            app:popExitAnim="@anim/slide_right" />
+
+
+        <action
+            android:id="@+id/fragment_returns_to_account"
+            app:destination="@id/fragment_account"
+            app:enterAnim="@anim/slide_left"
+            app:exitAnim="@anim/wait_anim"
+            app:popEnterAnim="@anim/wait_anim"
+            app:popExitAnim="@anim/slide_right" />
+
+
+        <action
+            android:id="@+id/fragment_returns_to_cart"
             app:destination="@id/fragment_cart"
             app:enterAnim="@anim/slide_left"
             app:exitAnim="@anim/wait_anim"

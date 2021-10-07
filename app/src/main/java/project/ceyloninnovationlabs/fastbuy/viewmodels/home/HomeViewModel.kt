@@ -45,13 +45,37 @@ constructor( private val homeRepo: HomeRepo) : ViewModel() {
     }
 
 
+    val termsAndCondition: MutableLiveData<String> by lazy {
+        MutableLiveData<String>()
+    }
+
 
     init {
         itemQty.value = 0
         itemValue.value = 0.0
         moreProductStatus.value = 0
+        termsAndCondition.value = ""
 
     }
+
+
+
+    fun getPages(pageid : Int) = liveData(Dispatchers.IO) {
+        try {
+            var respond = homeRepo.getPage(pageid)
+            emit(FastBuyResult.Success(respond))
+        } catch (exception: Exception) {
+            emit(FastBuyResult.ExceptionError.ExError(exception))
+        }catch (un : UnknownHostException) {
+            emit(FastBuyResult.ExceptionError.ExError(un))
+        }
+    }
+
+
+
+
+
+
 
     private var productCatValue: Int? = null
     private var moreProductsResult: Flow<PagingData<Product>>? = null
@@ -61,7 +85,6 @@ constructor( private val homeRepo: HomeRepo) : ViewModel() {
     fun couponsValidate(_code: String) = liveData(Dispatchers.IO) {
         try {
             var respond = homeRepo.couponsValidate(_code)
-            println("cccccccccccccccccccccccccccc  respond: "+respond)
             if(respond.error){
                 var baseApiModal = BaseApiModal().apply {
                     error = respond.error

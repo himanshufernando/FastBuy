@@ -11,6 +11,7 @@ import project.ceyloninnovationlabs.fastbuy.data.model.product.Product
 import project.ceyloninnovationlabs.fastbuy.data.model.SliderImage
 import project.ceyloninnovationlabs.fastbuy.data.model.coupon.Coupon
 import project.ceyloninnovationlabs.fastbuy.data.model.coupon.CouponBase
+import project.ceyloninnovationlabs.fastbuy.data.model.page.Page
 import project.ceyloninnovationlabs.fastbuy.services.network.api.APIInterface
 import project.ceyloninnovationlabs.fastbuy.ui.fragment.home.featured.FeaturedPagingSource
 import project.ceyloninnovationlabs.fastbuy.ui.fragment.home.onsale.OnSalePagingSource
@@ -24,6 +25,12 @@ class HomeRepo(private var client: APIInterface) {
 
     private val APPCONTEX = FastBuy.applicationContext()
     val NETWORK_PAGE_SIZE = 5
+
+
+
+    suspend fun getPage(_pageid : Int): Page {
+        return client.getPage(pageid =_pageid)
+    }
 
 
     suspend fun couponsValidate(_code : String): CouponBase {

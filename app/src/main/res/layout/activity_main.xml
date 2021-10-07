@@ -86,30 +86,6 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
 
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/cl_tracking"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-                <androidx.appcompat.widget.AppCompatImageView
-                    android:id="@+id/img_tracking"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@mipmap/ic_nav_deliver"
-                    android:padding="5dp"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/txt_tracking"
-                    style="@style/app_content_gry_light_14"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Order Tracking"
-                    android:layout_marginStart="10dp"
-                    app:layout_constraintBottom_toBottomOf="@+id/img_tracking"
-                    app:layout_constraintStart_toEndOf="@+id/img_tracking"
-                    app:layout_constraintTop_toTopOf="@+id/img_tracking" />
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
 
 
             <androidx.constraintlayout.widget.ConstraintLayout
@@ -187,29 +163,6 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
 
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/cl_faq"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-                <androidx.appcompat.widget.AppCompatImageView
-                    android:id="@+id/img_faq"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@mipmap/ic_nav_faq"
-                    android:padding="5dp"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/txt_faq"
-                    style="@style/app_content_gry_light_14"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="FAQ"
-                    android:layout_marginStart="10dp"
-                    app:layout_constraintBottom_toBottomOf="@+id/img_faq"
-                    app:layout_constraintStart_toEndOf="@+id/img_faq"
-                    app:layout_constraintTop_toTopOf="@+id/img_faq" />
-            </androidx.constraintlayout.widget.ConstraintLayout>
 
 
 

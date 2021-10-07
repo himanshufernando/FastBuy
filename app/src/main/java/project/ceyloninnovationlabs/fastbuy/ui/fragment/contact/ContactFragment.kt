@@ -26,7 +26,9 @@ import kotlinx.android.synthetic.main.fragment_contact.img_navigation
 import project.ceyloninnovationlabs.fastbuy.R
 import project.ceyloninnovationlabs.fastbuy.services.perfrences.AppPrefs
 import project.ceyloninnovationlabs.fastbuy.ui.activity.MainActivity
+import project.ceyloninnovationlabs.fastbuy.ui.customview.alerter.Alerter
 import project.ceyloninnovationlabs.fastbuy.viewmodels.home.HomeViewModel
+
 
 
 class ContactFragment : Fragment() ,View.OnClickListener{
@@ -84,6 +86,7 @@ class ContactFragment : Fragment() ,View.OnClickListener{
         img_navigation.setOnClickListener(this)
         cl_contact_cart.setOnClickListener(this)
         img_account.setOnClickListener(this)
+        btn_proceed.setOnClickListener(this)
 
         val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment?
         mapFragment?.getMapAsync(callback)
@@ -105,6 +108,7 @@ class ContactFragment : Fragment() ,View.OnClickListener{
             R.id.cl_contact_cart ->goToCart()
             R.id.img_account -> NavHostFragment.findNavController(requireParentFragment()).navigate(R.id.fragment_contact_to_account)
             R.id.img_navigation -> mainActivity.openDrawer()
+            R.id.btn_proceed ->sendContact()
         }
 
     }
@@ -156,4 +160,58 @@ class ContactFragment : Fragment() ,View.OnClickListener{
         edit_text_product_search.setText("")
     }
 
+
+    private fun sendContact(){
+        mainActivity.hideKeyboard()
+
+        when {
+            !InternetConnection.checkInternetConnection() -> showToastError("Network", getString(R.string.no_internet), R.color.app_text_red)
+            edit_text_fname.text.toString().isNullOrEmpty() -> showToastError("Error", "First name field is required ", R.color.app_text_red)
+            edit_text_lname.text.toString().isNullOrEmpty() -> showToastError("Error", "Last name field is required ", R.color.app_text_red)
+            edit_text_email.text.toString().isNullOrEmpty() -> showToastError("Error", "Email field is required ", R.color.app_text_red)
+            edit_text_comment.text.toString().isNullOrEmpty() -> showToastError("Error", "Comment or Message field is required ", R.color.app_text_red)
+
+
+        }
+
+    }
+
+
+    private fun showToastError(title : String,message : String,typeColor : Int){
+        Alerter.create(requireActivity())
+            .setTitle(title)
+            .setText( message)
+            .setBackgroundColorRes(typeColor)
+            .show()
+    }
+
+    fun sendUser() {
+       /* MaildroidX.Builder()
+            .smtp("")
+            .smtpUsername("")
+            .smtpPassword("")
+            .port("")
+            .type(MaildroidXType.HTML)
+            .to("")
+            .from("")
+            .subject("")
+            .body("")
+            .attachment()
+            .isJavascriptDisabled()
+            .isStartTLSEnabled()
+            //or
+            .attachments() //List<String>
+            .onCompleteCallback(object : MaildroidX.onCompleteCallback{
+                override val timeout: Long = 3000
+                override fun onSuccess() {
+
+                }
+                override fun onFail(errorMessage: String) {
+
+                }
+            })
+            .mail()*/
+    }
+
+    
 }

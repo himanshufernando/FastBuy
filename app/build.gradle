@@ -34,7 +34,7 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-            addConstantTo(owner,"API_BASE_URL", "https://www.fastbuy.lk/wp-json/wc/v3/")
+            addConstantTo(owner,"API_BASE_URL", "https://www.fastbuy.lk/wp-json/")
             addConstantTo(owner,"COSTUMER_KEY", "ck_fd87f58d45ea89429ea6ee658555d466bcff5359")
             addConstantTo(owner,"COSTUMER_SECRET", "cs_da1498081ad0dc356e10781e0dfb7eeeb1404dff")
 
@@ -42,7 +42,7 @@ android {
         debug {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-            addConstantTo(owner,"API_BASE_URL", "https://www.fastbuy.lk/wp-json/wc/v3/")
+            addConstantTo(owner,"API_BASE_URL", "https://www.fastbuy.lk/wp-json/")
             addConstantTo(owner,"COSTUMER_KEY", "ck_fd87f58d45ea89429ea6ee658555d466bcff5359")
             addConstantTo(owner,"COSTUMER_SECRET", "cs_da1498081ad0dc356e10781e0dfb7eeeb1404dff")
         }
@@ -85,6 +85,9 @@ dependencies {
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.2'
 
     implementation(platform("com.squareup.okhttp3:okhttp-bom:4.9.0"))
+
+
+
 
     implementation("com.squareup.okhttp3:okhttp")
     implementation("com.squareup.okhttp3:logging-interceptor")

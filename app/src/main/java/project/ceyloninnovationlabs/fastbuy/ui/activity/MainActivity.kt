@@ -4,6 +4,7 @@ import android.app.Activity
 import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.SystemClock
 import android.view.View
 import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
@@ -35,6 +36,8 @@ class MainActivity : FragmentActivity() ,View.OnClickListener{
 
     lateinit var onNavigationListener: OnNavigationListener
 
+    private var mLastClickTime: Long = 0
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -43,6 +46,7 @@ class MainActivity : FragmentActivity() ,View.OnClickListener{
 
         cl_about.setOnClickListener(this)
         cl_contact.setOnClickListener(this)
+        cl_terms.setOnClickListener(this)
 
         navView = nav_view
         drawerLayout = drawer_layout
@@ -64,6 +68,8 @@ class MainActivity : FragmentActivity() ,View.OnClickListener{
     }
 
     override fun onClick(v: View) {
+        if ((SystemClock.elapsedRealtime() - mLastClickTime < 1500) ) { return }
+        mLastClickTime = SystemClock.elapsedRealtime()
         var nav = navController.currentDestination
         when(v.id){
              R.id.cl_about ->{
@@ -73,6 +79,11 @@ class MainActivity : FragmentActivity() ,View.OnClickListener{
             R.id.cl_contact ->{
                 closeDrawer()
                 if(!nav?.label?.equals("Contact")!!) { navController.navigate(R.id.fragment_activity_to_contact) }
+            }
+
+            R.id.cl_terms ->{
+                closeDrawer()
+                if(!nav?.label?.equals("Terms")!!) { navController.navigate(R.id.fragment_activity_to_terms) }
             }
 
         }
