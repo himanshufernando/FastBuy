@@ -12,7 +12,7 @@ import java.util.regex.Pattern;
 /**
  * This class contains OAuth Encoder, used to encode the string value
  */
-public class OAuthEncoder
+ public class OAuthEncoder
 {
     private static String CHARSET = "UTF-8";
     private static final Map<String, String> ENCODING_RULES;

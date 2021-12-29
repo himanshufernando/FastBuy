@@ -11,8 +11,7 @@ import project.ceyloninnovationlabs.fastbuy.services.network.woocom.OauthConstan
 /**
  * Utils for checking preconditions and invariants
   */
-public class Preconditions
-{
+ public class Preconditions {
     private static final String DEFAULT_MESSAGE = "Received an invalid parameter";
 
     // scheme = alpha *( alpha | digit | "+" | "-" | "." )

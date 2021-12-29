@@ -9,5 +9,11 @@
     <string name="no_internet">No internet access or poor connection, please check your connection and retry.</string>
     <string name="gift_wrapping_for_all_products_rs_200_00_add_gift_wrapping">Gift Wrapping for All Products (Rs.200.00):\nAdd gift wrapping</string>
 
+    <string name="timeout">Request timed out. please try again.</string>
+    <string name="network_failed">We could not perform this task due to the network failure, please try again !</string>
+    <string name="something_went_wrong">Something went wrong please check your connection and try again.</string>
+
+
+    <string name="terms">I have read and agree to the website <u>terms and conditions</u> *</string>
 
 </resources>

@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="android.view.View" />
+
+
+
+        <variable
+            name="clickListener"
+            type="android.view.View.OnClickListener" />
+
+        <variable
+            name="pastorder"
+            type="project.ceyloninnovationlabs.fastbuy.data.model.past.Orders" />
+    </data>
+
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/card_view_dealer_to_visits"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:onClick="@{clickListener}"
+        app:cardBackgroundColor="@color/white"
+        app:cardCornerRadius="15dp"
+        app:cardElevation="5dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cl_top_hits_main"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="1dp"
+            android:background="@color/white">
+
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/txt1"
+                style="@style/app_content_gry_medium_14"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
+                android:singleLine="true"
+                android:text="Order"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/txt2"
+                style="@style/app_content_gry_light_14"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                app:layout_constraintStart_toEndOf="@+id/txt1"
+                app:layout_constraintTop_toTopOf="@+id/txt1"
+                app:layout_constraintBottom_toBottomOf="@+id/txt1"
+                android:text="@{String.valueOf(pastorder.id)}"
+                tools:text="#7245" />
+
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/txt3"
+                style="@style/app_content_gry_medium_14"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:text="Date"
+                android:layout_marginEnd="10dp"
+                app:layout_constraintBottom_toBottomOf="@+id/txt4"
+                app:layout_constraintEnd_toStartOf="@+id/txt4"
+                app:layout_constraintTop_toTopOf="@+id/txt4" />
+
+
+
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/txt4"
+                style="@style/app_content_gry_light_14"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="10dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/txt1"
+                app:layout_constraintBottom_toBottomOf="@+id/txt1"
+                app:setPastOrderDate="@{pastorder.date_created}"
+                tools:text="December 27, 2021" />
+
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/txt5"
+                style="@style/app_content_gry_medium_14"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:singleLine="true"
+                android:text="Status"
+                app:layout_constraintTop_toBottomOf="@+id/txt1"
+                app:layout_constraintStart_toStartOf="@+id/txt1" />
+
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/txt6"
+                style="@style/app_content_gry_light_14"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                app:layout_constraintStart_toEndOf="@+id/txt5"
+                app:layout_constraintTop_toTopOf="@+id/txt5"
+                app:layout_constraintBottom_toBottomOf="@+id/txt5"
+                android:text="@{pastorder.status}"
+                tools:text="Cancelled" />
+
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/txt7"
+                style="@style/app_content_gry_medium_14"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:text="Total"
+                android:layout_marginEnd="10dp"
+                app:layout_constraintBottom_toBottomOf="@+id/txt8"
+                app:layout_constraintEnd_toStartOf="@+id/txt8"
+                app:layout_constraintTop_toTopOf="@+id/txt8" />
+
+
+
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/txt8"
+                style="@style/app_content_gry_light_14"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="10dp"
+                android:layout_marginTop="10dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/txt4"
+                app:setPastOrderTotal="@{pastorder}"
+                tools:text="Rs.399.00 for 1 item" />
+
+
+            <View
+                android:id="@+id/view_1"
+                android:layout_width="0dp"
+                android:layout_height="0.5dp"
+                android:layout_margin="10dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/txt7" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    </androidx.cardview.widget.CardView>
+
+
+
+</layout>

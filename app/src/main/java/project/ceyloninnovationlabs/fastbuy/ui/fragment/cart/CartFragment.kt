@@ -1,6 +1,8 @@
 package project.ceyloninnovationlabs.fastbuy.ui.fragment.cart
 
 import android.app.Activity
+import android.app.AlertDialog
+import android.content.DialogInterface
 import android.os.Bundle
 import android.os.SystemClock
 import androidx.fragment.app.Fragment
@@ -9,6 +11,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.widget.TextView
+import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
 import androidx.fragment.app.activityViewModels
@@ -25,18 +28,18 @@ import project.ceyloninnovationlabs.fastbuy.data.model.coupon.Coupon
 import project.ceyloninnovationlabs.fastbuy.data.model.product.Product
 import project.ceyloninnovationlabs.fastbuy.services.perfrences.AppPrefs
 import project.ceyloninnovationlabs.fastbuy.ui.activity.MainActivity
-import project.ceyloninnovationlabs.fastbuy.ui.customview.alerter.Alerter
 import project.ceyloninnovationlabs.fastbuy.viewmodels.home.HomeViewModel
 
 
-
-class CartFragment : Fragment(),View.OnClickListener {
+class CartFragment : Fragment(), View.OnClickListener {
     private val viewmodel: HomeViewModel by activityViewModels()
     lateinit var mainActivity: MainActivity
     var appPrefs = AppPrefs
-
     var cartItemsAdapter = CartItemsAdapter()
     private var mLastClickTime: Long = 0
+
+
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -65,12 +68,12 @@ class CartFragment : Fragment(),View.OnClickListener {
         btn_remove.setOnClickListener(this)
         ic_search.setOnClickListener(this)
         img_account.setOnClickListener(this)
+        btn_proceed.setOnClickListener(this)
 
 
         initProductCartRecyclerView()
         setCartInitData()
         setupSearchBar()
-
     }
 
     override fun onResume() {
@@ -85,10 +88,12 @@ class CartFragment : Fragment(),View.OnClickListener {
     }
 
     override fun onClick(v: View) {
-        if ((SystemClock.elapsedRealtime() - mLastClickTime < 1500) || cl_cart_progress.isVisible) { return }
+        if ((SystemClock.elapsedRealtime() - mLastClickTime < 1500) || cl_cart_progress.isVisible) {
+            return
+        }
         mLastClickTime = SystemClock.elapsedRealtime()
-        when(v.id){
-            R.id.btn_apply_coupon ->{
+        when (v.id) {
+            R.id.btn_apply_coupon -> {
                 mainActivity.hideKeyboard()
                 cl_cart_progress.visibility = View.VISIBLE
                 couponsValidate(edit_text_coupan.text.toString().trim())
@@ -96,13 +101,29 @@ class CartFragment : Fragment(),View.OnClickListener {
             R.id.btn_remove -> {
                 var cart = appPrefs.getCartItemPrefs()
                 cart.coupon = Coupon()
+                cart.shippingCost = 0.0
                 appPrefs.setCartItemPrefs(cart)
                 setCartInitData()
             }
-            R.id.ic_search ->searchProducts()
-            R.id.img_account -> NavHostFragment.findNavController(requireParentFragment()).navigate(R.id.fragment_cart_to_account)
+            R.id.ic_search -> searchProducts()
+            R.id.img_account -> NavHostFragment.findNavController(requireParentFragment())
+                .navigate(R.id.fragment_cart_to_account)
+            R.id.btn_proceed -> {
+                var cart = appPrefs.getCartItemPrefs()
+                if (cart.product.isEmpty()) {
+                    Toast.makeText(requireContext(), "Your cart is empty ", Toast.LENGTH_SHORT)
+                        .show()
+                } else {
+                    NavHostFragment.findNavController(requireParentFragment())
+                        .navigate(R.id.fragment_cart_to_checkout)
+                }
+
+            }
         }
     }
+
+
+
 
 
     private fun setupSearchBar() {
@@ -125,16 +146,15 @@ class CartFragment : Fragment(),View.OnClickListener {
         edit_text_product_search.setText("")
     }
 
-    private fun setCartInitData(){
+    private fun setCartInitData() {
         var cart = appPrefs.getCartItemPrefs()
         cartItemsAdapter.submitList(cart.product)
 
 
-
         var subtotal = 0
-        for(item in cart.product){
-           var itemTotal = item.sale_price.toInt() * item.quantity
-            if(item.isGiftWrapping){
+        for (item in cart.product) {
+            var itemTotal = item.sale_price.toInt() * item.quantity
+            if (item.isGiftWrapping) {
                 itemTotal += 200
             }
             subtotal += itemTotal
@@ -146,14 +166,14 @@ class CartFragment : Fragment(),View.OnClickListener {
 
 
 
-        when(cart.coupon.discount_type){
+        when (cart.coupon.discount_type) {
             "fixed_cart" -> {
 
                 txt_cart_coupon.visibility = View.VISIBLE
                 view_3_1.visibility = View.VISIBLE
                 btn_remove.visibility = View.VISIBLE
 
-                txt_cart_coupon.text = "-Rs."+cart.coupon.amount
+                txt_cart_coupon.text = "-Rs." + cart.coupon.amount
                 var couponAmount = cart.coupon.amount.toDouble()
 
                 subtotal = (subtotal - couponAmount.toInt())
@@ -164,8 +184,8 @@ class CartFragment : Fragment(),View.OnClickListener {
                 view_3_1.visibility = View.VISIBLE
                 btn_remove.visibility = View.VISIBLE
 
-                var discountAmount = (subtotal*(cart.coupon.amount.toDouble()/100.00))
-                txt_cart_coupon.text = "-("+cart.coupon.amount+" %) Rs."+discountAmount
+                var discountAmount = (subtotal * (cart.coupon.amount.toDouble() / 100.00))
+                txt_cart_coupon.text = "-(" + cart.coupon.amount + " %) Rs." + discountAmount
                 subtotal = (subtotal - discountAmount).toInt()
 
             }
@@ -185,26 +205,27 @@ class CartFragment : Fragment(),View.OnClickListener {
 
 
         txt8.text = "Rs.$subtotal.00"
-        cart.total = subtotal.toDouble()
 
+        cart.total = subtotal.toString()
+        cart.shippingCost = 0.0
         appPrefs.setCartItemPrefs(cart)
 
 
     }
 
-    private fun updateCart(){
+    private fun updateCart() {
         var cartItemQty = 0
         var cart = appPrefs.getCartItemPrefs()
 
-        if(cart.product.isEmpty()){
+        if (cart.product.isEmpty()) {
             appCompatImageView4.visibility = View.GONE
             txt_cart_count.text = "0"
-        }else{
-            for(item in cart.product){
+        } else {
+            for (item in cart.product) {
                 cartItemQty += item.quantity
             }
             appCompatImageView4.visibility = View.VISIBLE
-            txt_cart_count.text =cartItemQty.toString()
+            txt_cart_count.text = cartItemQty.toString()
         }
 
     }
@@ -216,30 +237,75 @@ class CartFragment : Fragment(),View.OnClickListener {
                 when (aView.id) {
                     R.id.img1 -> {
                         var cart = appPrefs.getCartItemPrefs()
+                        var proList = cart.product
+                        var proNewList = ArrayList<Product>()
 
-
-                        for(item in cart.product){
-                            if(item.id == selectedProduct.id){
-                                cart.product.remove(item)
+                        for (item in proList) {
+                            if (item.id != selectedProduct.id) {
+                                proNewList.add(item)
                             }
                         }
+                        cart.product = proNewList
+                        cart.shippingCost = 0.0
                         appPrefs.setCartItemPrefs(cart)
                         setCartInitData()
                         updateCart()
+
+                    }
+
+                    R.id.btn_add -> {
+                        var cart = appPrefs.getCartItemPrefs()
+
+                        for ((index, value) in cart.product.withIndex()) {
+                            if (value.id == selectedProduct.id) {
+                                if (selectedProduct.stock_quantity > selectedProduct.quantity) {
+                                    cart.product[index].quantity += 1
+                                } else {
+                                    Toast.makeText(
+                                        requireContext(),
+                                        "Not enough quantity ",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                }
+
+                            }
+                        }
+
+                        cart.shippingCost = 0.0
+                        appPrefs.setCartItemPrefs(cart)
+                        setCartInitData()
+                        updateCart()
+
+
+                    }
+                    R.id.btn_minus -> {
+
+                        var cart = appPrefs.getCartItemPrefs()
+
+                        for ((index, value) in cart.product.withIndex()) {
+                            if (value.id == selectedProduct.id) {
+                                if (value.quantity > 1) {
+                                    cart.product[index].quantity -= 1
+                                }
+
+                            }
+                        }
+                        cart.shippingCost = 0.0
+                        appPrefs.setCartItemPrefs(cart)
+                        setCartInitData()
+                        updateCart()
+
 
                     }
                 }
 
             }
 
-            override fun onTextChanged(selectedCart: Product, value: Int, position: Int) {
-                 updateCartQty(selectedCart,value,position)
-            }
         })
 
     }
 
-    private fun updateCartQty(selectedCart: Product, qty : Int, position: Int){
+    private fun updateCartQty(selectedCart: Product, qty: Int, position: Int) {
 
         selectedCart.quantity = qty
         cartItemsAdapter.notifyItemChanged(position)
@@ -248,17 +314,17 @@ class CartFragment : Fragment(),View.OnClickListener {
         cart.product[position].quantity = qty
 
 
-
+        cart.shippingCost = 0.0
         appPrefs.setCartItemPrefs(cart)
 
 
         var updatedcart = appPrefs.getCartItemPrefs()
 
         var subtotal = 0
-        for(item in updatedcart.product){
+        for (item in updatedcart.product) {
             var itemTotal = item.sale_price.toInt() * item.quantity
 
-            if(item.isGiftWrapping){
+            if (item.isGiftWrapping) {
                 itemTotal += 200
             }
             subtotal += itemTotal
@@ -279,53 +345,85 @@ class CartFragment : Fragment(),View.OnClickListener {
                     cl_cart_progress.visibility = View.GONE
                     var cart = appPrefs.getCartItemPrefs()
 
-                    if(it.data.data[0].discount_type != "fixed_product"){
+                    if (it.data.data[0].discount_type != "fixed_product") {
                         cart.coupon = it.data.data[0]
+                        cart.shippingCost = 0.0
                         appPrefs.setCartItemPrefs(cart)
 
-                        Alerter.create(requireActivity())
-                            .setTitle("Coupon")
-                            .setText("Coupon code applied successfully")
-                            .setBackgroundColorRes(R.color.app_text_green)
-                            .show()
+
+                       val alertInfoDialog : AlertDialog = requireContext()?.let {
+                           val alertInfobuilder:AlertDialog.Builder = AlertDialog.Builder(it)
+                            alertInfobuilder.apply {
+                                setPositiveButton("OK",
+                                    DialogInterface.OnClickListener { dialog, id ->
+                                        // User clicked OK button
+                                    })
+                            }
+                            alertInfobuilder?.setMessage("Coupon code applied successfully").setTitle("Coupon")
+                            alertInfobuilder.create()
+                        }
+                        alertInfoDialog.show()
 
                         setCartInitData()
-                    }else{
-
-                        Alerter.create(requireActivity())
-                            .setTitle("Coupon")
-                            .setText("Sorry, this coupon is not applicable to selected products")
-                            .setBackgroundColorRes(R.color.app_text_red)
-                            .show()
+                    } else {
+                        val alertInfoDialog : AlertDialog = requireContext()?.let {
+                            val alertInfobuilder:AlertDialog.Builder = AlertDialog.Builder(it)
+                            alertInfobuilder.apply {
+                                setPositiveButton("OK",
+                                    DialogInterface.OnClickListener { dialog, id ->
+                                        // User clicked OK button
+                                    })
+                            }
+                            alertInfobuilder?.setMessage("Sorry, this coupon is not applicable to selected product").setTitle("Coupon")
+                            alertInfobuilder.create()
+                        }
+                        alertInfoDialog.show()
                     }
-
 
 
                 }
                 is FastBuyResult.ExceptionError.ExError -> {
                     cl_cart_progress.visibility = View.GONE
-                    Alerter.create(requireActivity())
-                        .setTitle("")
-                        .setText(it.exception.message!!)
-                        .setBackgroundColorRes(R.color.app_text_red)
-                        .show()
+
+                    val alertInfoDialog : AlertDialog = requireContext()?.let { alert ->
+                        val alertInfobuilder:AlertDialog.Builder = AlertDialog.Builder(alert)
+                        alertInfobuilder.apply {
+                            setPositiveButton("OK",
+                                DialogInterface.OnClickListener { dialog, id ->
+                                    // User clicked OK button
+                                })
+                        }
+                        alertInfobuilder?.setMessage(it.exception.message!!)
+                        alertInfobuilder.create()
+                    }
+                    alertInfoDialog.show()
+
+
 
                 }
                 is FastBuyResult.LogicalError.LogError -> {
                     cl_cart_progress.visibility = View.GONE
-                    Alerter.create(requireActivity())
-                        .setTitle("")
-                        .setText(it.exception.message!!)
-                        .setBackgroundColorRes(R.color.app_text_red)
-                        .show()
+
+                    val alertInfoDialog : AlertDialog = requireContext()?.let { alert ->
+                        val alertInfobuilder:AlertDialog.Builder = AlertDialog.Builder(alert)
+                        alertInfobuilder.apply {
+                            setPositiveButton("OK",
+                                DialogInterface.OnClickListener { dialog, id ->
+                                    // User clicked OK button
+                                })
+                        }
+                        alertInfobuilder?.setMessage(it.exception.message!!)
+                        alertInfobuilder.create()
+                    }
+                    alertInfoDialog.show()
+
+
                 }
             }
 
 
         })
     }
-
-
 
 
 }

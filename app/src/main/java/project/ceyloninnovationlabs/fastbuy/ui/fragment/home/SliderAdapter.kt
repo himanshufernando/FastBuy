@@ -73,7 +73,7 @@ class SliderAdapter : ListAdapter<SliderImage, SliderAdapter.DiffUtilCategoryIte
         fun bind(rec: SliderImage) {
             selectItem = rec
 
-            itemView.img_slid.load(selectItem.image) {
+            itemView.img_slid.load("https://fastbuy.lk/app-slider/"+selectItem.name) {
                 memoryCachePolicy(CachePolicy.ENABLED)
                 allowHardware(false)
                 crossfade(true)

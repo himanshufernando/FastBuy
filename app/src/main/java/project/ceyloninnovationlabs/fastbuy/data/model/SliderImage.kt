@@ -7,7 +7,7 @@ import kotlinx.android.parcel.Parcelize
 class SliderImage(
     var id: String,
     var productid: Int,
-    var image: String
+    var name: String
 ) : Parcelable {
     constructor() : this("", 0, ""
     )

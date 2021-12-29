@@ -84,7 +84,7 @@
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/constraintLayout6"
+        android:id="@+id/cl_account_cart"
         android:layout_width="35dp"
         android:layout_height="50dp"
         app:layout_constraintBottom_toBottomOf="@+id/constraintLayout5"
@@ -133,7 +133,7 @@
         android:paddingEnd="10dp"
         android:src="@mipmap/ic_user_account"
         app:layout_constraintBottom_toBottomOf="@+id/constraintLayout5"
-        app:layout_constraintEnd_toStartOf="@+id/constraintLayout6"
+        app:layout_constraintEnd_toStartOf="@+id/cl_account_cart"
         app:layout_constraintTop_toTopOf="@+id/constraintLayout5" />
 
 
@@ -149,7 +149,6 @@
         app:layout_constraintTop_toTopOf="@+id/constraintLayout5" />
 
 
-
     <androidx.core.widget.NestedScrollView
         android:id="@+id/nestedScrollView"
         android:layout_width="match_parent"
@@ -163,10 +162,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
 
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/cl_login"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="150dp"
+                android:visibility="gone">
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/txt1"
@@ -175,7 +177,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
                     android:singleLine="true"
-                    android:text="Login"
+                    android:text="Sign up"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
@@ -203,148 +205,15 @@
                     tools:visibility="visible" />
 
                 <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/txt_2"
-                    style="@style/app_content_gry_light_14"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginTop="25dp"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/view_2"
-                    android:text="Welcome back! Sign in to your account." />
-
-
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/txt_3"
-                    style="@style/app_content_gry_medium_14"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginTop="15dp"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/txt_2"
-                    android:text="Username or email address *" />
-
-
-
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/cl_username"
-                    android:layout_width="match_parent"
-                    android:layout_height="35dp"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginEnd="40dp"
-                    android:layout_marginBottom="10dp"
-                    android:layout_marginTop="10dp"
-                    android:background="@drawable/bg_empty_gry_border"
-                    app:layout_constraintTop_toBottomOf="@+id/txt_3">
-
-                </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-                <androidx.appcompat.widget.AppCompatEditText
-                    android:id="@+id/edt_username"
-                    style="@style/app_content_gry_light_14"
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:layout_marginStart="15dp"
-                    android:layout_marginEnd="15dp"
-                    android:background="@color/edittext_background"
-                    android:inputType="text"
-                    android:lines="1"
-                    android:maxLines="1"
-                    android:singleLine="true"
-                    android:textColorHint="@color/app_text_gry"
-                    app:layout_constraintBottom_toBottomOf="@+id/cl_username"
-                    app:layout_constraintEnd_toEndOf="@+id/cl_username"
-                    app:layout_constraintStart_toStartOf="@+id/cl_username"
-                    app:layout_constraintTop_toTopOf="@+id/cl_username" />
-
-
-
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/txt_4"
-                    style="@style/app_content_gry_medium_14"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginTop="15dp"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/cl_username"
-                    android:text="Password *" />
-
-
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/cl_password"
-                    android:layout_width="match_parent"
-                    android:layout_height="35dp"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginEnd="40dp"
-                    android:layout_marginBottom="10dp"
-                    android:layout_marginTop="10dp"
-                    android:background="@drawable/bg_empty_gry_border"
-                    app:layout_constraintTop_toBottomOf="@+id/txt_4">
-
-                </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-                <androidx.appcompat.widget.AppCompatEditText
-                    android:id="@+id/edt_password"
-                    style="@style/app_content_gry_light_14"
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:layout_marginStart="15dp"
-                    android:layout_marginEnd="15dp"
-                    android:background="@color/edittext_background"
-                    android:inputType="textPassword"
-                    android:lines="1"
-                    android:maxLines="1"
-                    android:singleLine="true"
-                    android:textColorHint="@color/app_text_gry"
-                    app:layout_constraintBottom_toBottomOf="@+id/cl_password"
-                    app:layout_constraintEnd_toEndOf="@+id/cl_password"
-                    app:layout_constraintStart_toStartOf="@+id/cl_password"
-                    app:layout_constraintTop_toTopOf="@+id/cl_password" />
-
-
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/btn_login"
-                    style="@style/app_content_white_light_14"
-                    android:layout_width="150dp"
-                    android:layout_height="40dp"
-                    android:layout_marginTop="40dp"
-                    android:background="@drawable/bg_blue_border"
-                    android:gravity="center"
-                    android:text="Log in"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintStart_toStartOf="@+id/cl_password"
-                    app:layout_constraintTop_toBottomOf="@+id/cl_password"
-                    tools:visibility="visible" />
-
-
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/txt_5"
-                    style="@style/app_content_gry_light_14"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginTop="25dp"
-                    android:padding="5dp"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/btn_login"
-                    android:text="Lost your password?" />
-
-
-                <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/txt_6"
                     style="@style/app_content_gry_light_14"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
                     android:layout_marginTop="10dp"
+                    android:text="Use a social account for faster login or easy registration."
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/txt_5"
-                    android:text="Use a social account for faster login or easy registration." />
+                    app:layout_constraintTop_toBottomOf="@+id/view_2" />
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/cl_google"
@@ -355,17 +224,16 @@
                     app:layout_constraintStart_toStartOf="@+id/txt_6"
                     app:layout_constraintTop_toBottomOf="@+id/txt_6">
 
-
                     <androidx.appcompat.widget.AppCompatTextView
                         android:id="@+id/txt_7"
                         style="@style/app_content_white_medium_14"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Log in with Google"
-                        app:layout_constraintTop_toTopOf="parent"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toEndOf="@+id/constraintLayout4" />
+                        app:layout_constraintStart_toEndOf="@+id/constraintLayout4"
+                        app:layout_constraintTop_toTopOf="parent" />
 
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:id="@+id/constraintLayout4"
@@ -377,7 +245,6 @@
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent">
 
-
                         <androidx.appcompat.widget.AppCompatImageView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -388,57 +255,25 @@
                             app:layout_constraintTop_toTopOf="parent" />
                     </androidx.constraintlayout.widget.ConstraintLayout>
                 </androidx.constraintlayout.widget.ConstraintLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
-
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/txt8"
-                    style="@style/app_content_gry_medium_25"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="40dp"
-                    android:singleLine="true"
-                    app:layout_constraintTop_toBottomOf="@+id/cl_google"
-                    android:text="Register"
-                    app:layout_constraintStart_toStartOf="@id/cl_google"
-                    />
-
-
-                <View
-                    android:id="@+id/view_3"
-                    android:layout_width="0dp"
-                    android:layout_height="0.5dp"
-                    android:layout_margin="10dp"
-                    android:background="@color/app_gry_bg"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/txt8"
-                    tools:visibility="visible" />
-
-                <View
-                    android:id="@+id/view_4"
-                    android:layout_width="0dp"
-                    android:layout_height="0.5dp"
-                    android:layout_marginTop="10dp"
-                    android:background="@color/app_blue"
-                    android:visibility="gone"
-                    app:layout_constraintEnd_toEndOf="@+id/txt8"
-                    app:layout_constraintStart_toStartOf="@+id/txt8"
-                    app:layout_constraintTop_toBottomOf="@+id/txt8"
-                    tools:visibility="visible" />
-
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/cl_account"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="visible">
 
                 <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/txt_9"
-                    style="@style/app_content_gry_light_14"
+                    android:id="@+id/txt99"
+                    style="@style/app_content_gry_medium_20"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
-                    android:layout_marginTop="20dp"
+                    android:layout_marginTop="10dp"
+                    android:singleLine="true"
+                    android:text="Account details"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/view_4"
-                    android:text="Create new account today to reap the benefits of a personalized shopping experience." />
-
-
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/txt_10"
@@ -447,24 +282,20 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
                     android:layout_marginTop="15dp"
+                    android:text="First name* "
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/txt_9"
-                    android:text="First name* " />
-
+                    app:layout_constraintTop_toBottomOf="@+id/txt99" />
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/cl_fname"
                     android:layout_width="match_parent"
                     android:layout_height="35dp"
                     android:layout_marginStart="10dp"
+                    android:layout_marginTop="10dp"
                     android:layout_marginEnd="40dp"
                     android:layout_marginBottom="10dp"
-                    android:layout_marginTop="10dp"
                     android:background="@drawable/bg_empty_gry_border"
-                    app:layout_constraintTop_toBottomOf="@+id/txt_10">
-
-                </androidx.constraintlayout.widget.ConstraintLayout>
-
+                    app:layout_constraintTop_toBottomOf="@+id/txt_10" />
 
                 <androidx.appcompat.widget.AppCompatEditText
                     android:id="@+id/edt_fname"
@@ -484,8 +315,6 @@
                     app:layout_constraintStart_toStartOf="@+id/cl_fname"
                     app:layout_constraintTop_toTopOf="@+id/cl_fname" />
 
-
-
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/txt_11"
                     style="@style/app_content_gry_medium_14"
@@ -493,24 +322,19 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
                     android:layout_marginTop="15dp"
+                    android:text="Last name* "
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/cl_fname"
-                    android:text="First name* " />
-
+                    app:layout_constraintTop_toBottomOf="@+id/cl_fname" />
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/cl_lname"
                     android:layout_width="match_parent"
                     android:layout_height="35dp"
                     android:layout_marginStart="10dp"
-                    android:layout_marginEnd="40dp"
-                    android:layout_marginBottom="10dp"
                     android:layout_marginTop="10dp"
                     android:background="@drawable/bg_empty_gry_border"
-                    app:layout_constraintTop_toBottomOf="@+id/txt_11">
-
-                </androidx.constraintlayout.widget.ConstraintLayout>
-
+                    app:layout_constraintTop_toBottomOf="@+id/txt_11"
+                    tools:layout_editor_absoluteX="10dp" />
 
                 <androidx.appcompat.widget.AppCompatEditText
                     android:id="@+id/edt_lname"
@@ -531,50 +355,6 @@
                     app:layout_constraintTop_toTopOf="@+id/cl_lname" />
 
 
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/txt_12"
-                    style="@style/app_content_gry_medium_14"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginTop="15dp"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/cl_lname"
-                    android:text="Phone* " />
-
-
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/cl_phone"
-                    android:layout_width="match_parent"
-                    android:layout_height="35dp"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginEnd="40dp"
-                    android:layout_marginBottom="10dp"
-                    android:layout_marginTop="10dp"
-                    android:background="@drawable/bg_empty_gry_border"
-                    app:layout_constraintTop_toBottomOf="@+id/txt_12">
-
-                </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-                <androidx.appcompat.widget.AppCompatEditText
-                    android:id="@+id/edt_phone"
-                    style="@style/app_content_gry_light_14"
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:layout_marginStart="15dp"
-                    android:layout_marginEnd="15dp"
-                    android:background="@color/edittext_background"
-                    android:inputType="phone"
-                    android:lines="1"
-                    android:maxLines="1"
-                    android:singleLine="true"
-                    android:textColorHint="@color/app_text_gry"
-                    app:layout_constraintBottom_toBottomOf="@+id/cl_phone"
-                    app:layout_constraintEnd_toEndOf="@+id/cl_phone"
-                    app:layout_constraintStart_toStartOf="@+id/cl_phone"
-                    app:layout_constraintTop_toTopOf="@+id/cl_phone" />
-
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/txt_13"
@@ -583,27 +363,537 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
                     android:layout_marginTop="15dp"
+                    android:text="Email address *"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/cl_phone"
-                    android:text="Email address * " />
-
+                    app:layout_constraintTop_toBottomOf="@+id/cl_lname" />
 
                 <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/cl_email"
+                    android:id="@+id/cl_email_address"
                     android:layout_width="match_parent"
                     android:layout_height="35dp"
                     android:layout_marginStart="10dp"
+                    android:layout_marginTop="10dp"
                     android:layout_marginEnd="40dp"
                     android:layout_marginBottom="10dp"
-                    android:layout_marginTop="10dp"
                     android:background="@drawable/bg_empty_gry_border"
-                    app:layout_constraintTop_toBottomOf="@+id/txt_13">
+                    app:layout_constraintTop_toBottomOf="@+id/txt_13" />
+
+                <androidx.appcompat.widget.AppCompatEditText
+                    android:id="@+id/edt_email_address"
+                    style="@style/app_content_gry_light_14"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_marginStart="15dp"
+                    android:layout_marginEnd="15dp"
+                    android:background="@color/edittext_background"
+                    android:inputType="textEmailAddress"
+                    android:lines="1"
+                    android:enabled="false"
+                    android:maxLines="1"
+                    android:singleLine="true"
+                    android:textColorHint="@color/app_text_gry"
+                    app:layout_constraintBottom_toBottomOf="@+id/cl_email_address"
+                    app:layout_constraintEnd_toEndOf="@+id/cl_email_address"
+                    app:layout_constraintStart_toStartOf="@+id/cl_email_address"
+                    app:layout_constraintTop_toTopOf="@+id/cl_email_address" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/txt100"
+                    style="@style/app_content_gry_medium_20"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="20dp"
+                    android:singleLine="true"
+                    android:text="Social Login"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/cl_email_address" />
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/cl_social_login_account"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintStart_toStartOf="@+id/txt100"
+                    app:layout_constraintTop_toBottomOf="@+id/txt100">
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/cl_social_google"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
+                        android:background="@color/app_blue"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/txt_77"
+                            style="@style/app_content_white_medium_14"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:paddingStart="20dp"
+                            android:paddingEnd="20dp"
+                            android:text="Google"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toEndOf="@+id/constraintLayout44"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:id="@+id/constraintLayout44"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="1dp"
+                            android:background="@color/white"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent">
+
+                            <androidx.appcompat.widget.AppCompatImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:padding="5dp"
+                                android:src="@mipmap/ic_google"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/cl_social_facebook"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
+                        android:background="@color/app_blue"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
+
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/txt_8"
+                            style="@style/app_content_white_medium_14"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:paddingStart="20dp"
+                            android:paddingEnd="20dp"
+                            android:text="Facebook"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toEndOf="@+id/constraintLayout55"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:id="@+id/constraintLayout55"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="1dp"
+                            android:background="@color/white"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent">
+
+
+                            <androidx.appcompat.widget.AppCompatImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:padding="5dp"
+                                android:src="@mipmap/ic_facebook"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/txt90"
+                    style="@style/app_content_gry_medium_20"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="20dp"
+                    android:singleLine="true"
+                    android:text="Billing address"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/cl_social_login_account" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/txt_10_billing"
+                    style="@style/app_content_gry_medium_14"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="15dp"
+                    android:text="First name* "
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/txt90" />
+
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/cl_fname_billing"
+                    android:layout_width="match_parent"
+                    android:layout_height="35dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginEnd="40dp"
+                    android:layout_marginBottom="10dp"
+                    android:background="@drawable/bg_empty_gry_border"
+                    app:layout_constraintTop_toBottomOf="@+id/txt_10_billing">
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
 
                 <androidx.appcompat.widget.AppCompatEditText
-                    android:id="@+id/edt_email"
+                    android:id="@+id/edt_fname_billing"
+                    style="@style/app_content_gry_light_14"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_marginStart="15dp"
+                    android:layout_marginEnd="15dp"
+                    android:background="@color/edittext_background"
+                    android:inputType="textPersonName"
+                    android:lines="1"
+                    android:maxLines="1"
+                    android:singleLine="true"
+                    android:textColorHint="@color/app_text_gry"
+                    app:layout_constraintBottom_toBottomOf="@+id/cl_fname_billing"
+                    app:layout_constraintEnd_toEndOf="@+id/cl_fname_billing"
+                    app:layout_constraintStart_toStartOf="@+id/cl_fname_billing"
+                    app:layout_constraintTop_toTopOf="@+id/cl_fname_billing" />
+
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/txt_11_billing"
+                    style="@style/app_content_gry_medium_14"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="15dp"
+                    android:text="Last name* "
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/cl_fname_billing" />
+
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/cl_lname_billing"
+                    android:layout_width="match_parent"
+                    android:layout_height="35dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/bg_empty_gry_border"
+                    app:layout_constraintTop_toBottomOf="@+id/txt_11_billing"
+                    tools:layout_editor_absoluteX="10dp">
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+                <androidx.appcompat.widget.AppCompatEditText
+                    android:id="@+id/edt_lname_billing"
+                    style="@style/app_content_gry_light_14"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_marginStart="15dp"
+                    android:layout_marginEnd="15dp"
+                    android:background="@color/edittext_background"
+                    android:inputType="textPersonName"
+                    android:lines="1"
+                    android:maxLines="1"
+                    android:singleLine="true"
+                    android:textColorHint="@color/app_text_gry"
+                    app:layout_constraintBottom_toBottomOf="@+id/cl_lname_billing"
+                    app:layout_constraintEnd_toEndOf="@+id/cl_lname_billing"
+                    app:layout_constraintStart_toStartOf="@+id/cl_lname_billing"
+                    app:layout_constraintTop_toTopOf="@+id/cl_lname_billing" />
+
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/txt_12_billing"
+                    style="@style/app_content_gry_medium_14"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="15dp"
+                    android:text="Company name (optional) "
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/cl_lname_billing" />
+
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/cl_company_billing"
+                    android:layout_width="match_parent"
+                    android:layout_height="35dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginEnd="40dp"
+                    android:layout_marginBottom="10dp"
+                    android:background="@drawable/bg_empty_gry_border"
+                    app:layout_constraintTop_toBottomOf="@+id/txt_12_billing">
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+                <androidx.appcompat.widget.AppCompatEditText
+                    android:id="@+id/edt_company_billing"
+                    style="@style/app_content_gry_light_14"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_marginStart="15dp"
+                    android:layout_marginEnd="15dp"
+                    android:background="@color/edittext_background"
+                    android:inputType="textPersonName"
+                    android:lines="1"
+                    android:maxLines="1"
+                    android:singleLine="true"
+                    android:textColorHint="@color/app_text_gry"
+                    app:layout_constraintBottom_toBottomOf="@+id/cl_company_billing"
+                    app:layout_constraintEnd_toEndOf="@+id/cl_company_billing"
+                    app:layout_constraintStart_toStartOf="@+id/cl_company_billing"
+                    app:layout_constraintTop_toTopOf="@+id/cl_company_billing" />
+
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/txt_13_billing"
+                    style="@style/app_content_gry_medium_14"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="15dp"
+                    android:text="Street address *"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/cl_company_billing" />
+
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/cl_house_number_billing"
+                    android:layout_width="match_parent"
+                    android:layout_height="35dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginEnd="40dp"
+                    android:layout_marginBottom="10dp"
+                    android:background="@drawable/bg_empty_gry_border"
+                    app:layout_constraintTop_toBottomOf="@+id/txt_13_billing">
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+                <androidx.appcompat.widget.AppCompatEditText
+                    android:id="@+id/edt_house_number_billing"
+                    style="@style/app_content_gry_light_14"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_marginStart="15dp"
+                    android:layout_marginEnd="15dp"
+                    android:background="@color/edittext_background"
+                    android:hint="House number and street name"
+                    android:inputType="text"
+                    android:lines="1"
+                    android:maxLines="1"
+                    android:singleLine="true"
+                    android:textColorHint="@color/app_light_gry"
+                    app:layout_constraintBottom_toBottomOf="@+id/cl_house_number_billing"
+                    app:layout_constraintEnd_toEndOf="@+id/cl_house_number_billing"
+                    app:layout_constraintStart_toStartOf="@+id/cl_house_number_billing"
+                    app:layout_constraintTop_toTopOf="@+id/cl_house_number_billing" />
+
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/cl_apartment_billing"
+                    android:layout_width="match_parent"
+                    android:layout_height="35dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginEnd="40dp"
+                    android:layout_marginBottom="10dp"
+                    android:background="@drawable/bg_empty_gry_border"
+                    app:layout_constraintTop_toBottomOf="@+id/cl_house_number_billing">
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+                <androidx.appcompat.widget.AppCompatEditText
+                    android:id="@+id/edt_apartment_billing"
+                    style="@style/app_content_gry_light_14"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_marginStart="15dp"
+                    android:layout_marginEnd="15dp"
+                    android:background="@color/edittext_background"
+                    android:hint="Apartment,suite,unit,etc.(optional)"
+                    android:inputType="text"
+                    android:lines="1"
+                    android:maxLines="1"
+                    android:singleLine="true"
+                    android:textColorHint="@color/app_light_gry"
+                    app:layout_constraintBottom_toBottomOf="@+id/cl_apartment_billing"
+                    app:layout_constraintEnd_toEndOf="@+id/cl_apartment_billing"
+                    app:layout_constraintStart_toStartOf="@+id/cl_apartment_billing"
+                    app:layout_constraintTop_toTopOf="@+id/cl_apartment_billing" />
+
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/txt_14_billing"
+                    style="@style/app_content_gry_medium_14"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="15dp"
+                    android:text="Town / City *"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/cl_apartment_billing" />
+
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/cl_city_billing"
+                    android:layout_width="match_parent"
+                    android:layout_height="35dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginEnd="40dp"
+                    android:layout_marginBottom="10dp"
+                    android:background="@drawable/bg_empty_gry_border"
+                    app:layout_constraintTop_toBottomOf="@+id/txt_14_billing">
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+                <androidx.appcompat.widget.AppCompatEditText
+                    android:id="@+id/edt_city_billing"
+                    style="@style/app_content_gry_light_14"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_marginStart="15dp"
+                    android:layout_marginEnd="15dp"
+                    android:background="@color/edittext_background"
+                    android:inputType="text"
+                    android:lines="1"
+                    android:maxLines="1"
+                    android:singleLine="true"
+                    android:textColorHint="@color/app_text_gry"
+                    app:layout_constraintBottom_toBottomOf="@+id/cl_city_billing"
+                    app:layout_constraintEnd_toEndOf="@+id/cl_city_billing"
+                    app:layout_constraintStart_toStartOf="@+id/cl_city_billing"
+                    app:layout_constraintTop_toTopOf="@+id/cl_city_billing" />
+
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/txt_15_billing"
+                    style="@style/app_content_gry_medium_14"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="15dp"
+                    android:text="Postcode / ZIP *"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/cl_city_billing" />
+
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/cl_pcode_billing"
+                    android:layout_width="match_parent"
+                    android:layout_height="35dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginEnd="40dp"
+                    android:layout_marginBottom="10dp"
+                    android:background="@drawable/bg_empty_gry_border"
+                    app:layout_constraintTop_toBottomOf="@+id/txt_15_billing">
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+                <androidx.appcompat.widget.AppCompatEditText
+                    android:id="@+id/edt_pcode_billing"
+                    style="@style/app_content_gry_light_14"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_marginStart="15dp"
+                    android:layout_marginEnd="15dp"
+                    android:background="@color/edittext_background"
+                    android:inputType="number"
+                    android:lines="1"
+                    android:maxLines="1"
+                    android:singleLine="true"
+                    android:textColorHint="@color/app_text_gry"
+                    app:layout_constraintBottom_toBottomOf="@+id/cl_pcode_billing"
+                    app:layout_constraintEnd_toEndOf="@+id/cl_pcode_billing"
+                    app:layout_constraintStart_toStartOf="@+id/cl_pcode_billing"
+                    app:layout_constraintTop_toTopOf="@+id/cl_pcode_billing" />
+
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/txt_16_billing"
+                    style="@style/app_content_gry_medium_14"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="15dp"
+                    android:text="Phone *"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/cl_pcode_billing" />
+
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/cl_phone_billing"
+                    android:layout_width="match_parent"
+                    android:layout_height="35dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginEnd="40dp"
+                    android:layout_marginBottom="10dp"
+                    android:background="@drawable/bg_empty_gry_border"
+                    app:layout_constraintTop_toBottomOf="@+id/txt_16_billing">
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+                <androidx.appcompat.widget.AppCompatEditText
+                    android:id="@+id/edt_phone_billing"
+                    style="@style/app_content_gry_light_14"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_marginStart="15dp"
+                    android:layout_marginEnd="15dp"
+                    android:background="@color/edittext_background"
+                    android:inputType="number"
+                    android:lines="1"
+                    android:maxLines="1"
+                    android:singleLine="true"
+                    android:textColorHint="@color/app_text_gry"
+                    app:layout_constraintBottom_toBottomOf="@+id/cl_phone_billing"
+                    app:layout_constraintEnd_toEndOf="@+id/cl_phone_billing"
+                    app:layout_constraintStart_toStartOf="@+id/cl_phone_billing"
+                    app:layout_constraintTop_toTopOf="@+id/cl_phone_billing" />
+
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/txt_17_billing"
+                    style="@style/app_content_gry_medium_14"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="15dp"
+                    android:text="Email Address *"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/cl_phone_billing" />
+
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/cl_email_billing"
+                    android:layout_width="match_parent"
+                    android:layout_height="35dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginEnd="40dp"
+                    android:layout_marginBottom="10dp"
+                    android:background="@drawable/bg_empty_gry_border"
+                    app:layout_constraintTop_toBottomOf="@+id/txt_17_billing">
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+                <androidx.appcompat.widget.AppCompatEditText
+                    android:id="@+id/edt_email_billing"
                     style="@style/app_content_gry_light_14"
                     android:layout_width="0dp"
                     android:layout_height="0dp"
@@ -615,96 +905,353 @@
                     android:maxLines="1"
                     android:singleLine="true"
                     android:textColorHint="@color/app_text_gry"
-                    app:layout_constraintBottom_toBottomOf="@+id/cl_email"
-                    app:layout_constraintEnd_toEndOf="@+id/cl_email"
-                    app:layout_constraintStart_toStartOf="@+id/cl_email"
-                    app:layout_constraintTop_toTopOf="@+id/cl_email" />
+                    app:layout_constraintBottom_toBottomOf="@+id/cl_email_billing"
+                    app:layout_constraintEnd_toEndOf="@+id/cl_email_billing"
+                    app:layout_constraintStart_toStartOf="@+id/cl_email_billing"
+                    app:layout_constraintTop_toTopOf="@+id/cl_email_billing" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/txt91"
+                    style="@style/app_content_gry_medium_20"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="20dp"
+                    android:singleLine="true"
+                    android:text="Shipping address"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/cl_email_billing" />
+
 
 
                 <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/txt_14"
+                    android:id="@+id/txt_100"
                     style="@style/app_content_gry_medium_14"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
                     android:layout_marginTop="15dp"
+                    android:text="First name* "
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/cl_email"
-                    android:text="Password *" />
+                    app:layout_constraintTop_toBottomOf="@+id/txt91" />
 
 
                 <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/cl_reg_password"
+                    android:id="@+id/cl_fname_shipping"
                     android:layout_width="match_parent"
                     android:layout_height="35dp"
                     android:layout_marginStart="10dp"
+                    android:layout_marginTop="10dp"
                     android:layout_marginEnd="40dp"
                     android:layout_marginBottom="10dp"
-                    android:layout_marginTop="10dp"
                     android:background="@drawable/bg_empty_gry_border"
-                    app:layout_constraintTop_toBottomOf="@+id/txt_14">
+                    app:layout_constraintTop_toBottomOf="@+id/txt_100">
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
 
                 <androidx.appcompat.widget.AppCompatEditText
-                    android:id="@+id/edt_reg_password"
+                    android:id="@+id/edt_fname_shipping"
                     style="@style/app_content_gry_light_14"
                     android:layout_width="0dp"
                     android:layout_height="0dp"
                     android:layout_marginStart="15dp"
                     android:layout_marginEnd="15dp"
                     android:background="@color/edittext_background"
-                    android:inputType="textPassword"
+                    android:inputType="textPersonName"
                     android:lines="1"
                     android:maxLines="1"
                     android:singleLine="true"
                     android:textColorHint="@color/app_text_gry"
-                    app:layout_constraintBottom_toBottomOf="@+id/cl_reg_password"
-                    app:layout_constraintEnd_toEndOf="@+id/cl_reg_password"
-                    app:layout_constraintStart_toStartOf="@+id/cl_reg_password"
-                    app:layout_constraintTop_toTopOf="@+id/cl_reg_password" />
-
+                    app:layout_constraintBottom_toBottomOf="@+id/cl_fname_shipping"
+                    app:layout_constraintEnd_toEndOf="@+id/cl_fname_shipping"
+                    app:layout_constraintStart_toStartOf="@+id/cl_fname_shipping"
+                    app:layout_constraintTop_toTopOf="@+id/cl_fname_shipping" />
 
 
                 <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/txt_15"
-                    style="@style/app_content_gry_light_14"
+                    android:id="@+id/txt_110"
+                    style="@style/app_content_gry_medium_14"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
-                    android:layout_marginTop="10dp"
-                    android:padding="5dp"
+                    android:layout_marginTop="15dp"
+                    android:text="Last name* "
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/cl_reg_password"
-                    android:text="Your personal data will be used to support your experience throughout this website, to manage access to your account, and for other purposes described in our privacy policy." />
+                    app:layout_constraintTop_toBottomOf="@+id/cl_fname_shipping" />
 
-
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/btn_register"
-                    style="@style/app_content_white_light_14"
-                    android:layout_width="150dp"
-                    android:layout_height="40dp"
-                    android:layout_marginTop="40dp"
-                    android:background="@drawable/bg_blue_border"
-                    android:gravity="center"
-                    android:text="Register"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintStart_toStartOf="@+id/cl_password"
-                    app:layout_constraintTop_toBottomOf="@+id/txt_15"
-                    tools:visibility="visible" />
 
                 <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/cl_lname_shipping"
                     android:layout_width="match_parent"
-                    android:layout_height="150dp"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/btn_register">
+                    android:layout_height="35dp"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/bg_empty_gry_border"
+                    app:layout_constraintTop_toBottomOf="@+id/txt_110">
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
 
+                <androidx.appcompat.widget.AppCompatEditText
+                    android:id="@+id/edt_lname_shipping"
+                    style="@style/app_content_gry_light_14"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_marginStart="15dp"
+                    android:layout_marginEnd="15dp"
+                    android:background="@color/edittext_background"
+                    android:inputType="textPersonName"
+                    android:lines="1"
+                    android:maxLines="1"
+                    android:singleLine="true"
+                    android:textColorHint="@color/app_text_gry"
+                    app:layout_constraintBottom_toBottomOf="@+id/cl_lname_shipping"
+                    app:layout_constraintEnd_toEndOf="@+id/cl_lname_shipping"
+                    app:layout_constraintStart_toStartOf="@+id/cl_lname_shipping"
+                    app:layout_constraintTop_toTopOf="@+id/cl_lname_shipping" />
 
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/txt_120"
+                    style="@style/app_content_gry_medium_14"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="15dp"
+                    android:text="Company name (optional) "
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/cl_lname_shipping" />
+
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/cl_company_shipping"
+                    android:layout_width="match_parent"
+                    android:layout_height="35dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginEnd="40dp"
+                    android:layout_marginBottom="10dp"
+                    android:background="@drawable/bg_empty_gry_border"
+                    app:layout_constraintTop_toBottomOf="@+id/txt_120">
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+                <androidx.appcompat.widget.AppCompatEditText
+                    android:id="@+id/edt_company_shipping"
+                    style="@style/app_content_gry_light_14"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_marginStart="15dp"
+                    android:layout_marginEnd="15dp"
+                    android:background="@color/edittext_background"
+                    android:inputType="textPersonName"
+                    android:lines="1"
+                    android:maxLines="1"
+                    android:singleLine="true"
+                    android:textColorHint="@color/app_text_gry"
+                    app:layout_constraintBottom_toBottomOf="@+id/cl_company_shipping"
+                    app:layout_constraintEnd_toEndOf="@+id/cl_company_shipping"
+                    app:layout_constraintStart_toStartOf="@+id/cl_company_shipping"
+                    app:layout_constraintTop_toTopOf="@+id/cl_company_shipping" />
+
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/txt_130"
+                    style="@style/app_content_gry_medium_14"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="15dp"
+                    android:text="Street address *"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/cl_company_shipping" />
+
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/cl_house_number_shipping"
+                    android:layout_width="match_parent"
+                    android:layout_height="35dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginEnd="40dp"
+                    android:layout_marginBottom="10dp"
+                    android:background="@drawable/bg_empty_gry_border"
+                    app:layout_constraintTop_toBottomOf="@+id/txt_130">
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+                <androidx.appcompat.widget.AppCompatEditText
+                    android:id="@+id/edt_house_number_shipping"
+                    style="@style/app_content_gry_light_14"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_marginStart="15dp"
+                    android:layout_marginEnd="15dp"
+                    android:background="@color/edittext_background"
+                    android:hint="House number and street name"
+                    android:inputType="text"
+                    android:lines="1"
+                    android:maxLines="1"
+                    android:singleLine="true"
+                    android:textColorHint="@color/app_text_gry"
+                    app:layout_constraintBottom_toBottomOf="@+id/cl_house_number_shipping"
+                    app:layout_constraintEnd_toEndOf="@+id/cl_house_number_shipping"
+                    app:layout_constraintStart_toStartOf="@+id/cl_house_number_shipping"
+                    app:layout_constraintTop_toTopOf="@+id/cl_house_number_shipping" />
+
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/cl_apartment_shipping"
+                    android:layout_width="match_parent"
+                    android:layout_height="35dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginEnd="40dp"
+                    android:layout_marginBottom="10dp"
+                    android:background="@drawable/bg_empty_gry_border"
+                    app:layout_constraintTop_toBottomOf="@+id/cl_house_number_shipping">
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+                <androidx.appcompat.widget.AppCompatEditText
+                    android:id="@+id/edt_apartment_shipping"
+                    style="@style/app_content_gry_light_14"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_marginStart="15dp"
+                    android:layout_marginEnd="15dp"
+                    android:background="@color/edittext_background"
+                    android:hint="Apartment,suite,unit,etc.(optional)"
+                    android:inputType="text"
+                    android:lines="1"
+                    android:maxLines="1"
+                    android:singleLine="true"
+                    android:textColorHint="@color/app_text_gry"
+                    app:layout_constraintBottom_toBottomOf="@+id/cl_apartment_shipping"
+                    app:layout_constraintEnd_toEndOf="@+id/cl_apartment_shipping"
+                    app:layout_constraintStart_toStartOf="@+id/cl_apartment_shipping"
+                    app:layout_constraintTop_toTopOf="@+id/cl_apartment_shipping" />
+
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/txt_140"
+                    style="@style/app_content_gry_medium_14"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="15dp"
+                    android:text="Town / City *"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/cl_apartment_shipping" />
+
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/cl_city_shipping"
+                    android:layout_width="match_parent"
+                    android:layout_height="35dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginEnd="40dp"
+                    android:layout_marginBottom="10dp"
+                    android:background="@drawable/bg_empty_gry_border"
+                    app:layout_constraintTop_toBottomOf="@+id/txt_140">
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+                <androidx.appcompat.widget.AppCompatEditText
+                    android:id="@+id/edt_city_shipping"
+                    style="@style/app_content_gry_light_14"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_marginStart="15dp"
+                    android:layout_marginEnd="15dp"
+                    android:background="@color/edittext_background"
+                    android:inputType="text"
+                    android:lines="1"
+                    android:maxLines="1"
+                    android:singleLine="true"
+                    android:textColorHint="@color/app_text_gry"
+                    app:layout_constraintBottom_toBottomOf="@+id/cl_city_shipping"
+                    app:layout_constraintEnd_toEndOf="@+id/cl_city_shipping"
+                    app:layout_constraintStart_toStartOf="@+id/cl_city_shipping"
+                    app:layout_constraintTop_toTopOf="@+id/cl_city_shipping" />
+
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/txt_150"
+                    style="@style/app_content_gry_medium_14"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="15dp"
+                    android:text="Postcode / ZIP *"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/cl_city_shipping" />
+
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/cl_pcode_shipping"
+                    android:layout_width="match_parent"
+                    android:layout_height="35dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginEnd="40dp"
+                    android:layout_marginBottom="10dp"
+                    android:background="@drawable/bg_empty_gry_border"
+                    app:layout_constraintTop_toBottomOf="@+id/txt_150">
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+                <androidx.appcompat.widget.AppCompatEditText
+                    android:id="@+id/edt_pcode_shipping"
+                    style="@style/app_content_gry_light_14"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_marginStart="15dp"
+                    android:layout_marginEnd="15dp"
+                    android:background="@color/edittext_background"
+                    android:inputType="number"
+                    android:lines="1"
+                    android:maxLines="1"
+                    android:singleLine="true"
+                    android:textColorHint="@color/app_text_gry"
+                    app:layout_constraintBottom_toBottomOf="@+id/cl_pcode_shipping"
+                    app:layout_constraintEnd_toEndOf="@+id/cl_pcode_shipping"
+                    app:layout_constraintStart_toStartOf="@+id/cl_pcode_shipping"
+                    app:layout_constraintTop_toTopOf="@+id/cl_pcode_shipping" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/btn_update"
+                    style="@style/app_content_white_light_14"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:layout_marginStart="40dp"
+                    android:layout_marginTop="40dp"
+                    android:layout_marginEnd="40dp"
+                    android:background="@drawable/bg_blue_border"
+                    android:gravity="center"
+                    android:text="Save changes"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/cl_pcode_shipping"
+                    tools:visibility="visible" />
+
+
+                <View
+                    android:id="@+id/view_8"
+                    android:layout_width="0dp"
+                    android:layout_height="25dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginBottom="10dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/btn_update" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
         </LinearLayout>

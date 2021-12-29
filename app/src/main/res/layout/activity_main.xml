@@ -62,27 +62,27 @@
 
 
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/cl_category"
+                android:id="@+id/cl_past"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
                 <androidx.appcompat.widget.AppCompatImageView
-                    android:id="@+id/img_category"
+                    android:id="@+id/img_past"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@mipmap/ic_nav_category"
+                    android:src="@mipmap/ic_past_orders"
                     android:padding="5dp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
                 <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/txt_category"
+                    android:id="@+id/txt_past"
                     style="@style/app_content_gry_light_14"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Category"
+                    android:text="Orders"
                     android:layout_marginStart="10dp"
-                    app:layout_constraintBottom_toBottomOf="@+id/img_category"
-                    app:layout_constraintStart_toEndOf="@+id/img_category"
-                    app:layout_constraintTop_toTopOf="@+id/img_category" />
+                    app:layout_constraintBottom_toBottomOf="@+id/img_past"
+                    app:layout_constraintStart_toEndOf="@+id/img_past"
+                    app:layout_constraintTop_toTopOf="@+id/img_past" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
 
@@ -225,6 +225,23 @@
 
     </com.google.android.material.navigation.NavigationView>
 
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl_main"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorProgressBackground"
+        android:visibility="gone"
+        tools:visibility="gone">
+
+        <ProgressBar
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.drawerlayout.widget.DrawerLayout>
 

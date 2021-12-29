@@ -4,7 +4,7 @@ package project.ceyloninnovationlabs.fastbuy.services.network.woocom.OauthConsta
 /**
  * @author: Pablo Fernandez
  */
-public class Parameter implements Comparable<Parameter>
+ public class Parameter implements Comparable<Parameter>
 {
     private static final String UTF = "UTF8";
 

@@ -21,13 +21,20 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
 
+    init {
+        System.loadLibrary("keys")
+    }
+
+
+
     @Singleton
     @Provides
     fun provideRecipeService():APIInterface{
         val oauth1Woocommerce = OAuthInterceptor.Builder()
-            .consumerKey(BuildConfig.COSTUMER_KEY)
-            .consumerSecret(BuildConfig.COSTUMER_SECRET)
+            .consumerKey(getContumerKry())
+            .consumerSecret(getContumerSecret())
             .build()
+
 
         val logging = HttpLoggingInterceptor()
         logging.level = HttpLoggingInterceptor.Level.BODY
@@ -63,16 +70,19 @@ object NetworkModule {
                 chain.proceed(request)
             }.build()
 
-        return Retrofit.Builder()
-            .baseUrl(BuildConfig.API_BASE_URL.toHttpUrlOrNull()!!)
+       return Retrofit.Builder()
+            .baseUrl(getBaseURL().toHttpUrlOrNull()!!)
             .client(client)
             .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
             .addConverterFactory(GsonConverterFactory.create())
             .build()
             .create(APIInterface::class.java)
 
-    }
 
+    }
+    external fun getBaseURL(): String
+    external fun getContumerKry(): String
+    external fun getContumerSecret(): String
 
 
 }

@@ -106,36 +106,72 @@
             tools:text="Rs.125000.00" />
 
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/cl_item_qty"
-            android:layout_width="100dp"
-            android:layout_height="40dp"
+
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/btn_add"
+            style="@style/app_content_white_light_14"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:background="@drawable/bg_blue_border"
+            android:gravity="center"
+            android:text="+"
             android:layout_marginTop="15dp"
-            android:background="@drawable/bg_empty_blue_border"
-            app:layout_constraintEnd_toEndOf="@+id/txt4"
-            app:layout_constraintTop_toBottomOf="@+id/txt4" />
+            android:onClick="@{clickListener}"
+            android:layout_marginEnd="10dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/txt4"
+         />
 
 
 
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cl_qty"
+            android:layout_width="40dp"
+            android:layout_height="0dp"
+            android:background="@drawable/bg_empty_gry_border"
+            android:layout_marginEnd="10dp"
+            app:layout_constraintBottom_toBottomOf="@+id/btn_add"
+            app:layout_constraintEnd_toStartOf="@+id/btn_add"
+            app:layout_constraintTop_toTopOf="@+id/btn_add" />
 
-        <androidx.appcompat.widget.AppCompatEditText
-            android:id="@+id/edit_text_item_qty"
-            style="@style/app_content_gry_light_16"
+
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/edit_text_qty"
+            style="@style/app_content_gry_medium_14"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_marginStart="15dp"
-            android:layout_marginEnd="15dp"
             android:background="@color/edittext_background"
+            android:gravity="center"
             android:inputType="number"
             android:lines="1"
-            app:addItemQuantity="@{product.quantity}"
+            android:text="@{String.valueOf(product.quantity)}"
             android:maxLines="1"
             android:singleLine="true"
-            android:textColorHint="@color/app_text_gry"
-            app:layout_constraintBottom_toBottomOf="@+id/cl_item_qty"
-            app:layout_constraintEnd_toEndOf="@+id/cl_item_qty"
-            app:layout_constraintStart_toStartOf="@+id/cl_item_qty"
-            app:layout_constraintTop_toTopOf="@+id/cl_item_qty" />
+            app:layout_constraintBottom_toBottomOf="@+id/cl_qty"
+            app:layout_constraintEnd_toEndOf="@+id/cl_qty"
+            app:layout_constraintStart_toStartOf="@+id/cl_qty"
+            app:layout_constraintTop_toTopOf="@+id/cl_qty" />
+
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/btn_minus"
+            style="@style/app_content_white_light_14"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:background="@drawable/bg_blue_border"
+            android:gravity="center"
+            android:text="-"
+            android:onClick="@{clickListener}"
+            android:layout_marginEnd="10dp"
+            app:layout_constraintBottom_toBottomOf="@+id/cl_qty"
+            app:layout_constraintEnd_toStartOf="@+id/cl_qty"
+            app:layout_constraintTop_toTopOf="@+id/cl_qty"
+            app:textAllCaps="true"
+           />
+
+
 
 
         <androidx.appcompat.widget.AppCompatTextView
@@ -146,9 +182,9 @@
             android:layout_marginStart="10dp"
             android:singleLine="true"
             android:text="Quantity"
-            app:layout_constraintBottom_toBottomOf="@+id/cl_item_qty"
+            app:layout_constraintBottom_toBottomOf="@+id/btn_add"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/txt4" />
+            app:layout_constraintTop_toTopOf="@id/btn_add" />
 
 
         <androidx.appcompat.widget.AppCompatTextView
@@ -160,7 +196,7 @@
             android:layout_marginTop="10dp"
             android:singleLine="true"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/cl_item_qty"
+            app:layout_constraintTop_toBottomOf="@+id/btn_add"
             android:text="Subtotal" />
 
 

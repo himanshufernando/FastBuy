@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "678484600111",
+    "project_id": "fastbuyapp-7ca83",
+    "storage_bucket": "fastbuyapp-7ca83.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:678484600111:android:4ac16038900329cd8aadda",
+        "android_client_info": {
+          "package_name": "project.ceyloninnovationlabs.fastbuy"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "678484600111-76f369bph2kbjjquf27koblgmbr5eg6v.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "project.ceyloninnovationlabs.fastbuy",
+            "certificate_hash": "b001e90a6b794b0197e5d61329365efc0bef2cee"
+          }
+        },
+        {
+          "client_id": "678484600111-62ia8a9eiti1f4jib5b9difo88p0pq20.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDiNJMokeVG4dTOL02NnloonDERlGgPqog"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "678484600111-62ia8a9eiti1f4jib5b9difo88p0pq20.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

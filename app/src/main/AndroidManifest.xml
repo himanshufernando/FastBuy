@@ -2,6 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="project.ceyloninnovationlabs.fastbuy">
 
+
     <application
         android:name=".FastBuy"
         android:allowBackup="true"

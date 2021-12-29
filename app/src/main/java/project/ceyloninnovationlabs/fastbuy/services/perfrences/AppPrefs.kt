@@ -5,8 +5,8 @@ import android.content.Context
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import project.ceyloninnovationlabs.fastbuy.FastBuy
-import project.ceyloninnovationlabs.fastbuy.data.model.Order
-import project.ceyloninnovationlabs.fastbuy.data.model.product.Product
+import project.ceyloninnovationlabs.fastbuy.data.model.user.User
+import project.ceyloninnovationlabs.fastbuy.data.model.orderoutput.PastOrder
 import java.util.*
 import java.util.regex.Pattern
 
@@ -16,37 +16,91 @@ object AppPrefs {
 
     const val PREFNAME = "FastBuy"
     const val LAYOUT_HOME = 301
-    const val KEY_CART_ITEM = "CRAT_ITEM"
+    const val KEY_LAST_ORDER = "LAST_ORDER"
+    const val KEY_ORDER_ITEM = "CRAT_ITEM"
+    const val KEY_USER = "USER"
+
 
     var mContext = FastBuy.applicationContext()
 
 
 
 
-    fun setCartItemPrefs(value: Order) {
+    fun setUserPrefs(value: User) {
         val sharedPref = mContext.getSharedPreferences(PREFNAME, Context.MODE_PRIVATE) ?: return
         with(sharedPref.edit()) {
-            putString(KEY_CART_ITEM, Gson().toJson(value))
+            putString(KEY_USER, Gson().toJson(value))
             commit()
         }
     }
 
 
 
-    fun getCartItemPrefs(): Order {
+    fun getUserPrefs(): User {
         val sharedPref = mContext.getSharedPreferences(PREFNAME, Context.MODE_PRIVATE)
-        var userList = Order()
+        var user = User()
 
-        return if (sharedPref.getString(KEY_CART_ITEM, null) == null) {
-            userList
+        return if (sharedPref.getString(KEY_USER, null) == null) {
+            user
         } else {
             Gson().fromJson(
-                sharedPref.getString(KEY_CART_ITEM, null),
-                object : TypeToken<Order>() {}.type
+                sharedPref.getString(KEY_USER, null),
+                object : TypeToken<User>() {}.type
             )
         }
     }
 
+
+    fun setCartItemPrefs(value: PastOrder) {
+        val sharedPref = mContext.getSharedPreferences(PREFNAME, Context.MODE_PRIVATE) ?: return
+        with(sharedPref.edit()) {
+            putString(KEY_ORDER_ITEM, Gson().toJson(value))
+            commit()
+        }
+    }
+
+
+
+    fun getCartItemPrefs(): PastOrder {
+        val sharedPref = mContext.getSharedPreferences(PREFNAME, Context.MODE_PRIVATE)
+        var userList = PastOrder()
+
+        return if (sharedPref.getString(KEY_ORDER_ITEM, null) == null) {
+            userList
+        } else {
+            Gson().fromJson(
+                sharedPref.getString(KEY_ORDER_ITEM, null),
+                object : TypeToken<PastOrder>() {}.type
+            )
+        }
+    }
+
+
+
+
+    fun setLastOrderPrefs(value: PastOrder) {
+        val sharedPref = mContext.getSharedPreferences(PREFNAME, Context.MODE_PRIVATE) ?: return
+        with(sharedPref.edit()) {
+            putString(KEY_LAST_ORDER, Gson().toJson(value))
+            commit()
+        }
+    }
+
+
+
+    fun getLastOrderPrefs(): PastOrder {
+        val sharedPref = mContext.getSharedPreferences(PREFNAME, Context.MODE_PRIVATE)
+        var userList = PastOrder()
+
+        return if (sharedPref.getString(KEY_LAST_ORDER, null) == null) {
+            userList
+        } else {
+            Gson().fromJson(
+                sharedPref.getString(KEY_LAST_ORDER, null),
+                object : TypeToken<PastOrder>() {}.type
+            )
+        }
+    }
 
     fun checkValidString(st: String): Boolean {
         if ((st.isNullOrEmpty()) || (st == "null")) {

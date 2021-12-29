@@ -76,6 +76,7 @@ public class OAuthInterceptor implements Interceptor {
         String generatedBaseString = "";
 
 
+
         if(original.url().encodedQuery()!=null) {
             generatedBaseString = original.url().encodedQuery() + "&oauth_consumer_key=" + consumerKey + "&oauth_nonce=" + nonce + "&oauth_signature_method=HMAC-SHA1&oauth_timestamp=" + timestamp + "&oauth_version=1.0";
         }
@@ -99,6 +100,10 @@ public class OAuthInterceptor implements Interceptor {
 
         String baseString = firstBaseString + secoundBaseString;
 
+
+
+
+
         String signature = new HMACSha1SignatureService().getSignature(baseString, consumerSecret, "");
         Log.d("Signature", signature);
 
@@ -121,7 +126,6 @@ public class OAuthInterceptor implements Interceptor {
         Request request = requestBuilder.build();
         return chain.proceed(request);
     }
-
 
     public static final class Builder {
 

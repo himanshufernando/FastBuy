@@ -1,6 +1,8 @@
 package project.ceyloninnovationlabs.fastbuy.ui.fragment.contact
 
 import android.app.Activity
+import android.app.AlertDialog
+import android.content.DialogInterface
 import android.os.Bundle
 import android.os.SystemClock
 import androidx.fragment.app.Fragment
@@ -24,9 +26,10 @@ import kotlinx.android.synthetic.main.fragment_contact.ic_search
 import kotlinx.android.synthetic.main.fragment_contact.img_account
 import kotlinx.android.synthetic.main.fragment_contact.img_navigation
 import project.ceyloninnovationlabs.fastbuy.R
+import project.ceyloninnovationlabs.fastbuy.services.maildroidx.MaildroidX
+import project.ceyloninnovationlabs.fastbuy.services.maildroidx.MaildroidXType
 import project.ceyloninnovationlabs.fastbuy.services.perfrences.AppPrefs
 import project.ceyloninnovationlabs.fastbuy.ui.activity.MainActivity
-import project.ceyloninnovationlabs.fastbuy.ui.customview.alerter.Alerter
 import project.ceyloninnovationlabs.fastbuy.viewmodels.home.HomeViewModel
 
 
@@ -37,6 +40,8 @@ class ContactFragment : Fragment() ,View.OnClickListener{
     lateinit var mainActivity: MainActivity
     var appPrefs = AppPrefs
     private var mLastClickTime: Long = 0
+
+
 
 
     private val callback = OnMapReadyCallback { googleMap ->
@@ -93,6 +98,7 @@ class ContactFragment : Fragment() ,View.OnClickListener{
 
 
         setupSearchBar()
+
 
     }
 
@@ -170,7 +176,9 @@ class ContactFragment : Fragment() ,View.OnClickListener{
             edit_text_lname.text.toString().isNullOrEmpty() -> showToastError("Error", "Last name field is required ", R.color.app_text_red)
             edit_text_email.text.toString().isNullOrEmpty() -> showToastError("Error", "Email field is required ", R.color.app_text_red)
             edit_text_comment.text.toString().isNullOrEmpty() -> showToastError("Error", "Comment or Message field is required ", R.color.app_text_red)
-
+            else ->{
+                sendContactDetails()
+            }
 
         }
 
@@ -178,40 +186,63 @@ class ContactFragment : Fragment() ,View.OnClickListener{
 
 
     private fun showToastError(title : String,message : String,typeColor : Int){
-        Alerter.create(requireActivity())
-            .setTitle(title)
-            .setText( message)
-            .setBackgroundColorRes(typeColor)
-            .show()
+        val alertInfoDialog : AlertDialog = requireContext()?.let { alert ->
+            val alertInfobuilder:AlertDialog.Builder = AlertDialog.Builder(alert)
+            alertInfobuilder.apply {
+                setPositiveButton("OK",
+                    DialogInterface.OnClickListener { dialog, id ->
+                        // User clicked OK button
+                    })
+            }
+            alertInfobuilder?.setMessage(message).setTitle(title)
+            alertInfobuilder.create()
+        }
+        alertInfoDialog.show()
     }
 
-    fun sendUser() {
-       /* MaildroidX.Builder()
-            .smtp("")
-            .smtpUsername("")
-            .smtpPassword("")
-            .port("")
+
+
+
+    fun sendContactDetails() {
+       var confrimHTML = "<p>First Name: "+ edit_text_fname.text.toString() +"</p>\n" +
+               "<p>Last Name: "+ edit_text_lname.text.toString() +"</p>\n" +
+               "<p>Email: <a href=\"mailto:"+ edit_text_email.text.toString() +"\">"+ edit_text_email.text.toString() +"</a></p>\n" +
+               "<p>Message: "+ edit_text_comment.text.toString() +"</p>\n" +
+               "<p>&nbsp;</p>"
+
+        MaildroidX.Builder()
+            .smtp("mail.fastbuy.lk")
+            .smtpUsername("android@fastbuy.lk")
+            .smtpPassword("7I7cgcAMKA")
+            .port("465")
             .type(MaildroidXType.HTML)
-            .to("")
-            .from("")
-            .subject("")
-            .body("")
-            .attachment()
-            .isJavascriptDisabled()
-            .isStartTLSEnabled()
-            //or
-            .attachments() //List<String>
-            .onCompleteCallback(object : MaildroidX.onCompleteCallback{
-                override val timeout: Long = 3000
+            .body(confrimHTML)
+            .to("Info@fastbuy.lk")
+            .from("android@fastbuy.lk")
+            .subject( "Web Contact")
+            .onCompleteCallback(object : MaildroidX.onCompleteCallback {
+                override val timeout: Long = 10000
                 override fun onSuccess() {
+                    println("cccccccccccccccccccccccccccccccccccc onSuccess")
 
                 }
+
                 override fun onFail(errorMessage: String) {
 
                 }
             })
-            .mail()*/
+            .mail()
+
+
+        showToastError("Send", "Thanks for contacting us! We will be in touch with you shortly.", R.color.app_blue)
+        edit_text_fname.setText("")
+        edit_text_lname.setText("")
+        edit_text_email.setText("")
+        edit_text_comment.setText("")
+
     }
 
-    
+
+
+
 }

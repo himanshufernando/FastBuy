@@ -49,12 +49,14 @@ data class Product(
     var rating_count : Int,
     var isGiftWrapping : Boolean,
     var quantity: Int,
+    var shipping_class : String,
+    var shipping_class_id : Int
 ) : Parcelable {
 
     constructor() : this("", false, "",false,"",ArrayList<Category>(),"","","","",
         "","","","","", Dimensions(),false,0,ArrayList<Image>(),"",
         false,"",false,"","",false,"",false,"","","","",
-        false,"",0,ArrayList<Tag>(),0,"",false,"",0,false,0
+        false,"",0,ArrayList<Tag>(),0,"",false,"",0,false,0,"",0
     )
 
 

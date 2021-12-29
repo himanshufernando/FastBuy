@@ -16,7 +16,7 @@ import project.ceyloninnovationlabs.fastbuy.services.network.woocom.OauthConstan
 import project.ceyloninnovationlabs.fastbuy.services.network.woocom.utils.Preconditions;
 
 
-public class HMACSha1SignatureService implements SignatureService
+ public class HMACSha1SignatureService implements SignatureService
 {
     private static final String EMPTY_STRING = "";
     private static final String CARRIAGE_RETURN = "\r\n";

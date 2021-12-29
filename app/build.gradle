@@ -5,6 +5,8 @@ plugins {
     id 'kotlin-kapt'
     id 'com.google.firebase.crashlytics'
     id 'dagger.hilt.android.plugin'
+    id 'com.google.gms.google-services'
+
 }
 
 android {
@@ -27,28 +29,21 @@ android {
     }
 
     buildTypes {
-        def addConstantTo = {target, constantName, constantValue ->
-            target.manifestPlaceholders += [ (constantName):constantValue]
-            target.buildConfigField "String", "${constantName}", "\"${constantValue}\""
-        }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-            addConstantTo(owner,"API_BASE_URL", "https://www.fastbuy.lk/wp-json/")
-            addConstantTo(owner,"COSTUMER_KEY", "ck_fd87f58d45ea89429ea6ee658555d466bcff5359")
-            addConstantTo(owner,"COSTUMER_SECRET", "cs_da1498081ad0dc356e10781e0dfb7eeeb1404dff")
-
         }
         debug {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-            addConstantTo(owner,"API_BASE_URL", "https://www.fastbuy.lk/wp-json/")
-            addConstantTo(owner,"COSTUMER_KEY", "ck_fd87f58d45ea89429ea6ee658555d466bcff5359")
-            addConstantTo(owner,"COSTUMER_SECRET", "cs_da1498081ad0dc356e10781e0dfb7eeeb1404dff")
         }
 
     }
-
+    externalNativeBuild {
+        ndkBuild {
+            path 'src/main/jni/Android.mk'
+        }
+    }
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -86,9 +81,6 @@ dependencies {
 
     implementation(platform("com.squareup.okhttp3:okhttp-bom:4.9.0"))
 
-
-
-
     implementation("com.squareup.okhttp3:okhttp")
     implementation("com.squareup.okhttp3:logging-interceptor")
 
@@ -125,7 +117,7 @@ dependencies {
     kapt("com.google.dagger:hilt-android-compiler:2.38.1")
 
 
-    def hilt_lifecycle_viewmodel = "1.0.0-alpha01"
+    def hilt_lifecycle_viewmodel = "1.0.0-alpha03"
     implementation "androidx.hilt:hilt-lifecycle-viewmodel:$hilt_lifecycle_viewmodel"
     kapt "androidx.hilt:hilt-compiler:$hilt_lifecycle_viewmodel"
 
@@ -133,10 +125,16 @@ dependencies {
 
     implementation 'org.jsoup:jsoup:1.14.2'
 
+    implementation 'com.sun.mail:android-mail:1.6.3'
+    implementation 'com.sun.mail:android-activation:1.6.3'
 
+    implementation('com.shagi:material-datepicker:1.3') {
+        exclude group: 'com.android.support'
+    }
 
+    implementation 'com.google.android.gms:play-services-auth:19.2.0'
 
-
-
+    implementation("com.squareup.moshi:moshi-kotlin:1.9.2")
+    kapt("com.squareup.moshi:moshi-kotlin-codegen:1.9.2")
 
 }

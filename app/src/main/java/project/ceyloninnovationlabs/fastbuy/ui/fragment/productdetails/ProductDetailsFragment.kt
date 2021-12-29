@@ -1,6 +1,8 @@
 package project.ceyloninnovationlabs.fastbuy.ui.fragment.productdetails
 
 import android.app.Activity
+import android.app.AlertDialog
+import android.content.DialogInterface
 import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.os.SystemClock
@@ -31,6 +33,7 @@ import project.ceyloninnovationlabs.fastbuy.ui.activity.MainActivity
 import project.ceyloninnovationlabs.fastbuy.viewmodels.home.HomeViewModel
 import android.widget.CompoundButton
 import android.widget.TextView
+import android.widget.Toast
 import androidx.navigation.fragment.NavHostFragment
 import kotlinx.android.synthetic.main.fragment_product_details.appCompatImageView4
 import kotlinx.android.synthetic.main.fragment_product_details.edit_text_product_search
@@ -38,7 +41,7 @@ import kotlinx.android.synthetic.main.fragment_product_details.ic_search
 import kotlinx.android.synthetic.main.fragment_product_details.img_account
 import kotlinx.android.synthetic.main.fragment_product_details.txt_cart_count
 import project.ceyloninnovationlabs.fastbuy.services.perfrences.AppPrefs
-import project.ceyloninnovationlabs.fastbuy.ui.customview.alerter.Alerter
+
 
 
 @ExperimentalCoroutinesApi
@@ -57,6 +60,7 @@ class ProductDetailsFragment : Fragment(), View.OnClickListener {
 
     var appPrefs = AppPrefs
     private var mLastClickTime: Long = 0
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -100,6 +104,7 @@ class ProductDetailsFragment : Fragment(), View.OnClickListener {
         initItemQtyTextChangeListener()
         setupSearchBar()
 
+
     }
 
 
@@ -126,7 +131,6 @@ class ProductDetailsFragment : Fragment(), View.OnClickListener {
 
     }
 
-
     private fun setupSearchBar() {
         edit_text_product_search.setOnEditorActionListener(TextView.OnEditorActionListener { v, actionId, event ->
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
@@ -150,11 +154,7 @@ class ProductDetailsFragment : Fragment(), View.OnClickListener {
     private fun goToCart(){
         var cart = appPrefs.getCartItemPrefs()
         if(cart.product.isEmpty()){
-            Alerter.create(requireActivity())
-                .setTitle("Cart Empty")
-                .setText("Your cart is currently empty !!")
-                .setBackgroundColorRes(R.color.app_text_red)
-                .show()
+            Toast.makeText(requireContext(), "Your cart is currently empty !!", Toast.LENGTH_SHORT).show()
         }else{
             NavHostFragment.findNavController(requireParentFragment()).navigate(R.id.fragment_details_to_cart)
         }
@@ -167,11 +167,7 @@ class ProductDetailsFragment : Fragment(), View.OnClickListener {
         var cart = appPrefs.getCartItemPrefs()
 
         if(selectedProduct.stock_quantity == 0){
-            Alerter.create(requireActivity())
-                .setTitle("")
-                .setText("Out of stoke!!")
-                .setBackgroundColorRes(R.color.app_text_red)
-                .show()
+            Toast.makeText(requireContext(), "Out of stoke!!", Toast.LENGTH_SHORT).show()
             return
         }
 
@@ -191,16 +187,11 @@ class ProductDetailsFragment : Fragment(), View.OnClickListener {
         }
 
         cart.subtotal = viewmodel.itemValue.value!!
-        cart.total = viewmodel.itemValue.value!!
+        cart.total = viewmodel.itemValue.value!!.toString()
 
         appPrefs.setCartItemPrefs(cart)
 
-        Alerter.create(requireActivity())
-            .setTitle("")
-            .setText("Item added to cart")
-            .setBackgroundColorRes(R.color.app_text_green)
-            .show()
-
+        Toast.makeText(requireContext(), "Item added to cart", Toast.LENGTH_SHORT).show()
         goToCart()
     }
 
@@ -327,7 +318,13 @@ class ProductDetailsFragment : Fragment(), View.OnClickListener {
             txt_cart_item.text = "1 " + selectedProduct.name
             txt_sub_total.text = "Subtotal Rs." + selectedProduct.sale_price + ".00"
 
-            viewmodel.itemValue.value = selectedProduct.sale_price.toDouble()
+            try {
+                viewmodel.itemValue.value = selectedProduct.sale_price.toDouble()
+            }catch (num : java.lang.NumberFormatException){
+                viewmodel.itemValue.value = selectedProduct.price.toDouble()
+            }
+
+
             selectedProduct.quantity = 1
         }
     }

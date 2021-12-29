@@ -5,6 +5,22 @@
     android:id="@+id/nav_audici"
     app:startDestination="@id/fragment_splash">
 
+    <action
+        android:id="@+id/fragment_activity_to_home"
+        app:destination="@id/fragment_home"
+        app:enterAnim="@anim/slide_left"
+        app:exitAnim="@anim/wait_anim"
+        app:popEnterAnim="@anim/wait_anim"
+        app:popExitAnim="@anim/slide_right" />
+
+
+    <action
+        android:id="@+id/fragment_activity_to_past"
+        app:destination="@id/fragment_past"
+        app:enterAnim="@anim/slide_left"
+        app:exitAnim="@anim/wait_anim"
+        app:popEnterAnim="@anim/wait_anim"
+        app:popExitAnim="@anim/slide_right" />
 
     <action
         android:id="@+id/fragment_activity_to_about"
@@ -13,8 +29,6 @@
         app:exitAnim="@anim/wait_anim"
         app:popEnterAnim="@anim/wait_anim"
         app:popExitAnim="@anim/slide_right" />
-
-
 
     <action
         android:id="@+id/fragment_activity_to_contact"
@@ -38,6 +52,16 @@
     <action
         android:id="@+id/fragment_returns_to_terms"
         app:destination="@id/fragment_returns"
+        app:enterAnim="@anim/slide_left"
+        app:exitAnim="@anim/wait_anim"
+        app:popEnterAnim="@anim/wait_anim"
+        app:popExitAnim="@anim/slide_right" />
+
+
+
+    <action
+        android:id="@+id/fragment_warranty_to_terms"
+        app:destination="@id/fragment_warranty"
         app:enterAnim="@anim/slide_left"
         app:exitAnim="@anim/wait_anim"
         app:popEnterAnim="@anim/wait_anim"
@@ -205,6 +229,16 @@
             app:popEnterAnim="@anim/wait_anim"
             app:popExitAnim="@anim/slide_right" />
 
+
+
+        <action
+            android:id="@+id/fragment_cart_to_checkout"
+            app:destination="@id/fragment_checkout"
+            app:enterAnim="@anim/slide_left"
+            app:exitAnim="@anim/wait_anim"
+            app:popEnterAnim="@anim/wait_anim"
+            app:popExitAnim="@anim/slide_right" />
+
     </fragment>
 
 
@@ -219,6 +253,15 @@
         <action
             android:id="@+id/fragment_account_to_search"
             app:destination="@id/fragment_search"
+            app:enterAnim="@anim/slide_left"
+            app:exitAnim="@anim/wait_anim"
+            app:popEnterAnim="@anim/wait_anim"
+            app:popExitAnim="@anim/slide_right" />
+
+
+        <action
+            android:id="@+id/fragment_account_to_cart"
+            app:destination="@id/fragment_cart"
             app:enterAnim="@anim/slide_left"
             app:exitAnim="@anim/wait_anim"
             app:popEnterAnim="@anim/wait_anim"
@@ -366,5 +409,137 @@
             app:popEnterAnim="@anim/wait_anim"
             app:popExitAnim="@anim/slide_right" />
     </fragment>
+
+
+
+
+    <fragment
+        android:id="@+id/fragment_warranty"
+        android:name="project.ceyloninnovationlabs.fastbuy.ui.fragment.warranty.WarrantyFragment"
+        android:label="Warranty"
+        tools:layout="@layout/fragment_warranty">
+
+
+        <action
+            android:id="@+id/fragment_warranty_to_search"
+            app:destination="@id/fragment_search"
+            app:enterAnim="@anim/slide_left"
+            app:exitAnim="@anim/wait_anim"
+            app:popEnterAnim="@anim/wait_anim"
+            app:popExitAnim="@anim/slide_right" />
+
+
+        <action
+            android:id="@+id/fragment_warranty_to_account"
+            app:destination="@id/fragment_account"
+            app:enterAnim="@anim/slide_left"
+            app:exitAnim="@anim/wait_anim"
+            app:popEnterAnim="@anim/wait_anim"
+            app:popExitAnim="@anim/slide_right" />
+
+
+        <action
+            android:id="@+id/fragment_warranty_to_cart"
+            app:destination="@id/fragment_cart"
+            app:enterAnim="@anim/slide_left"
+            app:exitAnim="@anim/wait_anim"
+            app:popEnterAnim="@anim/wait_anim"
+            app:popExitAnim="@anim/slide_right" />
+    </fragment>
+
+
+    <fragment
+        android:id="@+id/fragment_checkout"
+        android:name="project.ceyloninnovationlabs.fastbuy.ui.fragment.checkout.CheckOutFragment"
+        android:label="CheckOut"
+        tools:layout="@layout/fragment_check_out">
+
+
+     <!--   <action
+            android:id="@+id/fragment_splash_to_home"
+            app:destination="@id/fragment_home"
+            app:popUpToInclusive="true"
+            app:popUpTo="@+id/fragment_splash"
+            app:enterAnim="@anim/slide_left"
+            app:exitAnim="@anim/wait_anim"
+            app:popEnterAnim="@anim/wait_anim"
+            app:popExitAnim="@anim/slide_right" />-->
+
+
+        <action
+            android:id="@+id/fragment_checkout_to_last"
+            app:destination="@id/fragment_last_order"
+            app:popUpToInclusive="false"
+            app:popUpTo="@+id/fragment_home"
+            app:enterAnim="@anim/slide_left"
+            app:exitAnim="@anim/wait_anim"
+            app:popEnterAnim="@anim/wait_anim"
+            app:popExitAnim="@anim/slide_right" />
+
+    </fragment>
+
+
+    <fragment
+        android:id="@+id/fragment_last_order"
+        android:name="project.ceyloninnovationlabs.fastbuy.ui.fragment.lastorder.LastOrderFragment"
+        android:label="LastOrder"
+        tools:layout="@layout/fragment_last_order">
+
+        <action
+            android:id="@+id/fragment_last_to_home"
+            app:destination="@id/fragment_home"
+            app:popUpToInclusive="true"
+            app:popUpTo="@+id/fragment_last_order"
+            app:enterAnim="@anim/slide_left"
+            app:exitAnim="@anim/wait_anim"
+            app:popEnterAnim="@anim/wait_anim"
+            app:popExitAnim="@anim/slide_right" />
+
+    </fragment>
+
+
+    <fragment
+        android:id="@+id/fragment_past"
+        android:name="project.ceyloninnovationlabs.fastbuy.ui.fragment.past.PastFragment"
+        android:label="Past"
+        tools:layout="@layout/fragment_past">
+
+
+
+        <action
+            android:id="@+id/fragment_past_to_last"
+            app:destination="@id/fragment_last_order"
+            app:enterAnim="@anim/slide_left"
+            app:exitAnim="@anim/wait_anim"
+            app:popEnterAnim="@anim/wait_anim"
+            app:popExitAnim="@anim/slide_right" />
+
+        <action
+            android:id="@+id/fragment_past_to_search"
+            app:destination="@id/fragment_search"
+            app:enterAnim="@anim/slide_left"
+            app:exitAnim="@anim/wait_anim"
+            app:popEnterAnim="@anim/wait_anim"
+            app:popExitAnim="@anim/slide_right" />
+
+
+        <action
+            android:id="@+id/fragment_past_to_account"
+            app:destination="@id/fragment_account"
+            app:enterAnim="@anim/slide_left"
+            app:exitAnim="@anim/wait_anim"
+            app:popEnterAnim="@anim/wait_anim"
+            app:popExitAnim="@anim/slide_right" />
+
+
+        <action
+            android:id="@+id/fragment_past_to_cart"
+            app:destination="@id/fragment_cart"
+            app:enterAnim="@anim/slide_left"
+            app:exitAnim="@anim/wait_anim"
+            app:popEnterAnim="@anim/wait_anim"
+            app:popExitAnim="@anim/slide_right" />
+    </fragment>
+
 
 </navigation>

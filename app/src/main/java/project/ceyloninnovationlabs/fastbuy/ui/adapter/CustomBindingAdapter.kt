@@ -1,6 +1,7 @@
 package project.ceyloninnovationlabs.fastbuy.ui.adapter
 
 import android.graphics.Color
+import android.os.Build
 import android.view.View
 import android.widget.ProgressBar
 import android.widget.TextView
@@ -23,6 +24,19 @@ import project.ceyloninnovationlabs.fastbuy.data.model.product.Product
 import project.ceyloninnovationlabs.fastbuy.ui.customview.ColorRatingBar
 import java.lang.NumberFormatException
 import java.text.DecimalFormat
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.recyclerview.widget.RecyclerView
+import project.ceyloninnovationlabs.fastbuy.data.model.orderoutput.LineItem
+import project.ceyloninnovationlabs.fastbuy.data.model.orderoutput.PastOrder
+import project.ceyloninnovationlabs.fastbuy.data.model.past.Orders
+import project.ceyloninnovationlabs.fastbuy.ui.fragment.checkout.CheckoutItemsAdapter
+import project.ceyloninnovationlabs.fastbuy.ui.fragment.lastorder.LastOrderItemsAdapter
+import java.text.DateFormat
+import java.text.SimpleDateFormat
+import java.time.format.DateTimeFormatter
+import java.util.*
+import kotlin.collections.ArrayList
+
 
 object CustomBindingAdapter {
 
@@ -199,6 +213,7 @@ object CustomBindingAdapter {
         }
     }
 
+
     @BindingAdapter("setRegularPrice")
     @JvmStatic
     fun setRegularPrice(view: TextView, price: String) {
@@ -240,12 +255,82 @@ object CustomBindingAdapter {
     }
 
 
-    @BindingAdapter("addItemQuantity")
+    @BindingAdapter("setQuantityToCartItems")
     @JvmStatic
-    fun addItemQuantity(view: AppCompatEditText, quantity: Int) {
-        view.setText(quantity.toString())
+    fun setQuantityToCartItems(view: AppCompatEditText, product: String) {
+        view.setText("ss")
     }
 
+
+    @BindingAdapter("setProductDetailsToCheckoutCart")
+    @JvmStatic
+    fun setProductDetailsToCheckoutCart(view: AppCompatTextView, product: Product) {
+        if (product.isGiftWrapping) {
+            view.text = product.name + "(Gift wrapping)" + " X " + (product.quantity.toString())
+        } else {
+            view.text = product.name + " X " + (product.quantity.toString())
+        }
+
+
+    }
+
+    @BindingAdapter("setProductDetailsToLastOrder")
+    @JvmStatic
+    fun setProductDetailsToLastOrder(view: AppCompatTextView, product: LineItem) {
+        view.text = product.name + " X " + (product.quantity.toString())
+    }
+
+
+    @BindingAdapter("setVisibilityBankDetails")
+    @JvmStatic
+    fun setVisibilityBankDetails(view: ConstraintLayout, payment: String) {
+        if (payment == "bacs") {
+            view.visibility = View.VISIBLE
+        } else {
+            view.visibility = View.GONE
+        }
+    }
+
+
+    @BindingAdapter("setProductList")
+    @JvmStatic
+    fun setProductList(view: RecyclerView, order: PastOrder) {
+        if (!order.line_items.isNullOrEmpty()) {
+            val proAdapter = LastOrderItemsAdapter()
+            view.adapter = proAdapter
+            proAdapter.submitList(order.line_items)
+        }
+    }
+
+
+    @BindingAdapter("setLastOrderDetails")
+    @JvmStatic
+    fun setLastOrderDetails(view: AppCompatTextView, company: String) {
+        if (company.isNullOrEmpty()) {
+            view.visibility = View.GONE
+        } else {
+            view.visibility = View.VISIBLE
+            view.text = company
+        }
+    }
+
+
+    @BindingAdapter("setPastOrderDate")
+    @JvmStatic
+    fun setPastOrderDate(view: AppCompatTextView, date: String) {
+        view.text = date.substring(0, 10)
+    }
+
+
+    @BindingAdapter("setPastOrderTotal")
+    @JvmStatic
+    fun setPastOrderTotal(view: AppCompatTextView, orders: Orders) {
+        var qty = 0
+        for (item in orders.line_items){
+            qty += item.quantity
+        }
+        view.text = orders.total+" for "+qty+" Items"
+    }
 
 
 }

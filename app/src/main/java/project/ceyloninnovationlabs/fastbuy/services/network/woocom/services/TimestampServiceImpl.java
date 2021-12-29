@@ -5,7 +5,7 @@ import java.util.Random;
 /**
  * This class generate timestamp and nonce
  */
-public class TimestampServiceImpl implements TimestampService
+ public class TimestampServiceImpl implements TimestampService
 {
     private Timer timer;
 

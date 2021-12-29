@@ -18,7 +18,6 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.NavHostFragment
 import androidx.paging.LoadState
 import androidx.viewpager2.widget.ViewPager2
-import project.ceyloninnovationlabs.fastbuy.ui.customview.alerter.Alerter
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.android.synthetic.main.fragment_home.appCompatImageView4
@@ -519,6 +518,7 @@ class HomeFragment : Fragment(), InfoDialog.InfoDialogListener, View.OnClickList
         viewmodel.getSlider().observe(viewLifecycleOwner, Observer {
             when (it) {
                 is FastBuyResult.Success -> {
+                    println("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa : "+it.data)
                     adapter.submitList(it.data)
                     listItems = it.data
                     repeatJob = startRepeatingJob(1500L)
@@ -582,7 +582,7 @@ class HomeFragment : Fragment(), InfoDialog.InfoDialogListener, View.OnClickList
         var cartItemQty = 0
         var cart = appPrefs.getCartItemPrefs()
 
-        if(cart.product.isEmpty()){
+       if(cart.product.isEmpty()){
             appCompatImageView4.visibility = View.GONE
             txt_cart_count.text = "0"
         }else{

@@ -11,7 +11,7 @@ import java.util.Map;
 /**
  * @author: Pablo Fernandez
  */
-public class ParameterList
+ public class ParameterList
 {
     private static final char QUERY_STRING_SEPARATOR = '?';
     private static final String PARAM_SEPARATOR = "&";
