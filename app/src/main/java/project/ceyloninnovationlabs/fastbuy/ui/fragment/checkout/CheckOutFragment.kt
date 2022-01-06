@@ -185,10 +185,13 @@ class CheckOutFragment : Fragment(), View.OnClickListener {
                 cl_pickup.visibility = View.GONE
                 radioGroup_payment.visibility = View.VISIBLE
                 shippingType = "Free shipping"
+                order.paymentType = ""
             } else {
                 cl_pickup.visibility = View.VISIBLE
                 radioGroup_payment.visibility = View.GONE
                 shippingType = "Local pickup"
+
+                order.paymentType = "cop"
             }
 
         }
@@ -199,10 +202,13 @@ class CheckOutFragment : Fragment(), View.OnClickListener {
                 cl_pickup.visibility = View.VISIBLE
                 radioGroup_payment.visibility = View.GONE
                 shippingType = "Local pickup"
+
+                order.paymentType = "cop"
             } else {
                 cl_pickup.visibility = View.GONE
                 radioGroup_payment.visibility = View.VISIBLE
                 shippingType = "Free shipping"
+                order.paymentType = ""
 
             }
 

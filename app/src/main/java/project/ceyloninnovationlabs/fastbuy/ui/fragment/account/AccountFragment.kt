@@ -84,6 +84,7 @@ class AccountFragment : Fragment(), View.OnClickListener {
         btn_update.setOnClickListener(this)
         img_navigation.setOnClickListener(this)
         cl_account_cart.setOnClickListener(this)
+        cl_facebook.setOnClickListener(this)
 
         setupSearchBar()
         googleSignObserver()
@@ -126,6 +127,7 @@ class AccountFragment : Fragment(), View.OnClickListener {
             R.id.btn_update -> update()
             R.id.img_navigation -> mainActivity.openDrawer()
             R.id.cl_account_cart -> goToCart()
+            R.id.cl_facebook -> mainActivity.facebooklogin()
         }
     }
 

@@ -125,16 +125,21 @@ class HomeRepo(private var client: APIInterface) {
 
 
     suspend fun addCustomer(user: User): User {
-
-
-
         var orderJson = JsonObject()
 
         orderJson.addProperty("email", user.email)
         orderJson.addProperty("first_name", user.first_name)
         orderJson.addProperty("last_name", user.last_name)
         orderJson.addProperty("username", user.email)
-        orderJson.addProperty("password", user.google_id)
+
+        if(user.google_id.isNotEmpty()){
+            orderJson.addProperty("password", user.google_id)
+        }else{
+            orderJson.addProperty("password", user.facebook_id)
+        }
+
+
+
 
 
 
@@ -268,6 +273,9 @@ class HomeRepo(private var client: APIInterface) {
 
         }else{
 
+
+
+
         }
 
 
@@ -285,13 +293,13 @@ class HomeRepo(private var client: APIInterface) {
 
 
     suspend fun newOrder(order: PastOrder): PastOrder {
+
         if (!order.isAgreedToTerms) {
             order.errorMessage =
                 "Please read and accept the terms and conditions to proceed with your order."
             order.errorStatus = true
             return order
         }
-
 
 
         if (!InternetConnection.checkInternetConnection()) {
@@ -406,6 +414,10 @@ class HomeRepo(private var client: APIInterface) {
             "cod" -> {
                 orderJson.addProperty("payment_method", "cod")
                 orderJson.addProperty("payment_method_title", "Cash on delivery")
+            }
+            "cop" -> {
+                orderJson.addProperty("payment_method", "cop")
+                orderJson.addProperty("payment_method_title", "Pay on Showroom pickup")
             }
 
         }

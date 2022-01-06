@@ -36,6 +36,34 @@ import com.squareup.moshi.Types
 import project.ceyloninnovationlabs.fastbuy.data.model.FastBuyResult
 import project.ceyloninnovationlabs.fastbuy.data.model.user.User
 import project.ceyloninnovationlabs.fastbuy.services.perfrences.AppPrefs
+import android.content.pm.PackageManager
+
+import android.content.pm.PackageInfo
+import android.util.Base64.encode
+import android.util.Log
+import com.facebook.CallbackManager
+import com.facebook.FacebookCallback
+import com.facebook.FacebookException
+import com.facebook.login.LoginManager
+import com.facebook.login.LoginResult
+import retrofit2.HttpException
+import java.lang.Exception
+import java.net.SocketTimeoutException
+import java.security.MessageDigest
+import java.security.NoSuchAlgorithmException
+import java.util.*
+import com.facebook.AccessToken
+import androidx.annotation.NonNull
+import com.facebook.GraphResponse
+
+import org.json.JSONObject
+
+import com.facebook.GraphRequest
+import com.facebook.GraphRequest.GraphJSONObjectCallback
+import com.google.gson.JsonObject
+import org.json.JSONException
+import java.net.MalformedURLException
+import java.net.URL
 
 
 @AndroidEntryPoint
@@ -53,6 +81,15 @@ class MainActivity : FragmentActivity(), View.OnClickListener {
 
     lateinit var mGoogleSignInClient: GoogleSignInClient
     lateinit var account: GoogleSignInAccount
+
+    lateinit var callbackManager: CallbackManager
+    lateinit var loginManager: LoginManager
+    lateinit var facebookObject: JSONObject
+
+    lateinit var socialMediaLoginType : String
+
+
+
     companion object {
         const val RC_SIGN_IN = 100
          val appPrefs = AppPrefs
@@ -84,10 +121,9 @@ class MainActivity : FragmentActivity(), View.OnClickListener {
             .requestEmail()
             .build()
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso)
-        mGoogleSignInClient.signOut()
 
-      //  googleSignIn()
-
+        LoginManager.getInstance().logOut()
+        initFacebookSDK()
 
 
     }
@@ -106,6 +142,7 @@ class MainActivity : FragmentActivity(), View.OnClickListener {
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        callbackManager.onActivityResult(requestCode, resultCode, data)
         super.onActivityResult(requestCode, resultCode, data)
 
         when (requestCode) {
@@ -136,7 +173,6 @@ class MainActivity : FragmentActivity(), View.OnClickListener {
             R.id.cl_past -> {
                 closeDrawer()
                 if (!nav?.label?.equals("Past")!!) {
-                    println("ccccccccccccccccccccc cl_past")
                     navController.navigate(R.id.fragment_activity_to_past)
                 }
             }
@@ -174,9 +210,64 @@ class MainActivity : FragmentActivity(), View.OnClickListener {
         }
     }
 
+    fun initFacebookSDK() {
+        //facebook sdk login callback register
+        callbackManager = CallbackManager.Factory.create()
+        loginManager = LoginManager.getInstance()
+        loginManager.registerCallback(callbackManager, object : FacebookCallback<LoginResult> {
+            override fun onSuccess(loginResult: LoginResult?) {
+
+                val accessToken: AccessToken = loginResult!!.accessToken
+                performLogin(accessToken)
 
 
-    public fun googleSignIn(){
+            }
+            override fun onCancel() { Toast.makeText(applicationContext, getString(R.string.facebook_login_cancel), Toast.LENGTH_LONG).show() }
+            override fun onError(error: FacebookException) {
+                when (error.cause) {
+                    is HttpException -> Toast.makeText(applicationContext, getString(R.string.network_failed), Toast.LENGTH_LONG).show()
+                    is SocketTimeoutException ->Toast.makeText(applicationContext, getString(R.string.timeout), Toast.LENGTH_LONG).show()
+                    else -> Toast.makeText(applicationContext, getString(R.string.something_went_wrong), Toast.LENGTH_LONG).show()
+
+                }
+
+            }
+        })
+    }
+
+
+    private fun performLogin(accessToken: AccessToken) {
+        val request = GraphRequest.newMeRequest(accessToken) { `object`, response ->
+
+            facebookObject = `object`
+
+            if(`object`.has("email")){
+                var email = `object`.getString("email")
+                cl_main.visibility = View.VISIBLE
+                checkUser(email)
+
+            }else{
+                Toast.makeText(applicationContext, getString(R.string.something_went_wrong), Toast.LENGTH_LONG).show()
+            }
+
+
+        }
+        val parameters = Bundle()
+        parameters.putString("fields", "id, first_name, last_name, email,gender, birthday, location")
+        request.parameters = parameters
+        request.executeAsync()
+
+    }
+
+
+
+
+    fun facebooklogin(){
+        loginManager.logInWithReadPermissions(this, listOf("email"))
+        socialMediaLoginType = "F"
+    }
+     fun googleSignIn(){
+         socialMediaLoginType = "G"
         val signInIntent = mGoogleSignInClient.signInIntent
         startActivityForResult(signInIntent, RC_SIGN_IN)
     }
@@ -205,33 +296,18 @@ class MainActivity : FragmentActivity(), View.OnClickListener {
                 checkUser(it)
             }
 
-
-          //  appPrefs.setUserPrefs(userDetails)
-         //   viewmodel.googleSign.value = userDetails
-
-
-
         } catch (e: ApiException) {
             Toast.makeText(this, "Error in google sign in, Please try again !", Toast.LENGTH_SHORT).show()
         }
     }
 
    private fun checkUser(email: String){
+
        viewmodel.checkCustomer(email).observe(this, Observer {
            when (it) {
                is FastBuyResult.Success -> {
                    if(it.data.isNullOrEmpty()){
-                       var userDetails = appPrefs.getUserPrefs()
-                       userDetails.email = account.email
-                       userDetails.first_name = account.givenName
-                       userDetails.last_name = account.familyName
-                       userDetails.google_id =  account.id
-
-                       if(account.photoUrl != null){
-                           userDetails.picture = account.photoUrl.toString()
-                       }
-
-                       addCustomer(userDetails)
+                       addCustomer()
                    }else{
                        cl_main.visibility = View.GONE
 
@@ -252,9 +328,6 @@ class MainActivity : FragmentActivity(), View.OnClickListener {
 
                        appPrefs.setUserPrefs(_user)
 
-                       println("cccccccccccccccccccccccccc checkCustomer "+_user)
-
-                       println("cccccccccccccccccccccccccc activity zzzzzzzzzzzzzzzzzzzzz " )
                        viewmodel.googleSign.value = _user
                        viewmodel.googleSignTest.value = 5
 
@@ -276,14 +349,34 @@ class MainActivity : FragmentActivity(), View.OnClickListener {
    }
 
 
-    private fun addCustomer(user: User){
-        viewmodel.addCustomer(user).observe(this, Observer {
+    private fun addCustomer(){
+        var userDetails = appPrefs.getUserPrefs()
+        if(socialMediaLoginType == "G"){
+            userDetails.email = account.email
+            userDetails.first_name = account.givenName
+            userDetails.last_name = account.familyName
+            userDetails.google_id =  account.id
+            if(account.photoUrl != null){ userDetails.picture = account.photoUrl.toString() }
+        }else{
+            userDetails.email =facebookObject.getString("email")
+            userDetails.first_name = facebookObject.getString("first_name")
+            userDetails.last_name = facebookObject.getString("last_name")
+            userDetails.facebook_id =  facebookObject.getString("id")
+            userDetails.picture = "https://graph.facebook.com/" + facebookObject.getString("id") + "/picture?width=200&height=150"
+        }
+        viewmodel.addCustomer(userDetails).observe(this, Observer {
             when (it) {
                 is FastBuyResult.Success -> {
                     cl_main.visibility = View.GONE
-
                     var _user =it.data
-                    _user.google_id = account.id
+
+                    if(socialMediaLoginType == "G"){
+                        _user.google_id = account.id
+                    }else{
+                        _user.facebook_id = facebookObject.getString("id")
+                    }
+
+
 
                     appPrefs.setUserPrefs(_user)
                     viewmodel.googleSign.value = _user

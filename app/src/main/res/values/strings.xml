@@ -16,4 +16,9 @@
 
     <string name="terms">I have read and agree to the website <u>terms and conditions</u> *</string>
 
+    <string name="facebook_app_id">2946099002125531</string>
+    <string name="fb_login_protocol_scheme">fb2946099002125531</string>
+
+    <string name="facebook_login_cancel">Facebook login cancel !</string>
+
 </resources>
