@@ -3,6 +3,9 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
+        maven {
+            url  "https://repo.repsy.io/mvn/payhere/payhere-mobilesdk-android/"
+        }
         jcenter() // Warning: this repository is going to shut down soon
     }
 }

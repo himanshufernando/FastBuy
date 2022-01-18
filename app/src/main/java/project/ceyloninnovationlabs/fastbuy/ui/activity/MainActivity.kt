@@ -39,7 +39,7 @@ import project.ceyloninnovationlabs.fastbuy.services.perfrences.AppPrefs
 import android.content.pm.PackageManager
 
 import android.content.pm.PackageInfo
-import android.util.Base64.encode
+import android.util.Base64.*
 import android.util.Log
 import com.facebook.CallbackManager
 import com.facebook.FacebookCallback
@@ -75,9 +75,7 @@ class MainActivity : FragmentActivity(), View.OnClickListener {
 
     private val viewmodel: HomeViewModel by viewModels()
 
-    lateinit var onNavigationListener: OnNavigationListener
 
-    private var mLastClickTime: Long = 0
 
     lateinit var mGoogleSignInClient: GoogleSignInClient
     lateinit var account: GoogleSignInAccount
@@ -126,6 +124,26 @@ class MainActivity : FragmentActivity(), View.OnClickListener {
         initFacebookSDK()
 
 
+        try {
+            val info = packageManager.getPackageInfo(
+                applicationContext.packageName,
+                PackageManager.GET_SIGNATURES
+            )
+
+            for (signature in info.signatures) {
+                val md = MessageDigest.getInstance("SHA")
+                md.update(signature.toByteArray())
+                val hashKey: String = String(android.util.Base64.encode(md.digest(), 0))
+                println("xxxxxxxxxxxxxxxxxc printHashKey "+hashKey)
+
+            }
+        } catch (e: PackageManager.NameNotFoundException) {
+            Log.d("Name not found", e.message, e)
+        } catch (e: NoSuchAlgorithmException) {
+            Log.d("Error", e.message, e)
+        }
+
+
     }
 
     override fun onResume() {
@@ -158,10 +176,6 @@ class MainActivity : FragmentActivity(), View.OnClickListener {
 
 
     override fun onClick(v: View) {
-        if ((SystemClock.elapsedRealtime() - mLastClickTime < 1500)) {
-            return
-        }
-        mLastClickTime = SystemClock.elapsedRealtime()
         var nav = navController.currentDestination
         when (v.id) {
             R.id.cl_home -> {
@@ -324,7 +338,13 @@ class MainActivity : FragmentActivity(), View.OnClickListener {
                        val yourMap =  adapter.fromJson(jsonVlau)
                        val identifier = yourMap?.get("identifier").toString()
 
-                       _user.google_id =identifier
+                       if(socialMediaLoginType == "G"){
+                           _user.google_id =identifier
+                       }else {
+                           _user.facebook_id =identifier
+                       }
+
+
 
                        appPrefs.setUserPrefs(_user)
 
@@ -375,9 +395,6 @@ class MainActivity : FragmentActivity(), View.OnClickListener {
                     }else{
                         _user.facebook_id = facebookObject.getString("id")
                     }
-
-
-
                     appPrefs.setUserPrefs(_user)
                     viewmodel.googleSign.value = _user
                 }

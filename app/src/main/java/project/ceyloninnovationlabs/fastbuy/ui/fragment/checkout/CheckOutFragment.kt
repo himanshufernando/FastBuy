@@ -75,6 +75,8 @@ class CheckOutFragment : Fragment(), View.OnClickListener {
         txt_terms.setOnClickListener(this)
         img_send.setOnClickListener(this)
         cl_google.setOnClickListener(this)
+        cl_facebook.setOnClickListener(this)
+        img_navigation.setOnClickListener(this)
 
 
         edt_pcode.addTextChangedListener(textWatcher)
@@ -381,12 +383,31 @@ class CheckOutFragment : Fragment(), View.OnClickListener {
     private fun setPaymentRadioBtn() {
         radioGroup_payment.setOnCheckedChangeListener { group, checkedId ->
             mainActivity.hideKeyboard()
-            order.paymentType = when (checkedId) {
-                R.id.radioButton_bank_transfer -> "bacs"
-                R.id.radioButton_cashon -> "cod"
+            when(checkedId){
+                R.id.radioButton_bank_transfer -> {
+                    order.paymentType ="bacs"
+                    order.paymentGatewayValue = 0.0
+                    txt_total.text = "Rs. " + String.format("%.2f", order.total.toDouble())
+
+                }
+                R.id.radioButton_cashon ->{
+                    order.paymentType = "cod"
+                    order.paymentGatewayValue = 0.0
+                    txt_total.text = "Rs. " + String.format("%.2f", order.total.toDouble())
+                }
+                R.id.radioButton_payhere -> {
+                    order.paymentType = "payhere"
+                    var payhereVal = (order.total.toDouble() * 2) / 100.00
+                    order.paymentGatewayValue = payhereVal
+                    txt_total.text = "Rs. " + String.format("%.2f", (order.total.toDouble()+order.paymentGatewayValue))
+                }
                 else -> ""
             }
+
         }
+
+
+
     }
 
 
@@ -487,62 +508,70 @@ class CheckOutFragment : Fragment(), View.OnClickListener {
 
         cl_cart_progress.visibility = View.VISIBLE
 
+        if(order.paymentType == "payhere"){
 
-        viewmodel.newOrder(order).observe(viewLifecycleOwner, Observer {
-            when (it) {
-                is FastBuyResult.Success -> {
-                    Toast.makeText(
-                        requireContext(),
-                        "Your order successfully pleased",
-                        Toast.LENGTH_SHORT
-                    ).show()
 
-                    appPrefs.setLastOrderPrefs(it.data)
-                    viewmodel.lastOrder.value = it.data
-                    appPrefs.setCartItemPrefs(PastOrder())
+            
+        }else{
+            viewmodel.newOrder(order).observe(viewLifecycleOwner, Observer {
+                when (it) {
+                    is FastBuyResult.Success -> {
+                        Toast.makeText(
+                            requireContext(),
+                            "Your order successfully pleased",
+                            Toast.LENGTH_SHORT
+                        ).show()
 
-                    NavHostFragment.findNavController(requireParentFragment())
-                        .navigate(R.id.fragment_checkout_to_last)
+                        appPrefs.setLastOrderPrefs(it.data)
+                        viewmodel.lastOrder.value = it.data
+                        appPrefs.setCartItemPrefs(PastOrder())
 
-                }
-                is FastBuyResult.ExceptionError.ExError -> {
-                    cl_cart_progress.visibility = View.GONE
-                    when (it.exception) {
-                        is HttpException -> {
-                            showToastError(
-                                "Network Error",
-                                resources.getString(R.string.network_failed),
-                                R.color.app_text_red
-                            )
-                        }
-                        is SocketTimeoutException -> {
-                            showToastError(
-                                "Network Error",
-                                resources.getString(R.string.timeout),
-                                R.color.app_text_red
-                            )
-                        }
-                        else -> {
-                            showToastError(
-                                "Network Error",
-                                resources.getString(R.string.something_went_wrong),
-                                R.color.app_text_red
-                            )
+                        NavHostFragment.findNavController(requireParentFragment())
+                            .navigate(R.id.fragment_checkout_to_last)
+
+                    }
+                    is FastBuyResult.ExceptionError.ExError -> {
+                        cl_cart_progress.visibility = View.GONE
+                        when (it.exception) {
+                            is HttpException -> {
+                                showToastError(
+                                    "Network Error",
+                                    resources.getString(R.string.network_failed),
+                                    R.color.app_text_red
+                                )
+                            }
+                            is SocketTimeoutException -> {
+                                showToastError(
+                                    "Network Error",
+                                    resources.getString(R.string.timeout),
+                                    R.color.app_text_red
+                                )
+                            }
+                            else -> {
+                                showToastError(
+                                    "Network Error",
+                                    resources.getString(R.string.something_went_wrong),
+                                    R.color.app_text_red
+                                )
+                            }
                         }
                     }
+                    is FastBuyResult.LogicalError.LogError -> {
+                        cl_cart_progress.visibility = View.GONE
+                        showToastError(
+                            "Error",
+                            it.exception.message,
+                            R.color.app_text_red
+                        )
+                    }
                 }
-                is FastBuyResult.LogicalError.LogError -> {
-                    cl_cart_progress.visibility = View.GONE
-                    showToastError(
-                        "Error",
-                        it.exception.message,
-                        R.color.app_text_red
-                    )
-                }
-            }
 
 
-        })
+            })
+
+        }
+
+
 
 
     }
@@ -550,9 +579,9 @@ class CheckOutFragment : Fragment(), View.OnClickListener {
 
     override fun onClick(v: View) {
         when (v.id) {
+            R.id.img_navigation ->mainActivity.openDrawer()
             R.id.cl_google -> mainActivity.googleSignIn()
-
-
+            R.id.cl_facebook ->mainActivity.facebooklogin()
             R.id.txt_coupon_value -> {
                 order.coupon = Coupon()
                 order.total = order.subtotal.toString()

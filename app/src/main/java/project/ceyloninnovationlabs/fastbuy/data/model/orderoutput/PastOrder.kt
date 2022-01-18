@@ -42,10 +42,11 @@ data class PastOrder(
     var shippingType : String,
     var coupon : Coupon,
     var shippingCost: Double,
-    var subtotal : Double
+    var subtotal : Double,
+    var paymentGatewayValue : Double
 ): Parcelable {
     constructor() : this(Billing(),"","","",0,"","","","","","",
         0, ArrayList<LineItem>(),"","","","", Shipping(), ArrayList<ShippingLine>(),"","","","",false,
-        "",false,"",ArrayList<Product>(),ArrayList<CouponBase>(),"",Coupon(),0.0,0.0
+        "",false,"",ArrayList<Product>(),ArrayList<CouponBase>(),"",Coupon(),0.0,0.0,0.0
     )
 }

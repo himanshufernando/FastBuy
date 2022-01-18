@@ -58,7 +58,8 @@ class HomeRepo(private var client: APIInterface) {
     }
 
 
-    suspend fun updateCustomer(user: User): User {
+
+     suspend fun updateCustomer(user: User): User {
 
 
       var updateUser = User()
@@ -122,6 +123,7 @@ class HomeRepo(private var client: APIInterface) {
         return result
 
     }
+
 
 
     suspend fun addCustomer(user: User): User {
@@ -273,7 +275,51 @@ class HomeRepo(private var client: APIInterface) {
 
         }else{
 
+            var socialloginJson = JsonObject()
 
+            socialloginJson.addProperty("key", "_wc_social_login_facebook_profile")
+            var socialloginValueJson = JsonObject()
+
+            socialloginValueJson.addProperty("identifier", user.facebook_id)
+            socialloginValueJson.addProperty("photo_url", user.picture)
+            socialloginValueJson.addProperty("display_name", user.first_name+" "+user.last_name)
+            socialloginValueJson.addProperty("first_name", user.first_name)
+            socialloginValueJson.addProperty("last_name", user.last_name)
+            socialloginValueJson.addProperty("language", "en")
+            socialloginValueJson.addProperty("email", user.email)
+            socialloginValueJson.addProperty("email_verified", user.email)
+
+
+            socialloginJson.add("value", socialloginValueJson)
+            meteDataJsonArr.add(socialloginJson)
+
+
+            var _wc_social_login_google_identifier = JsonObject()
+            _wc_social_login_google_identifier.addProperty("key", "_wc_social_login_facebook_identifier")
+            _wc_social_login_google_identifier.addProperty("value", user.facebook_id)
+            meteDataJsonArr.add(_wc_social_login_google_identifier)
+
+            var _wc_social_login_google_profile_image = JsonObject()
+            _wc_social_login_google_profile_image.addProperty("key", "_wc_social_login_facebook_profile_image")
+            _wc_social_login_google_profile_image.addProperty("value", user.picture)
+            meteDataJsonArr.add(_wc_social_login_google_profile_image)
+
+
+            var _wc_social_login_profile_image = JsonObject()
+            _wc_social_login_profile_image.addProperty("key", "_wc_social_login_profile_image")
+            _wc_social_login_profile_image.addProperty("value", user.picture)
+            meteDataJsonArr.add(_wc_social_login_profile_image)
+
+            var _wc_social_login_google_login_timestamp = JsonObject()
+            _wc_social_login_google_login_timestamp.addProperty("key", "_wc_social_login_facebook_login_timestamp")
+            _wc_social_login_google_login_timestamp.addProperty("value", ts)
+            meteDataJsonArr.add(_wc_social_login_google_login_timestamp)
+
+
+            var _wc_social_login_google_login_timestamp_gmt = JsonObject()
+            _wc_social_login_google_login_timestamp_gmt.addProperty("key", "_wc_social_login_facebook_login_timestamp_gmt")
+            _wc_social_login_google_login_timestamp_gmt.addProperty("value", ts)
+            meteDataJsonArr.add(_wc_social_login_google_login_timestamp_gmt)
 
 
         }
@@ -686,5 +732,6 @@ class HomeRepo(private var client: APIInterface) {
 
 
     }
+
 
 }

@@ -1239,6 +1239,56 @@
 
 
 
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/cl_payhere"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    tools:visibility="visible"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginEnd="20dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="@+id/txt20"
+                    app:layout_constraintTop_toBottomOf="@+id/view_coupon">
+
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/txt_payhere"
+                        style="@style/app_content_gry_medium_14"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Fee for PayHere"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/txt_payhere_cost"
+                        style="@style/app_content_gry_light_14"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text=""
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <View
+                        android:id="@+id/view_payhere"
+                        android:layout_width="0dp"
+                        android:layout_height="0.5dp"
+                        android:layout_marginTop="10dp"
+                        android:background="@color/app_dark_gry"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/txt_payhere_cost" />
+
+
+
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/txt24"
@@ -1249,7 +1299,7 @@
                     android:singleLine="true"
                     android:text="Shipping"
                     app:layout_constraintStart_toStartOf="@+id/txt20"
-                    app:layout_constraintTop_toBottomOf="@+id/view_coupon" />
+                    app:layout_constraintTop_toBottomOf="@+id/cl_payhere" />
 
 
                 <androidx.appcompat.widget.AppCompatTextView
@@ -1465,6 +1515,54 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/txt_cashon" />
+
+
+
+                <RadioButton
+                    android:id="@+id/radioButton_payhere"
+                    style="@style/app_content_gry_light_14"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:buttonTint="@color/black"
+                    android:text="PayHere"
+                    app:layout_constraintStart_toStartOf="@+id/txt20"
+                    app:layout_constraintTop_toBottomOf="@+id/view_7" />
+
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/img_payhere"
+                    android:layout_width="wrap_content"
+                    android:layout_height="60dp"
+                    android:src="@drawable/ic_payhere_banner"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="@+id/txt20"
+                    app:layout_constraintTop_toBottomOf="@+id/radioButton_payhere" />
+
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/txt_payhere_themrs"
+                    style="@style/app_content_gry_light_14"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="20dp"
+                    android:background="@color/app_gry_bg"
+                    android:padding="10dp"
+                    android:text="Pay by Visa, MasterCard, AMEX, eZcash, mCash or Internet Banking via PayHere."
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="@+id/txt20"
+                    app:layout_constraintTop_toBottomOf="@+id/img_payhere" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:background="@color/black"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/txt_payhere_themrs" />
+
 
             </RadioGroup>
 
