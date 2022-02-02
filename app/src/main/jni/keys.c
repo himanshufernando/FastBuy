@@ -23,3 +23,16 @@ Java_project_ceyloninnovationlabs_fastbuy_services_network_api_NetworkModule_get
         JNIEnv *env, jobject thiz) {
     return (*env)->NewStringUTF(env, "cs_da1498081ad0dc356e10781e0dfb7eeeb1404dff");
 }
+
+
+JNIEXPORT jstring JNICALL
+Java_project_ceyloninnovationlabs_fastbuy_ui_activity_MainActivity_getMerchant(JNIEnv *env,
+                                                                               jobject thiz) {
+    return (*env)->NewStringUTF(env, "214383");
+}
+
+JNIEXPORT jstring JNICALL
+Java_project_ceyloninnovationlabs_fastbuy_ui_activity_MainActivity_getMerchantSecret(JNIEnv *env,
+                                                                                     jobject thiz) {
+    return (*env)->NewStringUTF(env, "168b7f7401b58ae9328636f48675dfbb");
+}

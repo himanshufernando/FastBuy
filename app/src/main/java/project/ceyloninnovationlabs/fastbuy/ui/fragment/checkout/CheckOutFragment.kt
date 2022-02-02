@@ -47,6 +47,45 @@ class CheckOutFragment : Fragment(), View.OnClickListener {
 
     var adapter = CheckoutItemsAdapter()
 
+    companion object {
+        val postalCodeList = listOf(11500,
+            11420,
+            11522,
+            11524,
+            11526,
+            11538,
+            11244,
+            11350,
+            11536,
+            11558,
+            11270,
+            11250,
+            11264,
+            11380,
+            61130,
+            61192,
+            61154,
+            11265,
+            11320,
+            10662,
+            11640,
+            11260,
+            11234,
+            11370,
+            61138,
+            61150,
+            61210,
+            11400,
+            11010,
+            11532,
+            11300,
+            11550,
+            61110,
+            61144,
+            10100,
+            10107)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -69,6 +108,10 @@ class CheckOutFragment : Fragment(), View.OnClickListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+
+
+
 
         txt_coupon_value.setOnClickListener(this)
         btn_proceed.setOnClickListener(this)
@@ -219,7 +262,8 @@ class CheckOutFragment : Fragment(), View.OnClickListener {
 
 
     private fun calculateShipping(postcode: Int) {
-        if (postcode == 11500) {
+        if (postalCodeList.contains(postcode)) {
+       // if (postcode == 11500) {
             order.shippingCost = 0.0
 
             radioGroup_shipping.visibility = View.VISIBLE
@@ -387,18 +431,24 @@ class CheckOutFragment : Fragment(), View.OnClickListener {
                 R.id.radioButton_bank_transfer -> {
                     order.paymentType ="bacs"
                     order.paymentGatewayValue = 0.0
+                    order.cashOnDeliveryValue = 0.0
+                    order.finaltotal = order.total.toDouble()
                     txt_total.text = "Rs. " + String.format("%.2f", order.total.toDouble())
 
                 }
                 R.id.radioButton_cashon ->{
                     order.paymentType = "cod"
                     order.paymentGatewayValue = 0.0
-                    txt_total.text = "Rs. " + String.format("%.2f", order.total.toDouble())
+                    order.cashOnDeliveryValue = 399.00
+                    order.finaltotal = order.total.toDouble()+399.00
+                    txt_total.text = "Rs. " + String.format("%.2f", (order.total.toDouble()+399.00))
                 }
                 R.id.radioButton_payhere -> {
                     order.paymentType = "payhere"
                     var payhereVal = (order.total.toDouble() * 2) / 100.00
                     order.paymentGatewayValue = payhereVal
+                    order.cashOnDeliveryValue = 0.0
+                    order.finaltotal = order.total.toDouble()+order.paymentGatewayValue
                     txt_total.text = "Rs. " + String.format("%.2f", (order.total.toDouble()+order.paymentGatewayValue))
                 }
                 else -> ""
@@ -508,26 +558,37 @@ class CheckOutFragment : Fragment(), View.OnClickListener {
 
         cl_cart_progress.visibility = View.VISIBLE
 
-        if(order.paymentType == "payhere"){
-
-
-            
-        }else{
             viewmodel.newOrder(order).observe(viewLifecycleOwner, Observer {
                 when (it) {
                     is FastBuyResult.Success -> {
-                        Toast.makeText(
-                            requireContext(),
-                            "Your order successfully pleased",
-                            Toast.LENGTH_SHORT
-                        ).show()
 
-                        appPrefs.setLastOrderPrefs(it.data)
-                        viewmodel.lastOrder.value = it.data
-                        appPrefs.setCartItemPrefs(PastOrder())
 
-                        NavHostFragment.findNavController(requireParentFragment())
-                            .navigate(R.id.fragment_checkout_to_last)
+
+                        if(it.data.payment_method == "payhere"){
+
+
+
+                            mainActivity.payhereCall(it.data)
+
+                        }else{
+
+                            Toast.makeText(
+                                requireContext(),
+                                "Your order successfully pleased",
+                                Toast.LENGTH_SHORT
+                            ).show()
+
+                            appPrefs.setLastOrderPrefs(it.data)
+                            viewmodel.lastOrder.value = it.data
+                            appPrefs.setCartItemPrefs(PastOrder())
+
+                            NavHostFragment.findNavController(requireParentFragment())
+                                .navigate(R.id.fragment_checkout_to_last)
+
+
+                        }
+
+
 
                     }
                     is FastBuyResult.ExceptionError.ExError -> {
@@ -569,12 +630,14 @@ class CheckOutFragment : Fragment(), View.OnClickListener {
 
             })
 
-        }
+
 
 
 
 
     }
+
+
 
 
     override fun onClick(v: View) {
@@ -629,4 +692,8 @@ class CheckOutFragment : Fragment(), View.OnClickListener {
         alertInfoDialog.show()
 
     }
+
+
+
 }
+

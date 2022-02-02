@@ -69,6 +69,7 @@ class CartFragment : Fragment(), View.OnClickListener {
         ic_search.setOnClickListener(this)
         img_account.setOnClickListener(this)
         btn_proceed.setOnClickListener(this)
+        img_navigation.setOnClickListener(this)
 
 
         initProductCartRecyclerView()
@@ -93,6 +94,7 @@ class CartFragment : Fragment(), View.OnClickListener {
         }
         mLastClickTime = SystemClock.elapsedRealtime()
         when (v.id) {
+            R.id.img_navigation ->mainActivity.openDrawer()
             R.id.btn_apply_coupon -> {
                 mainActivity.hideKeyboard()
                 cl_cart_progress.visibility = View.VISIBLE

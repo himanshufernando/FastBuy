@@ -1,6 +1,7 @@
 package project.ceyloninnovationlabs.fastbuy.repo
 
 
+import android.util.Log
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
@@ -466,11 +467,18 @@ class HomeRepo(private var client: APIInterface) {
                 orderJson.addProperty("payment_method_title", "Pay on Showroom pickup")
             }
 
+            "payhere" -> {
+                orderJson.addProperty("payment_method", "payhere")
+                orderJson.addProperty("payment_method_title", "PayHere")
+                order.payment_method = "payhere"
+            }
+
+
         }
 
 
 
-        orderJson.addProperty("status", "on-hold")
+        orderJson.addProperty("status", "pending")
 
 
         var _user = appPrefs.getUserPrefs()
@@ -566,6 +574,63 @@ class HomeRepo(private var client: APIInterface) {
         }
 
 
+        if((order.cashOnDeliveryValue != 0.0) && (order.paymentType == "cod")){
+
+            val feeLines = JsonArray()
+            var feeLinesJson = JsonObject()
+
+            feeLinesJson.addProperty("name", "Cash on delivery:")
+            feeLinesJson.addProperty("tax_class", "0")
+            feeLinesJson.addProperty("tax_status", "taxable")
+            feeLinesJson.addProperty("amount", "399")
+            feeLinesJson.addProperty("total", "399.00")
+
+            val feeLinesMete = JsonArray()
+            var feeLinesMeteJson = JsonObject()
+
+            feeLinesMeteJson.addProperty("key", "_added_by")
+            feeLinesMeteJson.addProperty("value", "woocommerce_additional_fees")
+            feeLinesMeteJson.addProperty("display_key", "_added_by")
+            feeLinesMeteJson.addProperty("display_value", "woocommerce_additional_fees")
+
+            feeLinesMete.add(feeLinesMeteJson)
+            feeLinesJson.add("meta_data", feeLinesMete)
+
+            feeLines.add(feeLinesJson)
+
+            orderJson.add("fee_lines", feeLines)
+
+        }
+
+        if((order.paymentGatewayValue != 0.0) && (order.paymentType == "payhere")){
+
+            val feeLines = JsonArray()
+            var feeLinesJson = JsonObject()
+
+            feeLinesJson.addProperty("name", "Fee for PayHere:")
+            feeLinesJson.addProperty("tax_class", "0")
+            feeLinesJson.addProperty("tax_status", "taxable")
+            feeLinesJson.addProperty("amount", order.paymentGatewayValue.toString())
+            feeLinesJson.addProperty("total", order.paymentGatewayValue.toString())
+
+            val feeLinesMete = JsonArray()
+            var feeLinesMeteJson = JsonObject()
+
+            feeLinesMeteJson.addProperty("key", "_added_by")
+            feeLinesMeteJson.addProperty("value", "woocommerce_additional_fees")
+            feeLinesMeteJson.addProperty("display_key", "_added_by")
+            feeLinesMeteJson.addProperty("display_value", "woocommerce_additional_fees")
+
+            feeLinesMete.add(feeLinesMeteJson)
+            feeLinesJson.add("meta_data", feeLinesMete)
+
+            feeLines.add(feeLinesJson)
+
+            orderJson.add("fee_lines", feeLines)
+
+        }
+
+
         var _method_id = ""
         var _method_title = ""
 
@@ -596,7 +661,13 @@ class HomeRepo(private var client: APIInterface) {
         shippingLineJarray.add(shippingLineJson)
         orderJson.add("shipping_lines", shippingLineJarray)
 
-        return client.addOrder(orderInfo = orderJson)
+        Log.i("HOME_REPO",orderJson.toString())
+
+        order.id = 4545
+
+        return order
+
+     //   return client.addOrder(orderInfo = orderJson)
 
     }
 

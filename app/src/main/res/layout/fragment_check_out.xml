@@ -1499,7 +1499,7 @@
                     android:layout_marginEnd="20dp"
                     android:background="@color/app_gry_bg"
                     android:padding="10dp"
-                    android:text="Pay with cash upon delivery. if you pay by any credit or debit cards, will be add extra 3% from total value"
+                    android:text="Pay with cash upon delivery. if you pay by any credit or debit cards, will be add extra Rs.399.00 from total value"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="@+id/txt20"
                     app:layout_constraintTop_toBottomOf="@+id/radioButton_cashon" />

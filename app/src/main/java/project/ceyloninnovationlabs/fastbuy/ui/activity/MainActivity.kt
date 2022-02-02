@@ -1,6 +1,7 @@
 package project.ceyloninnovationlabs.fastbuy.ui.activity
 
 
+import android.R.attr
 import android.app.AlertDialog
 import android.content.DialogInterface
 import android.content.Intent
@@ -61,9 +62,33 @@ import org.json.JSONObject
 import com.facebook.GraphRequest
 import com.facebook.GraphRequest.GraphJSONObjectCallback
 import com.google.gson.JsonObject
+import lk.payhere.androidsdk.model.InitRequest
 import org.json.JSONException
+import project.ceyloninnovationlabs.fastbuy.data.model.orderoutput.PastOrder
 import java.net.MalformedURLException
 import java.net.URL
+import androidx.core.app.ActivityCompat.startActivityForResult
+
+import lk.payhere.androidsdk.PHConfigs
+
+import lk.payhere.androidsdk.PHConstants
+
+import lk.payhere.androidsdk.PHMainActivity
+import lk.payhere.androidsdk.model.Item
+import android.app.Activity
+
+import android.R.attr.data
+
+import lk.payhere.androidsdk.model.StatusResponse
+
+import lk.payhere.androidsdk.PHResponse
+import android.R.attr.data
+
+
+
+
+
+
 
 
 @AndroidEntryPoint
@@ -91,11 +116,14 @@ class MainActivity : FragmentActivity(), View.OnClickListener {
     companion object {
         const val RC_SIGN_IN = 100
          val appPrefs = AppPrefs
+        const val PAYHERE_REQUEST = 1001
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        System.loadLibrary("keys")
 
         trasperat()
 
@@ -168,6 +196,44 @@ class MainActivity : FragmentActivity(), View.OnClickListener {
                 val task: Task<GoogleSignInAccount> =
                     GoogleSignIn.getSignedInAccountFromIntent(data)
                 handleSignInResult(task)
+            }
+            PAYHERE_REQUEST ->{
+                if((data!!.hasExtra(PHConstants.INTENT_EXTRA_RESULT)) && (data != null)){
+                    val response = data.getSerializableExtra(PHConstants.INTENT_EXTRA_RESULT) as PHResponse<StatusResponse>
+                    println("qqqqqqqqqqqqqq response : "+response)
+                    println("qqqqqqqqqqqqqq resultCode : "+resultCode)
+
+                   /* if (resultCode == Activity.RESULT_OK) {
+                        if (response != null){
+
+                            if(response.isSuccess){
+                                Toast.makeText(this, "Done", Toast.LENGTH_SHORT).show()
+
+                            }else{
+                                errorAlertDialog("Error", response.toString())
+                            }
+
+
+
+                        }else{
+                            errorAlertDialog("Error", "Payment request not complete,Please try again !!")
+                        }
+
+                    }else if(resultCode == Activity.RESULT_CANCELED){
+
+                        if (response != null){
+                            errorAlertDialog("Error", response.toString())
+                        }else{
+                            errorAlertDialog("Error", "Payment request not complete,Please try again !!")
+                        }
+
+                    }*/
+
+                }else{
+                    errorAlertDialog("Error", "Payment request not complete,Please try again !!")
+                    //not done correctly
+
+                }
             }
 
         }
@@ -484,5 +550,45 @@ class MainActivity : FragmentActivity(), View.OnClickListener {
         window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN)
     }
 
+     fun payhereCall(order: PastOrder){
+         val req = InitRequest()
+         req.merchantId = getMerchant()
+         req.merchantSecret =getMerchantSecret()
+         req.currency = "LKR"
+         req.amount = order.total.toDouble()
+         req.orderId = order.id.toString()
+
+         var itemsDescription =""
+         for(item in order.line_items){
+             itemsDescription=itemsDescription+item.name+"_"
+             req.items.add(Item(null, item.name, item.quantity, item.total.toDouble()))
+         }
+         req.itemsDescription = itemsDescription
+
+         req.custom1 = order.customer_note
+         req.customer.firstName = order.billing.first_name
+         req.customer.lastName = order.billing.last_name
+         req.customer.email = order.billing.email
+         req.customer.phone = order.billing.phone
+         req.customer.address.address = order.billing.address_1+" "+order.billing.address_2
+         req.customer.address.city = order.billing.city
+         req.customer.address.country = "Sri Lanka"
+
+         req.customer.deliveryAddress.address = order.shipping.address_1+" "+order.shipping.address_2
+         req.customer.deliveryAddress.city = order.shipping.address_1+" "+order.shipping.address_2
+         req.customer.deliveryAddress.country = "Sri Lanka"
+
+
+
+
+         val intent = Intent(this, PHMainActivity::class.java)
+         intent.putExtra(PHConstants.INTENT_EXTRA_DATA, req)
+         PHConfigs.setBaseUrl(PHConfigs.SANDBOX_URL)
+         startActivityForResult(intent, PAYHERE_REQUEST)
+
+    }
+
+    external fun getMerchant(): String
+    external fun getMerchantSecret(): String
 
 }
