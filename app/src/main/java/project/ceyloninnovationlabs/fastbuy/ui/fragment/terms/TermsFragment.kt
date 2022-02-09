@@ -80,7 +80,7 @@ class TermsFragment : Fragment() ,View.OnClickListener{
         when(v.id){
             R.id.ic_search -> searchProducts()
             R.id.cl_contact_cart ->goToCart()
-            R.id.img_account -> NavHostFragment.findNavController(requireParentFragment()).navigate(R.id.fragment_returns_to_account)
+            R.id.img_account -> NavHostFragment.findNavController(requireParentFragment()).navigate(R.id.fragment_terms_to_account)
             R.id.img_navigation -> mainActivity.openDrawer()
         }
 
@@ -141,7 +141,7 @@ class TermsFragment : Fragment() ,View.OnClickListener{
         if(cart.product.isEmpty()){
             Toast.makeText(requireContext(), "Your cart is currently empty !!", Toast.LENGTH_SHORT).show()
         }else{
-            NavHostFragment.findNavController(requireParentFragment()).navigate(R.id.fragment_returns_to_cart)
+            NavHostFragment.findNavController(requireParentFragment()).navigate(R.id.fragment_terms_to_cart)
         }
     }
 
@@ -166,7 +166,7 @@ class TermsFragment : Fragment() ,View.OnClickListener{
     private fun searchProducts() {
         mainActivity.hideKeyboard()
         viewmodel.searchQuery.value = edit_text_product_search.text.toString().trim()
-        NavHostFragment.findNavController(this).navigate(R.id.fragment_returns_to_search)
+        NavHostFragment.findNavController(this).navigate(R.id.fragment_terms_to_search)
 
         edit_text_product_search.setText("")
     }

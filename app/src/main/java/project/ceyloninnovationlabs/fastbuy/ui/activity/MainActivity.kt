@@ -552,8 +552,8 @@ class MainActivity : FragmentActivity(), View.OnClickListener {
 
      fun payhereCall(order: PastOrder){
          val req = InitRequest()
-         req.merchantId = getMerchant()
-         req.merchantSecret =getMerchantSecret()
+         req.merchantId = "214383"
+         req.merchantSecret ="MS42dmRoNWhqNWp5"
          req.currency = "LKR"
          req.amount = order.total.toDouble()
          req.orderId = order.id.toString()

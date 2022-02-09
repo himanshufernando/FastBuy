@@ -18,10 +18,12 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.paging.LoadState
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_product_search.*
+import kotlinx.android.synthetic.main.fragment_product_search.appCompatImageView4
 import kotlinx.android.synthetic.main.fragment_product_search.cl_home_progress
 import kotlinx.android.synthetic.main.fragment_product_search.edit_text_product_search
 import kotlinx.android.synthetic.main.fragment_product_search.ic_search
 import kotlinx.android.synthetic.main.fragment_product_search.img_account
+import kotlinx.android.synthetic.main.fragment_product_search.txt_cart_count
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collectLatest
@@ -97,7 +99,7 @@ class ProductSearchFragment : Fragment(), InfoDialog.InfoDialogListener, View.On
 
     override fun onResume() {
         super.onResume()
-
+        updateCart()
         searchProducts()
     }
 
@@ -123,7 +125,23 @@ class ProductSearchFragment : Fragment(), InfoDialog.InfoDialogListener, View.On
 
     }
 
+    private fun updateCart(){
+        var cartItemQty = 0
+        var cart = appPrefs.getCartItemPrefs()
 
+        if(cart.product.isEmpty()){
+            appCompatImageView4.visibility = View.GONE
+            txt_cart_count.text = "0"
+        }else{
+            for(item in cart.product){
+                cartItemQty += item.quantity
+            }
+
+            appCompatImageView4.visibility = View.VISIBLE
+            txt_cart_count.text =cartItemQty.toString()
+        }
+
+    }
     private fun goToCart(){
         var cart = appPrefs.getCartItemPrefs()
         if(cart.product.isEmpty()){
