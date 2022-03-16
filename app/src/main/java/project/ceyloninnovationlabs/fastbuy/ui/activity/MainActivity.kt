@@ -83,12 +83,9 @@ import lk.payhere.androidsdk.model.StatusResponse
 
 import lk.payhere.androidsdk.PHResponse
 import android.R.attr.data
-
-
-
-
-
-
+import android.net.Uri
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 
 
 @AndroidEntryPoint
@@ -101,7 +98,6 @@ class MainActivity : FragmentActivity(), View.OnClickListener {
     private val viewmodel: HomeViewModel by viewModels()
 
 
-
     lateinit var mGoogleSignInClient: GoogleSignInClient
     lateinit var account: GoogleSignInAccount
 
@@ -109,13 +105,12 @@ class MainActivity : FragmentActivity(), View.OnClickListener {
     lateinit var loginManager: LoginManager
     lateinit var facebookObject: JSONObject
 
-    lateinit var socialMediaLoginType : String
-
+    lateinit var socialMediaLoginType: String
 
 
     companion object {
         const val RC_SIGN_IN = 100
-         val appPrefs = AppPrefs
+        val appPrefs = AppPrefs
         const val PAYHERE_REQUEST = 1001
     }
 
@@ -162,7 +157,6 @@ class MainActivity : FragmentActivity(), View.OnClickListener {
                 val md = MessageDigest.getInstance("SHA")
                 md.update(signature.toByteArray())
                 val hashKey: String = String(android.util.Base64.encode(md.digest(), 0))
-                println("xxxxxxxxxxxxxxxxxc printHashKey "+hashKey)
 
             }
         } catch (e: PackageManager.NameNotFoundException) {
@@ -178,58 +172,59 @@ class MainActivity : FragmentActivity(), View.OnClickListener {
         super.onResume()
         getShippingMethods()
 
-        println("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx appPrefs "+appPrefs.getUserPrefs())
-
-
     }
 
     override fun onStop() {
         super.onStop()
     }
 
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         callbackManager.onActivityResult(requestCode, resultCode, data)
         super.onActivityResult(requestCode, resultCode, data)
-
+        println("qqqqqqqqqqqqqq response 1: " )
         when (requestCode) {
             RC_SIGN_IN -> {
-                val task: Task<GoogleSignInAccount> =
-                    GoogleSignIn.getSignedInAccountFromIntent(data)
-                handleSignInResult(task)
+                handleSignInResult(data)
             }
-            PAYHERE_REQUEST ->{
-                if((data!!.hasExtra(PHConstants.INTENT_EXTRA_RESULT)) && (data != null)){
+            PAYHERE_REQUEST -> {
+                println("qqqqqqqqqqqqqq response 2: " )
+                if ((data!!.hasExtra(PHConstants.INTENT_EXTRA_RESULT)) && (data != null)) {
                     val response = data.getSerializableExtra(PHConstants.INTENT_EXTRA_RESULT) as PHResponse<StatusResponse>
-                    println("qqqqqqqqqqqqqq response : "+response)
-                    println("qqqqqqqqqqqqqq resultCode : "+resultCode)
+                    println("qqqqqqqqqqqqqq response : " + response)
+                    println("qqqqqqqqqqqqqq resultCode : " + resultCode)
 
-                   /* if (resultCode == Activity.RESULT_OK) {
-                        if (response != null){
-
-                            if(response.isSuccess){
+                    /*if (resultCode == Activity.RESULT_OK) {
+                        if (response != null) {
+                            if (response.isSuccess) {
                                 Toast.makeText(this, "Done", Toast.LENGTH_SHORT).show()
 
-                            }else{
+                            } else {
                                 errorAlertDialog("Error", response.toString())
                             }
 
-
-
-                        }else{
-                            errorAlertDialog("Error", "Payment request not complete,Please try again !!")
+                        } else {
+                            errorAlertDialog(
+                                "Error",
+                                "Payment request not complete,Please try again !!"
+                            )
                         }
 
-                    }else if(resultCode == Activity.RESULT_CANCELED){
+                    } else if (resultCode == Activity.RESULT_CANCELED) {
 
-                        if (response != null){
+                        if (response != null) {
                             errorAlertDialog("Error", response.toString())
-                        }else{
-                            errorAlertDialog("Error", "Payment request not complete,Please try again !!")
+                        } else {
+                            errorAlertDialog(
+                                "Error",
+                                "Payment request not complete,Please try again !!"
+                            )
                         }
 
                     }*/
 
-                }else{
+
+                } else {
                     errorAlertDialog("Error", "Payment request not complete,Please try again !!")
                     //not done correctly
 
@@ -237,6 +232,7 @@ class MainActivity : FragmentActivity(), View.OnClickListener {
             }
 
         }
+
 
     }
 
@@ -302,12 +298,32 @@ class MainActivity : FragmentActivity(), View.OnClickListener {
 
 
             }
-            override fun onCancel() { Toast.makeText(applicationContext, getString(R.string.facebook_login_cancel), Toast.LENGTH_LONG).show() }
+
+            override fun onCancel() {
+                Toast.makeText(
+                    applicationContext,
+                    getString(R.string.facebook_login_cancel),
+                    Toast.LENGTH_LONG
+                ).show()
+            }
+
             override fun onError(error: FacebookException) {
                 when (error.cause) {
-                    is HttpException -> Toast.makeText(applicationContext, getString(R.string.network_failed), Toast.LENGTH_LONG).show()
-                    is SocketTimeoutException ->Toast.makeText(applicationContext, getString(R.string.timeout), Toast.LENGTH_LONG).show()
-                    else -> Toast.makeText(applicationContext, getString(R.string.something_went_wrong), Toast.LENGTH_LONG).show()
+                    is HttpException -> Toast.makeText(
+                        applicationContext,
+                        getString(R.string.network_failed),
+                        Toast.LENGTH_LONG
+                    ).show()
+                    is SocketTimeoutException -> Toast.makeText(
+                        applicationContext,
+                        getString(R.string.timeout),
+                        Toast.LENGTH_LONG
+                    ).show()
+                    else -> Toast.makeText(
+                        applicationContext,
+                        getString(R.string.something_went_wrong),
+                        Toast.LENGTH_LONG
+                    ).show()
 
                 }
 
@@ -321,54 +337,60 @@ class MainActivity : FragmentActivity(), View.OnClickListener {
 
             facebookObject = `object`
 
-            if(`object`.has("email")){
+            if (`object`.has("email")) {
                 var email = `object`.getString("email")
                 cl_main.visibility = View.VISIBLE
                 checkUser(email)
 
-            }else{
-                Toast.makeText(applicationContext, getString(R.string.something_went_wrong), Toast.LENGTH_LONG).show()
+            } else {
+                Toast.makeText(
+                    applicationContext,
+                    getString(R.string.something_went_wrong),
+                    Toast.LENGTH_LONG
+                ).show()
             }
 
 
         }
         val parameters = Bundle()
-        parameters.putString("fields", "id, first_name, last_name, email,gender, birthday, location")
+        parameters.putString(
+            "fields",
+            "id, first_name, last_name, email,gender, birthday, location"
+        )
         request.parameters = parameters
         request.executeAsync()
 
     }
 
 
-
-
-    fun facebooklogin(){
+    fun facebooklogin() {
         loginManager.logInWithReadPermissions(this, listOf("email"))
         socialMediaLoginType = "F"
     }
-     fun googleSignIn(){
-         socialMediaLoginType = "G"
+
+    fun googleSignIn() {
+        socialMediaLoginType = "G"
         val signInIntent = mGoogleSignInClient.signInIntent
         startActivityForResult(signInIntent, RC_SIGN_IN)
     }
 
 
-    private fun getShippingMethods(){
+    private fun getShippingMethods() {
         viewmodel.getShippingMethods().observe(this, Observer {
-                when (it) {
-                    is FastBuyResult.Success -> {
-                       viewmodel.shippingMethods.value = it.data.last()
-                    }
-                    is FastBuyResult.ExceptionError.ExError -> {
-
-                    }
+            when (it) {
+                is FastBuyResult.Success -> {
+                    viewmodel.shippingMethods.value = it.data.last()
+                }
+                is FastBuyResult.ExceptionError.ExError -> {
 
                 }
-            })
+
+            }
+        })
 
     }
 
-    private fun handleSignInResult(completedTask: Task<GoogleSignInAccount>) {
+    /*private fun handleSignInResult(completedTask: Task<GoogleSignInAccount>) {
         try {
             account = completedTask.getResult(ApiException::class.java)!!
             account.email.let {
@@ -379,86 +401,114 @@ class MainActivity : FragmentActivity(), View.OnClickListener {
         } catch (e: ApiException) {
             Toast.makeText(this, "Error in google sign in, Please try again !", Toast.LENGTH_SHORT).show()
         }
+    }*/
+
+    private fun handleSignInResult(data: Intent?) {
+        try {
+            GoogleSignIn.getSignedInAccountFromIntent(data)
+                .addOnCompleteListener {
+                    if (it.isSuccessful) {
+                        println("xxxxxxxxxxxxx " + it.result?.email)
+                        it.result?.email?.let { it1 -> checkUser(it1) }
+                    } else {
+                        Toast.makeText(
+                            this,
+                            "Error in google sign in, Please try again !",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                }
+
+        } catch (e: ApiException) {
+            Toast.makeText(this, "Error in google sign in, Please try again !", Toast.LENGTH_SHORT)
+                .show()
+        }
     }
 
-   private fun checkUser(email: String){
+    private fun checkUser(email: String) {
 
-       viewmodel.checkCustomer(email).observe(this, Observer {
-           when (it) {
-               is FastBuyResult.Success -> {
-                   if(it.data.isNullOrEmpty()){
-                       addCustomer()
-                   }else{
-                       cl_main.visibility = View.GONE
+        viewmodel.checkCustomer(email).observe(this, Observer {
+            when (it) {
+                is FastBuyResult.Success -> {
 
-                       var _user =it.data.first()
+                    if (it.data.isEmpty()) {
+                        addCustomer()
+                    } else {
+                        cl_main.visibility = View.GONE
 
-                       var values = _user.meta_data[8].value
-                       var jsonVlau =  Gson().toJson(values)
+                        var _user = it.data.first()
 
-                       val moshi = Moshi.Builder().build()
-                       val adapter = moshi.adapter<Map<String, Any>>(
-                           Types.newParameterizedType(Map::class.java, String::class.java,
-                               Object::class.java)
-                       )
-                       val yourMap =  adapter.fromJson(jsonVlau)
-                       val identifier = yourMap?.get("identifier").toString()
+                        var values = _user.meta_data[8].value
+                        var jsonVlau = Gson().toJson(values)
 
-                       if(socialMediaLoginType == "G"){
-                           _user.google_id =identifier
-                       }else {
-                           _user.facebook_id =identifier
-                       }
+                        val moshi = Moshi.Builder().build()
+                        val adapter = moshi.adapter<Map<String, Any>>(
+                            Types.newParameterizedType(
+                                Map::class.java, String::class.java,
+                                Object::class.java
+                            )
+                        )
+                        val yourMap = adapter.fromJson(jsonVlau)
+                        val identifier = yourMap?.get("identifier").toString()
 
-
-
-                       appPrefs.setUserPrefs(_user)
-
-                       viewmodel.googleSign.value = _user
-                       viewmodel.googleSignTest.value = 5
-
-                   }
-               }
-               is FastBuyResult.ExceptionError.ExError -> {
-                   cl_main.visibility = View.GONE
-                   errorAlertDialog("Error", it.exception.toString())
-               }
-               is FastBuyResult.LogicalError.LogError -> {
-                   cl_main.visibility = View.GONE
-                   errorAlertDialog("Error", it.exception.toString())
-               }
-
-           }
-
-       })
-
-   }
+                        if (socialMediaLoginType == "G") {
+                            _user.google_id = identifier
+                        } else {
+                            _user.facebook_id = identifier
+                        }
 
 
-    private fun addCustomer(){
+
+                        appPrefs.setUserPrefs(_user)
+
+                         viewmodel.googleSign.value = _user
+                         viewmodel.googleSignTest.value = 5
+                    }
+
+                }
+                is FastBuyResult.ExceptionError.ExError -> {
+                    cl_main.visibility = View.GONE
+                    errorAlertDialog("Error", it.exception.toString())
+                }
+                is FastBuyResult.LogicalError.LogError -> {
+                    cl_main.visibility = View.GONE
+                    errorAlertDialog("Error", it.exception.toString())
+                }
+
+            }
+
+        })
+
+    }
+
+
+    private fun addCustomer() {
         var userDetails = appPrefs.getUserPrefs()
-        if(socialMediaLoginType == "G"){
+        if (socialMediaLoginType == "G") {
             userDetails.email = account.email
             userDetails.first_name = account.givenName
             userDetails.last_name = account.familyName
-            userDetails.google_id =  account.id
-            if(account.photoUrl != null){ userDetails.picture = account.photoUrl.toString() }
-        }else{
-            userDetails.email =facebookObject.getString("email")
+            userDetails.google_id = account.id
+            if (account.photoUrl != null) {
+                userDetails.picture = account.photoUrl.toString()
+            }
+        } else {
+            userDetails.email = facebookObject.getString("email")
             userDetails.first_name = facebookObject.getString("first_name")
             userDetails.last_name = facebookObject.getString("last_name")
-            userDetails.facebook_id =  facebookObject.getString("id")
-            userDetails.picture = "https://graph.facebook.com/" + facebookObject.getString("id") + "/picture?width=200&height=150"
+            userDetails.facebook_id = facebookObject.getString("id")
+            userDetails.picture =
+                "https://graph.facebook.com/" + facebookObject.getString("id") + "/picture?width=200&height=150"
         }
         viewmodel.addCustomer(userDetails).observe(this, Observer {
             when (it) {
                 is FastBuyResult.Success -> {
                     cl_main.visibility = View.GONE
-                    var _user =it.data
+                    var _user = it.data
 
-                    if(socialMediaLoginType == "G"){
+                    if (socialMediaLoginType == "G") {
                         _user.google_id = account.id
-                    }else{
+                    } else {
                         _user.facebook_id = facebookObject.getString("id")
                     }
                     appPrefs.setUserPrefs(_user)
@@ -480,9 +530,9 @@ class MainActivity : FragmentActivity(), View.OnClickListener {
     }
 
 
-    private fun errorAlertDialog(title: String,message: String){
-        val alertInfoDialog : AlertDialog = this?.let {
-            val alertInfobuilder:AlertDialog.Builder = AlertDialog.Builder(it)
+    private fun errorAlertDialog(title: String, message: String) {
+        val alertInfoDialog: AlertDialog = this?.let {
+            val alertInfobuilder: AlertDialog.Builder = AlertDialog.Builder(it)
             alertInfobuilder.apply {
                 setPositiveButton("OK",
                     DialogInterface.OnClickListener { dialog, id ->
@@ -550,41 +600,41 @@ class MainActivity : FragmentActivity(), View.OnClickListener {
         window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN)
     }
 
-     fun payhereCall(order: PastOrder){
-         val req = InitRequest()
-         req.merchantId = "214383"
-         req.merchantSecret ="MS42dmRoNWhqNWp5"
-         req.currency = "LKR"
-         req.amount = order.total.toDouble()
-         req.orderId = order.id.toString()
+    fun payhereCall(order: PastOrder) {
+        val req = InitRequest()
+        req.merchantId = "214383"
+        req.merchantSecret = "MS42dmRoNWhqNWp6"
+        req.currency = "LKR"
+        req.amount = order.total.toDouble()
+        req.orderId = order.id.toString()
 
-         var itemsDescription =""
-         for(item in order.line_items){
-             itemsDescription=itemsDescription+item.name+"_"
-             req.items.add(Item(null, item.name, item.quantity, item.total.toDouble()))
-         }
-         req.itemsDescription = itemsDescription
+        var itemsDescription = ""
+        for (item in order.line_items) {
+            itemsDescription = itemsDescription + item.name + "_"
+            req.items.add(Item(null, item.name, item.quantity, item.total.toDouble()))
+        }
+        req.itemsDescription = itemsDescription
 
-         req.custom1 = order.customer_note
-         req.customer.firstName = order.billing.first_name
-         req.customer.lastName = order.billing.last_name
-         req.customer.email = order.billing.email
-         req.customer.phone = order.billing.phone
-         req.customer.address.address = order.billing.address_1+" "+order.billing.address_2
-         req.customer.address.city = order.billing.city
-         req.customer.address.country = "Sri Lanka"
+        req.custom1 = order.customer_note
+        req.customer.firstName = order.billing.first_name
+        req.customer.lastName = order.billing.last_name
+        req.customer.email = order.billing.email
+        req.customer.phone = order.billing.phone
+        req.customer.address.address = order.billing.address_1 + " " + order.billing.address_2
+        req.customer.address.city = order.billing.city
+        req.customer.address.country = "Sri Lanka"
 
-         req.customer.deliveryAddress.address = order.shipping.address_1+" "+order.shipping.address_2
-         req.customer.deliveryAddress.city = order.shipping.address_1+" "+order.shipping.address_2
-         req.customer.deliveryAddress.country = "Sri Lanka"
+        req.customer.deliveryAddress.address =
+            order.shipping.address_1 + " " + order.shipping.address_2
+        req.customer.deliveryAddress.city =
+            order.shipping.address_1 + " " + order.shipping.address_2
+        req.customer.deliveryAddress.country = "Sri Lanka"
 
 
-
-
-         val intent = Intent(this, PHMainActivity::class.java)
-         intent.putExtra(PHConstants.INTENT_EXTRA_DATA, req)
-         PHConfigs.setBaseUrl(PHConfigs.SANDBOX_URL)
-         startActivityForResult(intent, PAYHERE_REQUEST)
+        val intent = Intent(this, PHMainActivity::class.java)
+        intent.putExtra(PHConstants.INTENT_EXTRA_DATA, req)
+        PHConfigs.setBaseUrl(PHConfigs.SANDBOX_URL)
+        startActivityForResult(intent, PAYHERE_REQUEST)
 
     }
 

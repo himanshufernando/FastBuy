@@ -143,7 +143,7 @@
         android:layout_height="0dp"
         android:paddingStart="5dp"
         android:paddingEnd="15dp"
-        android:src="@mipmap/ic_navigation_drawer"
+        android:src="@mipmap/ic_main_back"
         app:layout_constraintBottom_toBottomOf="@+id/constraintLayout5"
         app:layout_constraintStart_toStartOf="@+id/constraintLayout5"
         app:layout_constraintTop_toTopOf="@+id/constraintLayout5" />

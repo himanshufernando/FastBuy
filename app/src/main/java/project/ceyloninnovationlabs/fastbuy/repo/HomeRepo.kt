@@ -341,6 +341,8 @@ class HomeRepo(private var client: APIInterface) {
 
     suspend fun newOrder(order: PastOrder): PastOrder {
 
+
+
         if (!order.isAgreedToTerms) {
             order.errorMessage =
                 "Please read and accept the terms and conditions to proceed with your order."
@@ -444,7 +446,9 @@ class HomeRepo(private var client: APIInterface) {
             return order
         }
 
+        println("xxxxxxxxxxx 01    "+order.paymentType)
         if (order.paymentType.isNullOrEmpty()) {
+            println("xxxxxxxxxxx 02   "+order.paymentType)
             order.errorMessage = "Select the payment type "
             order.errorStatus = true
             return order

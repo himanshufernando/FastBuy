@@ -523,7 +523,7 @@ class CheckOutFragment : Fragment(), View.OnClickListener {
             city = edt_city.text.toString()
             postcode = edt_pcode.text.toString()
             email = edt_email.text.toString()
-            phone = edt_phone.text.toString()
+            phone = edt_phone.text.toString().trim()
         }
 
         order.billing = _billing
@@ -537,7 +537,7 @@ class CheckOutFragment : Fragment(), View.OnClickListener {
                 address_1 = edt_house_number_shipping.text.toString()
                 address_2 = edt_apartment_shipping.text.toString()
                 city = edt_city_shipping.text.toString()
-                postcode = edt_pcode_shipping.text.toString()
+                postcode = edt_pcode_shipping.text.toString().trim()
             }
         } else {
             _shipping = Shipping().apply {
@@ -548,8 +548,8 @@ class CheckOutFragment : Fragment(), View.OnClickListener {
                 address_1 = edt_house_number.text.toString()
                 address_2 = edt_apartment.text.toString()
                 city = edt_city.text.toString()
-                postcode = edt_pcode.text.toString()
-                phone = edt_phone.text.toString()
+                postcode = edt_pcode.text.toString().trim()
+                phone = edt_phone.text.toString().trim()
             }
         }
 

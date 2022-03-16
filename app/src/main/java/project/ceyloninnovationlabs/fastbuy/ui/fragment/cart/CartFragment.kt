@@ -112,7 +112,11 @@ class CartFragment : Fragment(), View.OnClickListener {
                 .navigate(R.id.fragment_cart_to_account)
             R.id.btn_proceed -> {
                 var cart = appPrefs.getCartItemPrefs()
-                if (cart.product.isEmpty()) {
+                var cartQuntity = 0
+                for (item in cart.product) {
+                    cartQuntity += item.quantity
+                }
+                if (cart.product.isEmpty() || cartQuntity == 0) {
                     Toast.makeText(requireContext(), "Your cart is empty ", Toast.LENGTH_SHORT)
                         .show()
                 } else {

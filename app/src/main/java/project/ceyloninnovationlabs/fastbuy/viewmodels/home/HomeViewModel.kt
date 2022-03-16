@@ -116,7 +116,6 @@ constructor( private val homeRepo: HomeRepo) : ViewModel() {
     fun checkCustomer(email: String) = liveData(Dispatchers.IO) {
         try {
             var respons = homeRepo.checkCustomer(email)
-
             emit(FastBuyResult.Success(respons))
         } catch (exception: Exception) {
             emit(FastBuyResult.ExceptionError.ExError(exception))

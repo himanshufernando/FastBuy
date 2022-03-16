@@ -125,7 +125,7 @@ class AccountFragment : Fragment(), View.OnClickListener {
             R.id.ic_search -> searchProducts()
             R.id.cl_google -> mainActivity.googleSignIn()
             R.id.btn_update -> update()
-            R.id.img_navigation -> mainActivity.openDrawer()
+            R.id.img_navigation -> mainActivity.onBackPressed()
             R.id.cl_account_cart -> goToCart()
             R.id.cl_facebook -> mainActivity.facebooklogin()
         }

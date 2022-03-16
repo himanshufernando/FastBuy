@@ -1,8 +1,6 @@
 package project.ceyloninnovationlabs.fastbuy.ui.fragment.productdetails
 
 import android.app.Activity
-import android.app.AlertDialog
-import android.content.DialogInterface
 import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.os.SystemClock
@@ -39,6 +37,7 @@ import kotlinx.android.synthetic.main.fragment_product_details.appCompatImageVie
 import kotlinx.android.synthetic.main.fragment_product_details.edit_text_product_search
 import kotlinx.android.synthetic.main.fragment_product_details.ic_search
 import kotlinx.android.synthetic.main.fragment_product_details.img_account
+import kotlinx.android.synthetic.main.fragment_product_details.img_navigation
 import kotlinx.android.synthetic.main.fragment_product_details.txt_cart_count
 import project.ceyloninnovationlabs.fastbuy.services.perfrences.AppPrefs
 
@@ -95,7 +94,7 @@ class ProductDetailsFragment : Fragment(), View.OnClickListener {
         cl_details_cart.setOnClickListener(this)
         ic_search.setOnClickListener(this)
         img_account.setOnClickListener(this)
-
+        img_navigation.setOnClickListener(this)
 
         initProductData()
         mainActivity.unLockDrawer()
@@ -120,9 +119,8 @@ class ProductDetailsFragment : Fragment(), View.OnClickListener {
 
 
     override fun onClick(v: View) {
-        if ((SystemClock.elapsedRealtime() - mLastClickTime < 1500)) { return }
-        mLastClickTime = SystemClock.elapsedRealtime()
         when (v.id) {
+            R.id.img_navigation ->mainActivity.openDrawer()
             R.id.btn_home_addtocart -> addToCart()
             R.id.cl_details_cart -> goToCart()
             R.id.ic_search -> searchProducts()
@@ -171,6 +169,10 @@ class ProductDetailsFragment : Fragment(), View.OnClickListener {
             return
         }
 
+        if(selectedProduct.quantity == 0){
+            Toast.makeText(requireContext(), "Please add quantity !!", Toast.LENGTH_SHORT).show()
+            return
+        }
 
         if(cart.product.isEmpty()){
             cart.product.add(selectedProduct)
@@ -218,9 +220,20 @@ class ProductDetailsFragment : Fragment(), View.OnClickListener {
     private fun initItemQtyTextChangeListener() {
         edit_text_item_qty.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
+
+                if(s.isNullOrEmpty()){
+                    return
+                }
+
                 var count = 1
                 try {
                     count = s.toString().toInt()
+                    if(selectedProduct.stock_quantity<count){
+                        count = selectedProduct.stock_quantity
+                        edit_text_item_qty.setText(selectedProduct.stock_quantity.toString())
+                        Toast.makeText(requireContext(), "Available stoke is "+selectedProduct.stock_quantity, Toast.LENGTH_SHORT).show()
+                    }
+
                     txt_cart_item.text = count.toString() + " " + selectedProduct.name
 
                 } catch (ex: NumberFormatException) {
@@ -234,7 +247,6 @@ class ProductDetailsFragment : Fragment(), View.OnClickListener {
 
                 selectedProduct.quantity = count
                 txt_sub_total.text = "Subtotal Rs." + viewmodel.itemValue.value.toString() + ".00"
-
 
             }
 
