@@ -151,7 +151,8 @@ dependencies {
     kapt("com.squareup.moshi:moshi-kotlin-codegen:1.9.2")
 
 
+    implementation 'com.facebook.android:facebook-login:latest.release'
 
-    implementation 'com.facebook.android:facebook-login:5.15.3'
+   // implementation 'com.facebook.android:facebook-login:5.15.3'
 
 }

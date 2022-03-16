@@ -446,7 +446,7 @@ class HomeRepo(private var client: APIInterface) {
             return order
         }
 
-        println("xxxxxxxxxxx 01    "+order.paymentType)
+
         if (order.paymentType.isNullOrEmpty()) {
             println("xxxxxxxxxxx 02   "+order.paymentType)
             order.errorMessage = "Select the payment type "
@@ -667,11 +667,7 @@ class HomeRepo(private var client: APIInterface) {
 
         Log.i("HOME_REPO",orderJson.toString())
 
-        order.id = 4545
-
-        return order
-
-     //   return client.addOrder(orderInfo = orderJson)
+        return client.addOrder(orderInfo = orderJson)
 
     }
 

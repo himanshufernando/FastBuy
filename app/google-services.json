@@ -1,4 +1,4 @@
-{
+ {
   "project_info": {
     "project_number": "678484600111",
     "project_id": "fastbuyapp-7ca83",
@@ -19,6 +19,14 @@
           "android_info": {
             "package_name": "project.ceyloninnovationlabs.fastbuy",
             "certificate_hash": "b001e90a6b794b0197e5d61329365efc0bef2cee"
+          }
+        },
+        {
+          "client_id": "678484600111-hvlrstpd5qagnkaftf3s8n3cgag9b6q2.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "project.ceyloninnovationlabs.fastbuy",
+            "certificate_hash": "26c1a55d7fd3f5156d3d33714b9ad9a3a8d73fdf"
           }
         },
         {

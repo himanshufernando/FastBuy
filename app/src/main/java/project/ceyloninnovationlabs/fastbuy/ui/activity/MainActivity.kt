@@ -102,7 +102,6 @@ class MainActivity : FragmentActivity(), View.OnClickListener {
     lateinit var account: GoogleSignInAccount
 
     lateinit var callbackManager: CallbackManager
-    lateinit var loginManager: LoginManager
     lateinit var facebookObject: JSONObject
 
     lateinit var socialMediaLoginType: String
@@ -158,6 +157,7 @@ class MainActivity : FragmentActivity(), View.OnClickListener {
                 md.update(signature.toByteArray())
                 val hashKey: String = String(android.util.Base64.encode(md.digest(), 0))
 
+                println("qqqqqqqqqqqqqq : "+hashKey)
             }
         } catch (e: PackageManager.NameNotFoundException) {
             Log.d("Name not found", e.message, e)
@@ -182,19 +182,17 @@ class MainActivity : FragmentActivity(), View.OnClickListener {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         callbackManager.onActivityResult(requestCode, resultCode, data)
         super.onActivityResult(requestCode, resultCode, data)
-        println("qqqqqqqqqqqqqq response 1: " )
         when (requestCode) {
             RC_SIGN_IN -> {
                 handleSignInResult(data)
             }
             PAYHERE_REQUEST -> {
-                println("qqqqqqqqqqqqqq response 2: " )
                 if ((data!!.hasExtra(PHConstants.INTENT_EXTRA_RESULT)) && (data != null)) {
                     val response = data.getSerializableExtra(PHConstants.INTENT_EXTRA_RESULT) as PHResponse<StatusResponse>
                     println("qqqqqqqqqqqqqq response : " + response)
                     println("qqqqqqqqqqqqqq resultCode : " + resultCode)
 
-                    /*if (resultCode == Activity.RESULT_OK) {
+                    if (resultCode == Activity.RESULT_OK) {
                         if (response != null) {
                             if (response.isSuccess) {
                                 Toast.makeText(this, "Done", Toast.LENGTH_SHORT).show()
@@ -221,9 +219,7 @@ class MainActivity : FragmentActivity(), View.OnClickListener {
                             )
                         }
 
-                    }*/
-
-
+                    }
                 } else {
                     errorAlertDialog("Error", "Payment request not complete,Please try again !!")
                     //not done correctly
@@ -289,53 +285,32 @@ class MainActivity : FragmentActivity(), View.OnClickListener {
     fun initFacebookSDK() {
         //facebook sdk login callback register
         callbackManager = CallbackManager.Factory.create()
-        loginManager = LoginManager.getInstance()
-        loginManager.registerCallback(callbackManager, object : FacebookCallback<LoginResult> {
-            override fun onSuccess(loginResult: LoginResult?) {
-
-                val accessToken: AccessToken = loginResult!!.accessToken
-                performLogin(accessToken)
-
-
-            }
-
+        LoginManager.getInstance().registerCallback(callbackManager, object : FacebookCallback<LoginResult> {
             override fun onCancel() {
-                Toast.makeText(
-                    applicationContext,
-                    getString(R.string.facebook_login_cancel),
-                    Toast.LENGTH_LONG
-                ).show()
+                Toast.makeText(this@MainActivity, getString(R.string.facebook_login_cancel), Toast.LENGTH_LONG).show()
             }
 
             override fun onError(error: FacebookException) {
                 when (error.cause) {
-                    is HttpException -> Toast.makeText(
-                        applicationContext,
-                        getString(R.string.network_failed),
-                        Toast.LENGTH_LONG
-                    ).show()
-                    is SocketTimeoutException -> Toast.makeText(
-                        applicationContext,
-                        getString(R.string.timeout),
-                        Toast.LENGTH_LONG
-                    ).show()
-                    else -> Toast.makeText(
-                        applicationContext,
-                        getString(R.string.something_went_wrong),
-                        Toast.LENGTH_LONG
-                    ).show()
-
+                    is HttpException -> Toast.makeText(this@MainActivity, getString(R.string.network_failed), Toast.LENGTH_LONG).show()
+                    is SocketTimeoutException -> Toast.makeText(this@MainActivity, getString(R.string.timeout), Toast.LENGTH_LONG).show()
+                    else -> Toast.makeText(this@MainActivity, getString(R.string.something_went_wrong), Toast.LENGTH_LONG).show()
                 }
-
+            }
+            override fun onSuccess(result: LoginResult) {
+                val accessToken: AccessToken = result!!.accessToken
+                performLogin(accessToken)
             }
         })
+
     }
+
 
 
     private fun performLogin(accessToken: AccessToken) {
         val request = GraphRequest.newMeRequest(accessToken) { `object`, response ->
 
-            facebookObject = `object`
+            facebookObject = `object`!!
 
             if (`object`.has("email")) {
                 var email = `object`.getString("email")
@@ -364,7 +339,7 @@ class MainActivity : FragmentActivity(), View.OnClickListener {
 
 
     fun facebooklogin() {
-        loginManager.logInWithReadPermissions(this, listOf("email"))
+        LoginManager.getInstance().logInWithReadPermissions(this, Arrays.asList("public_profile"));
         socialMediaLoginType = "F"
     }
 
@@ -408,7 +383,6 @@ class MainActivity : FragmentActivity(), View.OnClickListener {
             GoogleSignIn.getSignedInAccountFromIntent(data)
                 .addOnCompleteListener {
                     if (it.isSuccessful) {
-                        println("xxxxxxxxxxxxx " + it.result?.email)
                         it.result?.email?.let { it1 -> checkUser(it1) }
                     } else {
                         Toast.makeText(
@@ -603,7 +577,7 @@ class MainActivity : FragmentActivity(), View.OnClickListener {
     fun payhereCall(order: PastOrder) {
         val req = InitRequest()
         req.merchantId = "214383"
-        req.merchantSecret = "MS42dmRoNWhqNWp6"
+        req.merchantSecret = "MS55bnNuZ2tqOWJh"
         req.currency = "LKR"
         req.amount = order.total.toDouble()
         req.orderId = order.id.toString()
