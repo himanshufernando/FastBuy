@@ -341,7 +341,10 @@ class CheckOutFragment : Fragment(), View.OnClickListener {
         edt_apartment.setText(_user.billing.address_2)
         edt_city.setText(_user.billing.city)
         edt_pcode.setText(_user.billing.postcode)
-        edt_phone.setText(_user.billing.phone)
+
+        if (validatePhoneNumber(_user.billing.phone)) {
+            edt_phone.setText(_user.billing.phone)
+        }
 
 
     }
@@ -386,7 +389,10 @@ class CheckOutFragment : Fragment(), View.OnClickListener {
             }
 
             if (edt_phone.text.toString().isNullOrEmpty()) {
-                edt_phone.setText(_user.billing.postcode)
+                if (validatePhoneNumber(_user.billing.phone)) {
+                    edt_phone.setText(_user.billing.phone)
+                }
+
             }
 
             if (shipToDifferent) {
@@ -693,7 +699,15 @@ class CheckOutFragment : Fragment(), View.OnClickListener {
 
     }
 
+    fun validatePhoneNumber(phone: String): Boolean {
+        if (phone.length != 10) {
+            return false
+        }
 
+        return phone.matches("-?\\d+(\\.\\d+)?".toRegex())
+
+
+    }
 
 }
 

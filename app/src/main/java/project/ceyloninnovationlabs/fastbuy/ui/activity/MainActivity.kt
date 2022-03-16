@@ -85,6 +85,7 @@ import lk.payhere.androidsdk.PHResponse
 import android.R.attr.data
 import android.net.Uri
 import androidx.activity.result.ActivityResult
+import androidx.activity.result.ActivityResultRegistryOwner
 import androidx.activity.result.contract.ActivityResultContracts
 
 
@@ -101,7 +102,7 @@ class MainActivity : FragmentActivity(), View.OnClickListener {
     lateinit var mGoogleSignInClient: GoogleSignInClient
     lateinit var account: GoogleSignInAccount
 
-    lateinit var callbackManager: CallbackManager
+
     lateinit var facebookObject: JSONObject
 
     lateinit var socialMediaLoginType: String
@@ -142,28 +143,8 @@ class MainActivity : FragmentActivity(), View.OnClickListener {
             .build()
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso)
 
-        LoginManager.getInstance().logOut()
+
         initFacebookSDK()
-
-
-        try {
-            val info = packageManager.getPackageInfo(
-                applicationContext.packageName,
-                PackageManager.GET_SIGNATURES
-            )
-
-            for (signature in info.signatures) {
-                val md = MessageDigest.getInstance("SHA")
-                md.update(signature.toByteArray())
-                val hashKey: String = String(android.util.Base64.encode(md.digest(), 0))
-
-                println("qqqqqqqqqqqqqq : "+hashKey)
-            }
-        } catch (e: PackageManager.NameNotFoundException) {
-            Log.d("Name not found", e.message, e)
-        } catch (e: NoSuchAlgorithmException) {
-            Log.d("Error", e.message, e)
-        }
 
 
     }
@@ -180,7 +161,6 @@ class MainActivity : FragmentActivity(), View.OnClickListener {
 
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        callbackManager.onActivityResult(requestCode, resultCode, data)
         super.onActivityResult(requestCode, resultCode, data)
         when (requestCode) {
             RC_SIGN_IN -> {
@@ -284,7 +264,7 @@ class MainActivity : FragmentActivity(), View.OnClickListener {
 
     fun initFacebookSDK() {
         //facebook sdk login callback register
-        callbackManager = CallbackManager.Factory.create()
+/*        callbackManager = CallbackManager.Factory.create()
         LoginManager.getInstance().registerCallback(callbackManager, object : FacebookCallback<LoginResult> {
             override fun onCancel() {
                 Toast.makeText(this@MainActivity, getString(R.string.facebook_login_cancel), Toast.LENGTH_LONG).show()
@@ -301,7 +281,7 @@ class MainActivity : FragmentActivity(), View.OnClickListener {
                 val accessToken: AccessToken = result!!.accessToken
                 performLogin(accessToken)
             }
-        })
+        })*/
 
     }
 
@@ -339,7 +319,28 @@ class MainActivity : FragmentActivity(), View.OnClickListener {
 
 
     fun facebooklogin() {
-        LoginManager.getInstance().logInWithReadPermissions(this, Arrays.asList("public_profile"));
+        val callbackManager = CallbackManager.Factory.create()
+            val loginManager = LoginManager.getInstance()
+            loginManager.registerCallback(
+                callbackManager,
+                object : FacebookCallback<LoginResult> {
+                    override fun onCancel() {
+                        Toast.makeText(this@MainActivity, "Login canceled!", Toast.LENGTH_LONG).show()
+                    }
+
+                    override fun onError(error: FacebookException) {
+                        Log.e("Login", error.message ?: "Unknown error")
+                        Toast.makeText(this@MainActivity, "Login failed with errors!", Toast.LENGTH_LONG).show()
+                    }
+
+                    override fun onSuccess(result: LoginResult) {
+                        Toast.makeText(this@MainActivity, "Login succeed!", Toast.LENGTH_LONG).show()
+                        val accessToken: AccessToken = result!!.accessToken
+                        performLogin(accessToken)
+                    }
+                })
+            LoginManager.getInstance().logIn(this@MainActivity, callbackManager, listOf("email"))
+
         socialMediaLoginType = "F"
     }
 
@@ -365,18 +366,6 @@ class MainActivity : FragmentActivity(), View.OnClickListener {
 
     }
 
-    /*private fun handleSignInResult(completedTask: Task<GoogleSignInAccount>) {
-        try {
-            account = completedTask.getResult(ApiException::class.java)!!
-            account.email.let {
-                cl_main.visibility = View.VISIBLE
-                checkUser(it)
-            }
-
-        } catch (e: ApiException) {
-            Toast.makeText(this, "Error in google sign in, Please try again !", Toast.LENGTH_SHORT).show()
-        }
-    }*/
 
     private fun handleSignInResult(data: Intent?) {
         try {
@@ -575,12 +564,15 @@ class MainActivity : FragmentActivity(), View.OnClickListener {
     }
 
     fun payhereCall(order: PastOrder) {
+
         val req = InitRequest()
         req.merchantId = "214383"
         req.merchantSecret = "MS55bnNuZ2tqOWJh"
         req.currency = "LKR"
         req.amount = order.total.toDouble()
         req.orderId = order.id.toString()
+
+
 
         var itemsDescription = ""
         for (item in order.line_items) {

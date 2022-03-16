@@ -363,11 +363,27 @@
                     app:layout_constraintTop_toBottomOf="@+id/txt8"
                     tools:visibility="visible" />
 
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/btn_order_more"
+                    style="@style/app_content_white_light_14"
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/bg_blue_border"
+                    android:gravity="center"
+                    android:text="Order more !"
+                    app:layout_constraintEnd_toEndOf="@+id/cl_item_qty"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintStart_toStartOf="@+id/cl_item_qty"
+                    app:layout_constraintTop_toBottomOf="@+id/btn_proceed"
+                    tools:visibility="visible" />
+
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="100dp"
-                    app:layout_constraintStart_toStartOf="@+id/btn_proceed"
-                    app:layout_constraintTop_toBottomOf="@+id/btn_proceed">
+                    app:layout_constraintStart_toStartOf="@+id/btn_order_more"
+                    app:layout_constraintTop_toBottomOf="@+id/btn_order_more">
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 

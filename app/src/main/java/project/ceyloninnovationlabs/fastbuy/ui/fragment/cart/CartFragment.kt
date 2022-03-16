@@ -70,6 +70,7 @@ class CartFragment : Fragment(), View.OnClickListener {
         img_account.setOnClickListener(this)
         btn_proceed.setOnClickListener(this)
         img_navigation.setOnClickListener(this)
+        btn_order_more.setOnClickListener(this)
 
 
         initProductCartRecyclerView()
@@ -94,6 +95,7 @@ class CartFragment : Fragment(), View.OnClickListener {
         }
         mLastClickTime = SystemClock.elapsedRealtime()
         when (v.id) {
+            R.id.btn_order_more ->NavHostFragment.findNavController(requireParentFragment()).navigate(R.id.fragment_cart_to_home)
             R.id.img_navigation ->mainActivity.openDrawer()
             R.id.btn_apply_coupon -> {
                 mainActivity.hideKeyboard()
