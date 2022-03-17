@@ -333,7 +333,7 @@ class HomeRepo(private var client: APIInterface) {
 
         orderJson.add("meta_data", meteDataJsonArr)
 
-
+        println("xxxxxxxxxxxxxxxxxxxxxxxxxxxx 05 :  "+orderJson)
         return client.addCustomer(orderInfo = orderJson)
 
     }

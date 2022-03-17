@@ -215,7 +215,15 @@
                     app:layout_constraintTop_toTopOf="@+id/img_about" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
-
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/txt_app_version"
+                style="@style/app_content_gry_light_14"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Version 1.0.1"
+                android:layout_marginTop="20dp"
+                android:layout_gravity="bottom|center_horizontal"
+                />
 
         </androidx.appcompat.widget.LinearLayoutCompat>
 

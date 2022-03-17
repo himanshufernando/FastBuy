@@ -199,16 +199,93 @@
 
 
                 <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/cl_coupon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_item_cart_coupon"
+                    android:layout_marginTop="20dp"
+                    app:layout_constraintStart_toStartOf="@+id/txt_coupon_"
+                    app:layout_constraintTop_toBottomOf="@+id/recyclerView_cart_items">
+
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/txt_coupon_1"
+                        style="@style/app_content_gry_light_14"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginEnd="10dp"
+                        android:text="Rs.50.00 Cart Discount"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/txt_coupon_2"
+                        style="@style/app_content_gry_medium_14"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginEnd="10dp"
+                        android:text="all100"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/txt_coupon_1" />
+
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/txt_coupon_3"
+                        style="@style/app_content_gry_light_12"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginEnd="10dp"
+                        android:text="Every Orders"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/txt_coupon_2" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/txt_coupon_4"
+                        style="@style/app_content_gry_light_14"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginEnd="10dp"
+                        android:layout_marginBottom="10dp"
+                        android:text="Never Expires"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/txt_coupon_3" />
+
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/txt_coupon_"
+                    style="@style/app_content_gry_medium_14"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="Enter your coupon code"
+                    android:layout_marginTop="20dp"
+                    app:layout_constraintStart_toStartOf="@+id/cl_item_qty"
+                    app:layout_constraintTop_toBottomOf="@+id/cl_coupon" />
+
+                <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/cl_item_qty"
                     android:layout_width="match_parent"
                     android:layout_height="35dp"
                     android:layout_marginStart="25dp"
-                    android:layout_marginTop="20dp"
                     android:layout_marginEnd="25dp"
+                    android:layout_marginTop="10dp"
                     android:background="@drawable/bg_empty_blue_border"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/recyclerView_cart_items" />
+                    app:layout_constraintTop_toBottomOf="@+id/txt_coupon_" />
 
                 <androidx.appcompat.widget.AppCompatEditText
                     android:id="@+id/edit_text_coupan"

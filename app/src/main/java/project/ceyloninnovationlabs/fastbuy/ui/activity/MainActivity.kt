@@ -87,6 +87,8 @@ import android.net.Uri
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultRegistryOwner
 import androidx.activity.result.contract.ActivityResultContracts
+import project.ceyloninnovationlabs.fastbuy.FastBuy
+import project.ceyloninnovationlabs.fastbuy.services.listeners.OnBackListener
 
 
 @AndroidEntryPoint
@@ -101,7 +103,7 @@ class MainActivity : FragmentActivity(), View.OnClickListener {
 
     lateinit var mGoogleSignInClient: GoogleSignInClient
     lateinit var account: GoogleSignInAccount
-
+    lateinit var onBackListener: OnBackListener
 
     lateinit var facebookObject: JSONObject
 
@@ -159,6 +161,19 @@ class MainActivity : FragmentActivity(), View.OnClickListener {
         super.onStop()
     }
 
+    override fun onBackPressed() {
+        var nav = navController.currentDestination
+        when {
+            nav?.label?.equals("LastOrder")!! -> {
+                onBackListener = FastBuy.getOnBackResponseListener()!!
+                onBackListener.onBackListenerResponse(1)
+            }
+            else -> super.onBackPressed()
+
+        }
+
+
+    }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
@@ -369,11 +384,17 @@ class MainActivity : FragmentActivity(), View.OnClickListener {
 
     private fun handleSignInResult(data: Intent?) {
         try {
+            cl_main.visibility = View.VISIBLE
             GoogleSignIn.getSignedInAccountFromIntent(data)
-                .addOnCompleteListener {
+                .addOnCompleteListener { it ->
                     if (it.isSuccessful) {
-                        it.result?.email?.let { it1 -> checkUser(it1) }
+                        it.result?.let {
+                            account = it
+                            checkUser(it.email)
+                        }
+
                     } else {
+                        cl_main.visibility = View.GONE
                         Toast.makeText(
                             this,
                             "Error in google sign in, Please try again !",
@@ -383,6 +404,7 @@ class MainActivity : FragmentActivity(), View.OnClickListener {
                 }
 
         } catch (e: ApiException) {
+            cl_main.visibility = View.GONE
             Toast.makeText(this, "Error in google sign in, Please try again !", Toast.LENGTH_SHORT)
                 .show()
         }
@@ -390,42 +412,27 @@ class MainActivity : FragmentActivity(), View.OnClickListener {
 
     private fun checkUser(email: String) {
 
+
         viewmodel.checkCustomer(email).observe(this, Observer {
             when (it) {
                 is FastBuyResult.Success -> {
-
                     if (it.data.isEmpty()) {
                         addCustomer()
                     } else {
-                        cl_main.visibility = View.GONE
-
                         var _user = it.data.first()
+                        var values = _user.meta_data
 
-                        var values = _user.meta_data[8].value
-                        var jsonVlau = Gson().toJson(values)
-
-                        val moshi = Moshi.Builder().build()
-                        val adapter = moshi.adapter<Map<String, Any>>(
-                            Types.newParameterizedType(
-                                Map::class.java, String::class.java,
-                                Object::class.java
-                            )
-                        )
-                        val yourMap = adapter.fromJson(jsonVlau)
-                        val identifier = yourMap?.get("identifier").toString()
-
-                        if (socialMediaLoginType == "G") {
-                            _user.google_id = identifier
-                        } else {
-                            _user.facebook_id = identifier
+                        for (item in values){
+                            if (socialMediaLoginType == "G") {
+                                if(item.key == "_wc_social_login_google_identifier"){ _user.google_id = item.value.toString() }
+                            } else {
+                                if(item.key == "_wc_social_login_facebook_identifier"){ _user.facebook_id = item.value.toString() }
+                            }
                         }
-
-
-
                         appPrefs.setUserPrefs(_user)
-
-                         viewmodel.googleSign.value = _user
-                         viewmodel.googleSignTest.value = 5
+                        viewmodel.googleSign.value = _user
+                        viewmodel.googleSignTest.value = 5
+                        cl_main.visibility = View.GONE
                     }
 
                 }
@@ -446,6 +453,7 @@ class MainActivity : FragmentActivity(), View.OnClickListener {
 
 
     private fun addCustomer() {
+
         var userDetails = appPrefs.getUserPrefs()
         if (socialMediaLoginType == "G") {
             userDetails.email = account.email
@@ -463,6 +471,7 @@ class MainActivity : FragmentActivity(), View.OnClickListener {
             userDetails.picture =
                 "https://graph.facebook.com/" + facebookObject.getString("id") + "/picture?width=200&height=150"
         }
+
         viewmodel.addCustomer(userDetails).observe(this, Observer {
             when (it) {
                 is FastBuyResult.Success -> {

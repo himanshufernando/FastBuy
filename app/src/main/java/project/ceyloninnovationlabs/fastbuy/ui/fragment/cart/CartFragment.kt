@@ -39,8 +39,6 @@ class CartFragment : Fragment(), View.OnClickListener {
     private var mLastClickTime: Long = 0
 
 
-
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -71,7 +69,7 @@ class CartFragment : Fragment(), View.OnClickListener {
         btn_proceed.setOnClickListener(this)
         img_navigation.setOnClickListener(this)
         btn_order_more.setOnClickListener(this)
-
+        cl_coupon.setOnClickListener(this)
 
         initProductCartRecyclerView()
         setCartInitData()
@@ -95,8 +93,10 @@ class CartFragment : Fragment(), View.OnClickListener {
         }
         mLastClickTime = SystemClock.elapsedRealtime()
         when (v.id) {
-            R.id.btn_order_more ->NavHostFragment.findNavController(requireParentFragment()).navigate(R.id.fragment_cart_to_home)
-            R.id.img_navigation ->mainActivity.openDrawer()
+            R.id.cl_coupon -> addDefultCoupon()
+            R.id.btn_order_more -> NavHostFragment.findNavController(requireParentFragment())
+                .navigate(R.id.fragment_cart_to_home)
+            R.id.img_navigation -> mainActivity.openDrawer()
             R.id.btn_apply_coupon -> {
                 mainActivity.hideKeyboard()
                 cl_cart_progress.visibility = View.VISIBLE
@@ -131,7 +131,30 @@ class CartFragment : Fragment(), View.OnClickListener {
     }
 
 
+    private fun addDefultCoupon() {
 
+        mainActivity.hideKeyboard()
+        var cart = appPrefs.getCartItemPrefs()
+        if(cart.coupon.code == txt_coupon_2.text.toString()){
+            val alertInfoDialog: AlertDialog = requireContext()?.let {
+                val alertInfobuilder: AlertDialog.Builder = AlertDialog.Builder(it)
+                alertInfobuilder.apply {
+                    setPositiveButton("OK",
+                        DialogInterface.OnClickListener { dialog, id ->
+                            // User clicked OK button
+                        })
+                }
+                alertInfobuilder?.setMessage("Coupon code allrady applied ")
+                    .setTitle("Coupon")
+                alertInfobuilder.create()
+            }
+            alertInfoDialog.show()
+        }else{
+            cl_cart_progress.visibility = View.VISIBLE
+            couponsValidate(txt_coupon_2.text.toString())
+        }
+
+    }
 
 
     private fun setupSearchBar() {
@@ -359,30 +382,32 @@ class CartFragment : Fragment(), View.OnClickListener {
                         appPrefs.setCartItemPrefs(cart)
 
 
-                       val alertInfoDialog : AlertDialog = requireContext()?.let {
-                           val alertInfobuilder:AlertDialog.Builder = AlertDialog.Builder(it)
+                        val alertInfoDialog: AlertDialog = requireContext()?.let {
+                            val alertInfobuilder: AlertDialog.Builder = AlertDialog.Builder(it)
                             alertInfobuilder.apply {
                                 setPositiveButton("OK",
                                     DialogInterface.OnClickListener { dialog, id ->
                                         // User clicked OK button
                                     })
                             }
-                            alertInfobuilder?.setMessage("Coupon code applied successfully").setTitle("Coupon")
+                            alertInfobuilder?.setMessage("Coupon code applied successfully")
+                                .setTitle("Coupon")
                             alertInfobuilder.create()
                         }
                         alertInfoDialog.show()
 
                         setCartInitData()
                     } else {
-                        val alertInfoDialog : AlertDialog = requireContext()?.let {
-                            val alertInfobuilder:AlertDialog.Builder = AlertDialog.Builder(it)
+                        val alertInfoDialog: AlertDialog = requireContext()?.let {
+                            val alertInfobuilder: AlertDialog.Builder = AlertDialog.Builder(it)
                             alertInfobuilder.apply {
                                 setPositiveButton("OK",
                                     DialogInterface.OnClickListener { dialog, id ->
                                         // User clicked OK button
                                     })
                             }
-                            alertInfobuilder?.setMessage("Sorry, this coupon is not applicable to selected product").setTitle("Coupon")
+                            alertInfobuilder?.setMessage("Sorry, this coupon is not applicable to selected product")
+                                .setTitle("Coupon")
                             alertInfobuilder.create()
                         }
                         alertInfoDialog.show()
@@ -393,8 +418,8 @@ class CartFragment : Fragment(), View.OnClickListener {
                 is FastBuyResult.ExceptionError.ExError -> {
                     cl_cart_progress.visibility = View.GONE
 
-                    val alertInfoDialog : AlertDialog = requireContext()?.let { alert ->
-                        val alertInfobuilder:AlertDialog.Builder = AlertDialog.Builder(alert)
+                    val alertInfoDialog: AlertDialog = requireContext()?.let { alert ->
+                        val alertInfobuilder: AlertDialog.Builder = AlertDialog.Builder(alert)
                         alertInfobuilder.apply {
                             setPositiveButton("OK",
                                 DialogInterface.OnClickListener { dialog, id ->
@@ -407,13 +432,12 @@ class CartFragment : Fragment(), View.OnClickListener {
                     alertInfoDialog.show()
 
 
-
                 }
                 is FastBuyResult.LogicalError.LogError -> {
                     cl_cart_progress.visibility = View.GONE
 
-                    val alertInfoDialog : AlertDialog = requireContext()?.let { alert ->
-                        val alertInfobuilder:AlertDialog.Builder = AlertDialog.Builder(alert)
+                    val alertInfoDialog: AlertDialog = requireContext()?.let { alert ->
+                        val alertInfobuilder: AlertDialog.Builder = AlertDialog.Builder(alert)
                         alertInfobuilder.apply {
                             setPositiveButton("OK",
                                 DialogInterface.OnClickListener { dialog, id ->

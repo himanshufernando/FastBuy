@@ -19,8 +19,9 @@ import project.ceyloninnovationlabs.fastbuy.viewmodels.home.HomeViewModel
 import androidx.lifecycle.Observer
 import kotlinx.android.synthetic.main.fragment_last_order.cl_facebook
 import kotlinx.android.synthetic.main.fragment_last_order.cl_google
+import project.ceyloninnovationlabs.fastbuy.services.listeners.OnBackListener
 
-class LastOrderFragment : Fragment(),View.OnClickListener {
+class LastOrderFragment : Fragment(),View.OnClickListener, OnBackListener {
 
 
     private val viewmodel: HomeViewModel by activityViewModels()
@@ -96,6 +97,12 @@ class LastOrderFragment : Fragment(),View.OnClickListener {
 
 
        }
+    }
+
+    override fun onBackListenerResponse(fragment: Int) {
+          if(fragment==1){
+              NavHostFragment.findNavController(requireParentFragment()).navigate(R.id.fragment_last_to_home)
+          }
     }
 
 
