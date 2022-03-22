@@ -72,6 +72,7 @@ interface APIInterface {
                                 @Query("customer") customer_id: Int): ArrayList<Orders>
 
 
-
+    @PUT("wp-json/wc/v3/orders/{id}")
+    suspend fun updateOrders(@Path("id") orderid: Int): PastOrder
 
 }

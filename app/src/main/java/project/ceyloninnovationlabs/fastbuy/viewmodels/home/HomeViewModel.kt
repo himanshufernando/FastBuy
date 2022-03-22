@@ -72,6 +72,11 @@ constructor( private val homeRepo: HomeRepo) : ViewModel() {
     }
 
 
+    val payherePaymentCallBack: MutableLiveData<Int> by lazy {
+        MutableLiveData<Int>()
+    }
+
+
     init {
         itemQty.value = 0
         itemValue.value = 0.0
@@ -158,6 +163,17 @@ constructor( private val homeRepo: HomeRepo) : ViewModel() {
         }
     }
 
+
+    fun updateOrder(orderid: Int,status : Int) = liveData(Dispatchers.IO) {
+        try {
+            var respons = homeRepo.updateOrder(orderid,status)
+            emit(FastBuyResult.Success(respons))
+        } catch (exception: Exception) {
+            emit(FastBuyResult.ExceptionError.ExError(exception))
+        } catch (un: UnknownHostException) {
+            emit(FastBuyResult.ExceptionError.ExError(un))
+        }
+    }
 
     fun getPages(pageid : Int) = liveData(Dispatchers.IO) {
         try {

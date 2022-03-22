@@ -20,6 +20,20 @@ import project.ceyloninnovationlabs.fastbuy.R
 import project.ceyloninnovationlabs.fastbuy.data.model.coupon.Coupon
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.NavHostFragment
+import kotlinx.android.synthetic.main.fragment_account.*
+import kotlinx.android.synthetic.main.fragment_check_out.cl_account
+import kotlinx.android.synthetic.main.fragment_check_out.cl_facebook
+import kotlinx.android.synthetic.main.fragment_check_out.cl_google
+import kotlinx.android.synthetic.main.fragment_check_out.edt_apartment_shipping
+import kotlinx.android.synthetic.main.fragment_check_out.edt_city_shipping
+import kotlinx.android.synthetic.main.fragment_check_out.edt_company_shipping
+import kotlinx.android.synthetic.main.fragment_check_out.edt_fname
+import kotlinx.android.synthetic.main.fragment_check_out.edt_fname_shipping
+import kotlinx.android.synthetic.main.fragment_check_out.edt_house_number_shipping
+import kotlinx.android.synthetic.main.fragment_check_out.edt_lname
+import kotlinx.android.synthetic.main.fragment_check_out.edt_lname_shipping
+import kotlinx.android.synthetic.main.fragment_check_out.edt_pcode_shipping
+import kotlinx.android.synthetic.main.fragment_check_out.img_navigation
 import project.ceyloninnovationlabs.fastbuy.data.model.FastBuyResult
 import project.ceyloninnovationlabs.fastbuy.data.model.user.User
 import project.ceyloninnovationlabs.fastbuy.data.model.orderoutput.Billing
@@ -563,21 +577,13 @@ class CheckOutFragment : Fragment(), View.OnClickListener {
         order.shippingType = shippingType
 
         cl_cart_progress.visibility = View.VISIBLE
-
-            viewmodel.newOrder(order).observe(viewLifecycleOwner, Observer {
+        viewmodel.newOrder(order).observe(viewLifecycleOwner, Observer {
                 when (it) {
                     is FastBuyResult.Success -> {
-
-
-
+                        viewmodel.lastOrder.value = it.data
                         if(it.data.payment_method == "payhere"){
-
-
-
                             mainActivity.payhereCall(it.data)
-
                         }else{
-
                             Toast.makeText(
                                 requireContext(),
                                 "Your order successfully pleased",
@@ -585,16 +591,12 @@ class CheckOutFragment : Fragment(), View.OnClickListener {
                             ).show()
 
                             appPrefs.setLastOrderPrefs(it.data)
-                            viewmodel.lastOrder.value = it.data
                             appPrefs.setCartItemPrefs(PastOrder())
 
                             NavHostFragment.findNavController(requireParentFragment())
                                 .navigate(R.id.fragment_checkout_to_last)
 
-
                         }
-
-
 
                     }
                     is FastBuyResult.ExceptionError.ExError -> {
@@ -632,18 +634,65 @@ class CheckOutFragment : Fragment(), View.OnClickListener {
                         )
                     }
                 }
-
-
             })
-
-
-
-
-
 
     }
 
+    private fun payherePaymentCallBack() {
+        viewmodel.payherePaymentCallBack.observe(viewLifecycleOwner, Observer {
+            if(it == 5){
+                cl_cart_progress.visibility = View.VISIBLE
+                viewmodel.lastOrder.value?.id?.let { it1 ->
+                    viewmodel.updateOrder(it1).observe(viewLifecycleOwner, Observer {
+                        when (it) {
+                            is FastBuyResult.Success -> {
 
+
+                            }
+                            is FastBuyResult.ExceptionError.ExError -> {
+                                cl_cart_progress.visibility = View.GONE
+                                when (it.exception) {
+                                    is HttpException -> {
+                                        showToastError(
+                                            "Network Error",
+                                            resources.getString(R.string.network_failed),
+                                            R.color.app_text_red
+                                        )
+                                    }
+                                    is SocketTimeoutException -> {
+                                        showToastError(
+                                            "Network Error",
+                                            resources.getString(R.string.timeout),
+                                            R.color.app_text_red
+                                        )
+                                    }
+                                    else -> {
+                                        showToastError(
+                                            "Network Error",
+                                            resources.getString(R.string.something_went_wrong),
+                                            R.color.app_text_red
+                                        )
+                                    }
+                                }
+                            }
+                            is FastBuyResult.LogicalError.LogError -> {
+                                cl_cart_progress.visibility = View.GONE
+                                showToastError(
+                                    "Error",
+                                    it.exception.message,
+                                    R.color.app_text_red
+                                )
+                            }
+                        }
+
+                    })
+                }
+
+            }
+
+        })
+
+    }
 
 
     override fun onClick(v: View) {

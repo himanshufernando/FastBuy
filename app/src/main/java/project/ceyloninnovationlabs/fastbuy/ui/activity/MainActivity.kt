@@ -146,7 +146,6 @@ class MainActivity : FragmentActivity(), View.OnClickListener {
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso)
 
 
-        initFacebookSDK()
 
 
     }
@@ -184,14 +183,10 @@ class MainActivity : FragmentActivity(), View.OnClickListener {
             PAYHERE_REQUEST -> {
                 if ((data!!.hasExtra(PHConstants.INTENT_EXTRA_RESULT)) && (data != null)) {
                     val response = data.getSerializableExtra(PHConstants.INTENT_EXTRA_RESULT) as PHResponse<StatusResponse>
-                    println("qqqqqqqqqqqqqq response : " + response)
-                    println("qqqqqqqqqqqqqq resultCode : " + resultCode)
-
                     if (resultCode == Activity.RESULT_OK) {
                         if (response != null) {
                             if (response.isSuccess) {
-                                Toast.makeText(this, "Done", Toast.LENGTH_SHORT).show()
-
+                                viewmodel.payherePaymentCallBack.value = 5
                             } else {
                                 errorAlertDialog("Error", response.toString())
                             }
@@ -204,7 +199,6 @@ class MainActivity : FragmentActivity(), View.OnClickListener {
                         }
 
                     } else if (resultCode == Activity.RESULT_CANCELED) {
-
                         if (response != null) {
                             errorAlertDialog("Error", response.toString())
                         } else {
@@ -276,30 +270,6 @@ class MainActivity : FragmentActivity(), View.OnClickListener {
             }
         }
     }
-
-    fun initFacebookSDK() {
-        //facebook sdk login callback register
-/*        callbackManager = CallbackManager.Factory.create()
-        LoginManager.getInstance().registerCallback(callbackManager, object : FacebookCallback<LoginResult> {
-            override fun onCancel() {
-                Toast.makeText(this@MainActivity, getString(R.string.facebook_login_cancel), Toast.LENGTH_LONG).show()
-            }
-
-            override fun onError(error: FacebookException) {
-                when (error.cause) {
-                    is HttpException -> Toast.makeText(this@MainActivity, getString(R.string.network_failed), Toast.LENGTH_LONG).show()
-                    is SocketTimeoutException -> Toast.makeText(this@MainActivity, getString(R.string.timeout), Toast.LENGTH_LONG).show()
-                    else -> Toast.makeText(this@MainActivity, getString(R.string.something_went_wrong), Toast.LENGTH_LONG).show()
-                }
-            }
-            override fun onSuccess(result: LoginResult) {
-                val accessToken: AccessToken = result!!.accessToken
-                performLogin(accessToken)
-            }
-        })*/
-
-    }
-
 
 
     private fun performLogin(accessToken: AccessToken) {

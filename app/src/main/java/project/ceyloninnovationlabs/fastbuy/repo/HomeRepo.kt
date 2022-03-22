@@ -116,12 +116,7 @@ class HomeRepo(private var client: APIInterface) {
         shippingJson.addProperty("phone", user.shipping.phone)
 
         orderJson.add("shipping", shippingJson)
-
-        var result = client.updateCustomer(orderInfo = orderJson,user.id)
-        println("cccccccccccccccccccccccccc result " + result)
-
-
-        return result
+         return client.updateCustomer(orderInfo = orderJson,user.id)
 
     }
 
@@ -333,15 +328,12 @@ class HomeRepo(private var client: APIInterface) {
 
         orderJson.add("meta_data", meteDataJsonArr)
 
-        println("xxxxxxxxxxxxxxxxxxxxxxxxxxxx 05 :  "+orderJson)
         return client.addCustomer(orderInfo = orderJson)
 
     }
 
 
     suspend fun newOrder(order: PastOrder): PastOrder {
-
-
 
         if (!order.isAgreedToTerms) {
             order.errorMessage =
@@ -448,7 +440,6 @@ class HomeRepo(private var client: APIInterface) {
 
 
         if (order.paymentType.isNullOrEmpty()) {
-            println("xxxxxxxxxxx 02   "+order.paymentType)
             order.errorMessage = "Select the payment type "
             order.errorStatus = true
             return order
@@ -669,6 +660,20 @@ class HomeRepo(private var client: APIInterface) {
 
         return client.addOrder(orderInfo = orderJson)
 
+    }
+
+
+    suspend fun updateOrder(orderid: Int,status :Int): PastOrder {
+
+        if(status == 5){
+
+        }else if(status == 10){
+
+        }else{
+
+        }
+
+        return client.updateOrders(orderid)
     }
 
 
