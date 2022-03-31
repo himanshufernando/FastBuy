@@ -62,7 +62,8 @@ class CheckOutFragment : Fragment(), View.OnClickListener {
     var adapter = CheckoutItemsAdapter()
 
     companion object {
-        val postalCodeList = listOf(11500,
+        val postalCodeList = listOf(
+            11500,
             11420,
             11522,
             11524,
@@ -97,7 +98,8 @@ class CheckOutFragment : Fragment(), View.OnClickListener {
             61110,
             61144,
             10100,
-            10107)
+            10107
+        )
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -150,6 +152,7 @@ class CheckOutFragment : Fragment(), View.OnClickListener {
 
         googleSignObserver()
         setSavedUserData()
+        payherePaymentCallBack()
 
     }
 
@@ -277,7 +280,7 @@ class CheckOutFragment : Fragment(), View.OnClickListener {
 
     private fun calculateShipping(postcode: Int) {
         if (postalCodeList.contains(postcode)) {
-       // if (postcode == 11500) {
+            // if (postcode == 11500) {
             order.shippingCost = 0.0
 
             radioGroup_shipping.visibility = View.VISIBLE
@@ -366,7 +369,6 @@ class CheckOutFragment : Fragment(), View.OnClickListener {
     private fun googleSignObserver() {
 
 
-
         val signObserver = Observer<User> { _user ->
 
 
@@ -447,35 +449,38 @@ class CheckOutFragment : Fragment(), View.OnClickListener {
     private fun setPaymentRadioBtn() {
         radioGroup_payment.setOnCheckedChangeListener { group, checkedId ->
             mainActivity.hideKeyboard()
-            when(checkedId){
+            when (checkedId) {
                 R.id.radioButton_bank_transfer -> {
-                    order.paymentType ="bacs"
+                    order.paymentType = "bacs"
                     order.paymentGatewayValue = 0.0
                     order.cashOnDeliveryValue = 0.0
                     order.finaltotal = order.total.toDouble()
                     txt_total.text = "Rs. " + String.format("%.2f", order.total.toDouble())
 
                 }
-                R.id.radioButton_cashon ->{
+                R.id.radioButton_cashon -> {
                     order.paymentType = "cod"
                     order.paymentGatewayValue = 0.0
                     order.cashOnDeliveryValue = 399.00
-                    order.finaltotal = order.total.toDouble()+399.00
-                    txt_total.text = "Rs. " + String.format("%.2f", (order.total.toDouble()+399.00))
+                    order.finaltotal = order.total.toDouble() + 399.00
+                    txt_total.text =
+                        "Rs. " + String.format("%.2f", (order.total.toDouble() + 399.00))
                 }
                 R.id.radioButton_payhere -> {
                     order.paymentType = "payhere"
                     var payhereVal = (order.total.toDouble() * 2) / 100.00
                     order.paymentGatewayValue = payhereVal
                     order.cashOnDeliveryValue = 0.0
-                    order.finaltotal = order.total.toDouble()+order.paymentGatewayValue
-                    txt_total.text = "Rs. " + String.format("%.2f", (order.total.toDouble()+order.paymentGatewayValue))
+                    order.finaltotal = order.total.toDouble() + order.paymentGatewayValue
+                    txt_total.text = "Rs. " + String.format(
+                        "%.2f",
+                        (order.total.toDouble() + order.paymentGatewayValue)
+                    )
                 }
                 else -> ""
             }
 
         }
-
 
 
     }
@@ -578,118 +583,129 @@ class CheckOutFragment : Fragment(), View.OnClickListener {
 
         cl_cart_progress.visibility = View.VISIBLE
         viewmodel.newOrder(order).observe(viewLifecycleOwner, Observer {
-                when (it) {
-                    is FastBuyResult.Success -> {
-                        viewmodel.lastOrder.value = it.data
-                        if(it.data.payment_method == "payhere"){
-                            mainActivity.payhereCall(it.data)
-                        }else{
-                            Toast.makeText(
-                                requireContext(),
-                                "Your order successfully pleased",
-                                Toast.LENGTH_SHORT
-                            ).show()
+            when (it) {
+                is FastBuyResult.Success -> {
+                    viewmodel.lastOrder.value = it.data
+                    if (it.data.payment_method == "payhere") {
+                        mainActivity.payhereCall(it.data)
+                    } else {
+                        Toast.makeText(
+                            requireContext(),
+                            "Your order successfully pleased",
+                            Toast.LENGTH_SHORT
+                        ).show()
 
-                            appPrefs.setLastOrderPrefs(it.data)
-                            appPrefs.setCartItemPrefs(PastOrder())
+                        appPrefs.setLastOrderPrefs(it.data)
+                        appPrefs.setCartItemPrefs(PastOrder())
 
-                            NavHostFragment.findNavController(requireParentFragment())
-                                .navigate(R.id.fragment_checkout_to_last)
-
-                        }
+                        NavHostFragment.findNavController(requireParentFragment())
+                            .navigate(R.id.fragment_checkout_to_last)
 
                     }
-                    is FastBuyResult.ExceptionError.ExError -> {
-                        cl_cart_progress.visibility = View.GONE
-                        when (it.exception) {
-                            is HttpException -> {
-                                showToastError(
-                                    "Network Error",
-                                    resources.getString(R.string.network_failed),
-                                    R.color.app_text_red
-                                )
-                            }
-                            is SocketTimeoutException -> {
-                                showToastError(
-                                    "Network Error",
-                                    resources.getString(R.string.timeout),
-                                    R.color.app_text_red
-                                )
-                            }
-                            else -> {
-                                showToastError(
-                                    "Network Error",
-                                    resources.getString(R.string.something_went_wrong),
-                                    R.color.app_text_red
-                                )
-                            }
+
+                }
+                is FastBuyResult.ExceptionError.ExError -> {
+                    cl_cart_progress.visibility = View.GONE
+                    when (it.exception) {
+                        is HttpException -> {
+                            showToastError(
+                                "Network Error",
+                                resources.getString(R.string.network_failed),
+                                R.color.app_text_red
+                            )
                         }
-                    }
-                    is FastBuyResult.LogicalError.LogError -> {
-                        cl_cart_progress.visibility = View.GONE
-                        showToastError(
-                            "Error",
-                            it.exception.message,
-                            R.color.app_text_red
-                        )
+                        is SocketTimeoutException -> {
+                            showToastError(
+                                "Network Error",
+                                resources.getString(R.string.timeout),
+                                R.color.app_text_red
+                            )
+                        }
+                        else -> {
+                            showToastError(
+                                "Network Error",
+                                resources.getString(R.string.something_went_wrong),
+                                R.color.app_text_red
+                            )
+                        }
                     }
                 }
-            })
+                is FastBuyResult.LogicalError.LogError -> {
+                    cl_cart_progress.visibility = View.GONE
+                    showToastError(
+                        "Error",
+                        it.exception.message,
+                        R.color.app_text_red
+                    )
+                }
+            }
+        })
 
     }
 
     private fun payherePaymentCallBack() {
-        viewmodel.payherePaymentCallBack.observe(viewLifecycleOwner, Observer {
-            if(it == 5){
-                cl_cart_progress.visibility = View.VISIBLE
-                viewmodel.lastOrder.value?.id?.let { it1 ->
-                    viewmodel.updateOrder(it1).observe(viewLifecycleOwner, Observer {
-                        when (it) {
-                            is FastBuyResult.Success -> {
+        viewmodel.payherePaymentCallBack.observe(viewLifecycleOwner, Observer {callback ->
+            cl_cart_progress.visibility = View.VISIBLE
+            viewmodel.lastOrder.value?.id?.let { lastorder ->
+                viewmodel.updateOrder(lastorder, callback).observe(viewLifecycleOwner, Observer {
+                    when (it) {
+                        is FastBuyResult.Success -> {
+                            cl_cart_progress.visibility = View.GONE
+                            if(callback == 5){
+                                Toast.makeText(
+                                    requireContext(),
+                                    "Your order successfully pleased",
+                                    Toast.LENGTH_SHORT
+                                ).show()
 
+                                appPrefs.setLastOrderPrefs(it.data)
+                                appPrefs.setCartItemPrefs(PastOrder())
 
+                                NavHostFragment.findNavController(requireParentFragment())
+                                    .navigate(R.id.fragment_checkout_to_last)
                             }
-                            is FastBuyResult.ExceptionError.ExError -> {
-                                cl_cart_progress.visibility = View.GONE
-                                when (it.exception) {
-                                    is HttpException -> {
-                                        showToastError(
-                                            "Network Error",
-                                            resources.getString(R.string.network_failed),
-                                            R.color.app_text_red
-                                        )
-                                    }
-                                    is SocketTimeoutException -> {
-                                        showToastError(
-                                            "Network Error",
-                                            resources.getString(R.string.timeout),
-                                            R.color.app_text_red
-                                        )
-                                    }
-                                    else -> {
-                                        showToastError(
-                                            "Network Error",
-                                            resources.getString(R.string.something_went_wrong),
-                                            R.color.app_text_red
-                                        )
-                                    }
+
+
+
+                        }
+                        is FastBuyResult.ExceptionError.ExError -> {
+                            cl_cart_progress.visibility = View.GONE
+                            when (it.exception) {
+                                is HttpException -> {
+                                    showToastError(
+                                        "Network Error",
+                                        resources.getString(R.string.network_failed),
+                                        R.color.app_text_red
+                                    )
+                                }
+                                is SocketTimeoutException -> {
+                                    showToastError(
+                                        "Network Error",
+                                        resources.getString(R.string.timeout),
+                                        R.color.app_text_red
+                                    )
+                                }
+                                else -> {
+                                    showToastError(
+                                        "Network Error",
+                                        resources.getString(R.string.something_went_wrong),
+                                        R.color.app_text_red
+                                    )
                                 }
                             }
-                            is FastBuyResult.LogicalError.LogError -> {
-                                cl_cart_progress.visibility = View.GONE
-                                showToastError(
-                                    "Error",
-                                    it.exception.message,
-                                    R.color.app_text_red
-                                )
-                            }
                         }
+                        is FastBuyResult.LogicalError.LogError -> {
+                            cl_cart_progress.visibility = View.GONE
+                            showToastError(
+                                "Error",
+                                it.exception.message,
+                                R.color.app_text_red
+                            )
+                        }
+                    }
 
-                    })
-                }
-
+                })
             }
-
         })
 
     }
@@ -697,9 +713,9 @@ class CheckOutFragment : Fragment(), View.OnClickListener {
 
     override fun onClick(v: View) {
         when (v.id) {
-            R.id.img_navigation ->mainActivity.openDrawer()
+            R.id.img_navigation -> mainActivity.openDrawer()
             R.id.cl_google -> mainActivity.googleSignIn()
-            R.id.cl_facebook ->mainActivity.facebooklogin()
+            R.id.cl_facebook -> mainActivity.facebooklogin()
             R.id.txt_coupon_value -> {
                 order.coupon = Coupon()
                 order.total = order.subtotal.toString()

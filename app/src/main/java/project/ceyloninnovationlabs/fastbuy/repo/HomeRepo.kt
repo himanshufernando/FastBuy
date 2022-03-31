@@ -456,24 +456,26 @@ class HomeRepo(private var client: APIInterface) {
             "cod" -> {
                 orderJson.addProperty("payment_method", "cod")
                 orderJson.addProperty("payment_method_title", "Cash on delivery")
+
             }
             "cop" -> {
                 orderJson.addProperty("payment_method", "cop")
                 orderJson.addProperty("payment_method_title", "Pay on Showroom pickup")
+
             }
 
             "payhere" -> {
                 orderJson.addProperty("payment_method", "payhere")
                 orderJson.addProperty("payment_method_title", "PayHere")
                 order.payment_method = "payhere"
-            }
 
+            }
 
         }
 
 
 
-        orderJson.addProperty("status", "pending")
+
 
 
         var _user = appPrefs.getUserPrefs()
@@ -633,16 +635,20 @@ class HomeRepo(private var client: APIInterface) {
             "Flat rate" -> {
                 _method_id = "flat_rate"
                 _method_title = "Flat rate"
+                orderJson.addProperty("status", "pending")
             }
 
             "Local pickup" -> {
                 _method_id = "local_pickup"
                 _method_title = "Local pickup"
+                orderJson.addProperty("status", "on-hold")
+
             }
 
             "Free shipping" -> {
                 _method_id = "free_shipping"
                 _method_title = "Free shipping"
+                orderJson.addProperty("status", "pending")
             }
         }
 
@@ -665,15 +671,20 @@ class HomeRepo(private var client: APIInterface) {
 
     suspend fun updateOrder(orderid: Int,status :Int): PastOrder {
 
-        if(status == 5){
-
-        }else if(status == 10){
-
-        }else{
-
+        var orderJson = JsonObject()
+        when (status) {
+            5 -> {
+                orderJson.addProperty("status", "processing")
+            }
+            10 -> {
+                orderJson.addProperty("status", "failed")
+            }
+            else -> {
+                orderJson.addProperty("status", "failed")
+            }
         }
 
-        return client.updateOrders(orderid)
+        return client.updateOrders(orderJson,orderid)
     }
 
 

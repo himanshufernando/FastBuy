@@ -73,6 +73,6 @@ interface APIInterface {
 
 
     @PUT("wp-json/wc/v3/orders/{id}")
-    suspend fun updateOrders(@Path("id") orderid: Int): PastOrder
+    suspend fun updateOrders(@Body orderInfo: JsonObject,@Path("id") orderid: Int): PastOrder
 
 }

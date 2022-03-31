@@ -220,7 +220,7 @@
                 style="@style/app_content_gry_light_14"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Version 1.0.1"
+                android:text="Version 1.0.2"
                 android:layout_marginTop="20dp"
                 android:layout_gravity="bottom|center_horizontal"
                 />

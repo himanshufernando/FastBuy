@@ -188,10 +188,12 @@ class MainActivity : FragmentActivity(), View.OnClickListener {
                             if (response.isSuccess) {
                                 viewmodel.payherePaymentCallBack.value = 5
                             } else {
-                                errorAlertDialog("Error", response.toString())
+                                viewmodel.payherePaymentCallBack.value = 10
+                                errorAlertDialog("Error", "Payment request not complete,Please try again !!")
                             }
 
                         } else {
+                            viewmodel.payherePaymentCallBack.value = 10
                             errorAlertDialog(
                                 "Error",
                                 "Payment request not complete,Please try again !!"
@@ -199,8 +201,9 @@ class MainActivity : FragmentActivity(), View.OnClickListener {
                         }
 
                     } else if (resultCode == Activity.RESULT_CANCELED) {
+                        viewmodel.payherePaymentCallBack.value = 10
                         if (response != null) {
-                            errorAlertDialog("Error", response.toString())
+                            errorAlertDialog("Error", "Payment request not complete,Please try again !!")
                         } else {
                             errorAlertDialog(
                                 "Error",
@@ -210,6 +213,7 @@ class MainActivity : FragmentActivity(), View.OnClickListener {
 
                     }
                 } else {
+                    viewmodel.payherePaymentCallBack.value = 10
                     errorAlertDialog("Error", "Payment request not complete,Please try again !!")
                     //not done correctly
 
@@ -578,7 +582,7 @@ class MainActivity : FragmentActivity(), View.OnClickListener {
 
         val intent = Intent(this, PHMainActivity::class.java)
         intent.putExtra(PHConstants.INTENT_EXTRA_DATA, req)
-        PHConfigs.setBaseUrl(PHConfigs.SANDBOX_URL)
+        PHConfigs.setBaseUrl(PHConfigs.LIVE_URL)
         startActivityForResult(intent, PAYHERE_REQUEST)
 
     }

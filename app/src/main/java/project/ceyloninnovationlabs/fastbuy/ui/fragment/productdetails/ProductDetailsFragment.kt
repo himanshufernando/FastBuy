@@ -246,7 +246,7 @@ class ProductDetailsFragment : Fragment(), View.OnClickListener {
                 }
 
                 selectedProduct.quantity = count
-                txt_sub_total.text = "Subtotal Rs." + viewmodel.itemValue.value.toString() + ".00"
+                txt_sub_total.text = "Subtotal Rs." + String.format("%.2f", viewmodel.itemValue.value)
 
             }
 

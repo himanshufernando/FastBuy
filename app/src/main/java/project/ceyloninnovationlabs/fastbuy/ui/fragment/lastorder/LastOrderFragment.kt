@@ -19,6 +19,7 @@ import project.ceyloninnovationlabs.fastbuy.viewmodels.home.HomeViewModel
 import androidx.lifecycle.Observer
 import kotlinx.android.synthetic.main.fragment_last_order.cl_facebook
 import kotlinx.android.synthetic.main.fragment_last_order.cl_google
+import project.ceyloninnovationlabs.fastbuy.FastBuy
 import project.ceyloninnovationlabs.fastbuy.services.listeners.OnBackListener
 
 class LastOrderFragment : Fragment(),View.OnClickListener, OnBackListener {
@@ -49,6 +50,7 @@ class LastOrderFragment : Fragment(),View.OnClickListener, OnBackListener {
         cl_google.setOnClickListener(this)
         cl_facebook.setOnClickListener(this)
         img_navigation_last_order.setOnClickListener(this)
+        FastBuy.setOnBackResponseListener(this)
 
         saveUserData()
         googleSignObserver()
@@ -101,6 +103,7 @@ class LastOrderFragment : Fragment(),View.OnClickListener, OnBackListener {
 
     override fun onBackListenerResponse(fragment: Int) {
           if(fragment==1){
+              println("xxxxxxxxxxxxxxx 012")
               NavHostFragment.findNavController(requireParentFragment()).navigate(R.id.fragment_last_to_home)
           }
     }
