@@ -31,6 +31,7 @@ import project.ceyloninnovationlabs.fastbuy.data.model.orderoutput.PastOrder
 import project.ceyloninnovationlabs.fastbuy.data.model.past.Orders
 import project.ceyloninnovationlabs.fastbuy.ui.fragment.checkout.CheckoutItemsAdapter
 import project.ceyloninnovationlabs.fastbuy.ui.fragment.lastorder.LastOrderItemsAdapter
+import project.ceyloninnovationlabs.fastbuy.ui.fragment.pastorderdetails.PastOrderItemsAdapter
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.time.format.DateTimeFormatter
@@ -281,6 +282,13 @@ object CustomBindingAdapter {
     }
 
 
+    @BindingAdapter("setOrderProductDetailsToLastOrder")
+    @JvmStatic
+    fun setOrderProductDetailsToLastOrder(view: AppCompatTextView, product: project.ceyloninnovationlabs.fastbuy.data.model.past.LineItem) {
+        view.text = product.name + " X " + (product.quantity.toString())
+    }
+
+
     @BindingAdapter("setVisibilityBankDetails")
     @JvmStatic
     fun setVisibilityBankDetails(view: ConstraintLayout, payment: String) {
@@ -297,6 +305,16 @@ object CustomBindingAdapter {
     fun setProductList(view: RecyclerView, order: PastOrder) {
         if (!order.line_items.isNullOrEmpty()) {
             val proAdapter = LastOrderItemsAdapter()
+            view.adapter = proAdapter
+            proAdapter.submitList(order.line_items)
+        }
+    }
+
+    @BindingAdapter("setPastOrderProductList")
+    @JvmStatic
+    fun setPastOrderProductList(view: RecyclerView, order: Orders) {
+        if (!order.line_items.isNullOrEmpty()) {
+            val proAdapter = PastOrderItemsAdapter()
             view.adapter = proAdapter
             proAdapter.submitList(order.line_items)
         }

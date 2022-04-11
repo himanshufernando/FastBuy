@@ -58,9 +58,14 @@ constructor( private val homeRepo: HomeRepo) : ViewModel() {
         MutableLiveData<ShippingMethods>()
     }
 
+    val pastOrder: MutableLiveData<Orders> by lazy {
+        MutableLiveData<Orders>()
+    }
+
     val lastOrder: MutableLiveData<PastOrder> by lazy {
         MutableLiveData<PastOrder>()
     }
+
 
     val googleSign: MutableLiveData<User> by lazy {
         MutableLiveData<User>()

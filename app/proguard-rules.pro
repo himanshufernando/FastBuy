@@ -29,3 +29,6 @@
 -dontwarn javax.security.sasl.**
 -dontwarn java.awt.**
 -dontwarn java.beans.**
+
+-keepattributes LineNumberTable,SourceFile
+-renamesourcefileattribute SourceFile

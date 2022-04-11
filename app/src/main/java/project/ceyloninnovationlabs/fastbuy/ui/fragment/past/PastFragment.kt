@@ -166,6 +166,8 @@ class PastFragment : Fragment() ,View.OnClickListener{
 
         ordersAdapter.setOnItemClickListener(object : PastOrdersAdapter.ClickListener {
             override fun onClick(order: Orders, aView: View, position: Int) {
+                viewmodel.pastOrder.value = order
+                goToOrderDetails()
 
             }
         })
@@ -180,6 +182,8 @@ class PastFragment : Fragment() ,View.OnClickListener{
         NavHostFragment.findNavController(this).navigate(R.id.fragment_past_to_search)
         edit_text_product_search.setText("")
     }
+
+    private fun goToOrderDetails() =  NavHostFragment.findNavController(this).navigate(R.id.fragment_order_to_orderdetails)
 
     private fun goToCart(){
         var cart = appPrefs.getCartItemPrefs()

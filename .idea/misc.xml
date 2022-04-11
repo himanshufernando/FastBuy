@@ -83,11 +83,14 @@
         <entry key="..\:/Project/fastbuy/app/src/main/res/layout/fragment_home.xml" value="0.2651252408477842" />
         <entry key="..\:/Project/fastbuy/app/src/main/res/layout/fragment_last_order.xml" value="0.26614583333333336" />
         <entry key="..\:/Project/fastbuy/app/src/main/res/layout/fragment_past.xml" value="0.35833333333333334" />
+        <entry key="..\:/Project/fastbuy/app/src/main/res/layout/fragment_past_order_details.xml" value="0.33" />
         <entry key="..\:/Project/fastbuy/app/src/main/res/layout/fragment_product_details.xml" value="0.33" />
         <entry key="..\:/Project/fastbuy/app/src/main/res/layout/fragment_product_search.xml" value="0.334375" />
         <entry key="..\:/Project/fastbuy/app/src/main/res/layout/list_cart_item.xml" value="0.35833333333333334" />
         <entry key="..\:/Project/fastbuy/app/src/main/res/layout/list_checkout_item.xml" value="0.31979166666666664" />
+        <entry key="..\:/Project/fastbuy/app/src/main/res/layout/list_lastorder_item.xml" value="0.2984375" />
         <entry key="..\:/Project/fastbuy/app/src/main/res/layout/list_past.xml" value="0.35833333333333334" />
+        <entry key="..\:/Project/fastbuy/app/src/main/res/layout/list_pastorder_item.xml" value="0.2984375" />
         <entry key="..\:/Project/fastbuy/app/src/main/res/layout/test_account.xml" value="0.25104166666666666" />
         <entry key="..\:/Project/fastbuy/app/src/main/res/layout/test_user.xml" value="0.3098958333333333" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.26510416666666664" />

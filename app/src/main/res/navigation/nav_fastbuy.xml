@@ -507,6 +507,15 @@
 
     </fragment>
 
+    <fragment
+        android:id="@+id/fragment_past_order_details"
+        android:name="project.ceyloninnovationlabs.fastbuy.ui.fragment.pastorderdetails.PastOrderDetailsFragment"
+        android:label="PastOrderDetails"
+        tools:layout="@layout/fragment_past_order_details">
+
+    </fragment>
+
+
 
     <fragment
         android:id="@+id/fragment_past"
@@ -549,6 +558,15 @@
             app:exitAnim="@anim/wait_anim"
             app:popEnterAnim="@anim/wait_anim"
             app:popExitAnim="@anim/slide_right" />
+
+        <action
+            android:id="@+id/fragment_order_to_orderdetails"
+            app:destination="@id/fragment_past_order_details"
+            app:enterAnim="@anim/slide_left"
+            app:exitAnim="@anim/wait_anim"
+            app:popEnterAnim="@anim/wait_anim"
+            app:popExitAnim="@anim/slide_right" />
+
     </fragment>
 
 

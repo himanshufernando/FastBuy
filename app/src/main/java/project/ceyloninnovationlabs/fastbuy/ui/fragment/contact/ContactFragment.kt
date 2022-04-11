@@ -45,7 +45,6 @@ class ContactFragment : Fragment() ,View.OnClickListener{
 
 
     private val callback = OnMapReadyCallback { googleMap ->
-
         googleMap.setMapStyle(
             MapStyleOptions.loadRawResourceStyle(
                 context as Activity,
@@ -57,7 +56,6 @@ class ContactFragment : Fragment() ,View.OnClickListener{
         val mapLocation =  LatLng(7.21125,79.840252)
         googleMap.addMarker(MarkerOptions().position(mapLocation).title("Super Unique IT Solutions ( fastbuy.lk )"))
         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mapLocation, 17f));
-
 
 
     }
@@ -223,7 +221,7 @@ class ContactFragment : Fragment() ,View.OnClickListener{
             .onCompleteCallback(object : MaildroidX.onCompleteCallback {
                 override val timeout: Long = 10000
                 override fun onSuccess() {
-                    println("cccccccccccccccccccccccccccccccccccc onSuccess")
+
 
                 }
 
