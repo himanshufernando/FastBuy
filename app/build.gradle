@@ -28,21 +28,21 @@ android {
         viewBinding = true
     }
 
-    signingConfigs {
+  /*  signingConfigs {
         key {
             storeFile file('C:\\Project\\fastbuy\\key\\fastbuy.jks')
             storePassword 'GEc6keT3'
             keyAlias 'fastbuy'
             keyPassword 'GEc6keT3'
         }
-    }
+    }*/
 
 
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-            signingConfig signingConfigs.key
+           // signingConfig signingConfigs.key
         }
         debug {
             minifyEnabled false
