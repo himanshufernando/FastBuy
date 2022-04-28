@@ -34,5 +34,5 @@ Java_project_ceyloninnovationlabs_fastbuy_ui_activity_MainActivity_getMerchant(J
 JNIEXPORT jstring JNICALL
 Java_project_ceyloninnovationlabs_fastbuy_ui_activity_MainActivity_getMerchantSecret(JNIEnv *env,
                                                                                      jobject thiz) {
-    return (*env)->NewStringUTF(env, "168b7f7401b58ae9328636f48675dfbb");
+    return (*env)->NewStringUTF(env, "MS55bnNuZ2tqOWJh");
 }

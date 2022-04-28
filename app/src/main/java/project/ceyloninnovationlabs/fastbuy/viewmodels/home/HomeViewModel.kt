@@ -72,8 +72,8 @@ constructor( private val homeRepo: HomeRepo) : ViewModel() {
     }
 
 
-    val googleSignTest: MutableLiveData<Int> by lazy {
-        MutableLiveData<Int>()
+    val googleSignProgress: MutableLiveData<Boolean> by lazy {
+        MutableLiveData<Boolean>()
     }
 
 

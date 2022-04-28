@@ -1,13 +1,13 @@
 package project.ceyloninnovationlabs.fastbuy.ui.activity
 
 
-import android.R.attr
+import android.app.Activity
 import android.app.AlertDialog
 import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
-import android.os.SystemClock
+import android.util.Log
 import android.view.View
 import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
@@ -16,79 +16,35 @@ import androidx.activity.viewModels
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.FragmentActivity
+import androidx.lifecycle.Observer
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
+import com.facebook.*
+import com.facebook.login.LoginManager
+import com.facebook.login.LoginResult
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
-import com.google.android.gms.tasks.Task
+import com.google.android.gms.common.api.ApiException
 import com.google.android.material.navigation.NavigationView
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_main.*
-import project.ceyloninnovationlabs.fastbuy.R
-import project.ceyloninnovationlabs.fastbuy.services.listeners.OnNavigationListener
-import project.ceyloninnovationlabs.fastbuy.viewmodels.home.HomeViewModel
-import com.google.android.gms.common.api.ApiException
-import androidx.lifecycle.Observer
-import com.google.gson.Gson
-import com.squareup.moshi.Moshi
-import com.squareup.moshi.Types
-import project.ceyloninnovationlabs.fastbuy.data.model.FastBuyResult
-import project.ceyloninnovationlabs.fastbuy.data.model.user.User
-import project.ceyloninnovationlabs.fastbuy.services.perfrences.AppPrefs
-import android.content.pm.PackageManager
-
-import android.content.pm.PackageInfo
-import android.util.Base64.*
-import android.util.Log
-import com.facebook.CallbackManager
-import com.facebook.FacebookCallback
-import com.facebook.FacebookException
-import com.facebook.login.LoginManager
-import com.facebook.login.LoginResult
-import retrofit2.HttpException
-import java.lang.Exception
-import java.net.SocketTimeoutException
-import java.security.MessageDigest
-import java.security.NoSuchAlgorithmException
-import java.util.*
-import com.facebook.AccessToken
-import androidx.annotation.NonNull
-import com.facebook.GraphResponse
-
-import org.json.JSONObject
-
-import com.facebook.GraphRequest
-import com.facebook.GraphRequest.GraphJSONObjectCallback
-import com.google.gson.JsonObject
-import lk.payhere.androidsdk.model.InitRequest
-import org.json.JSONException
-import project.ceyloninnovationlabs.fastbuy.data.model.orderoutput.PastOrder
-import java.net.MalformedURLException
-import java.net.URL
-import androidx.core.app.ActivityCompat.startActivityForResult
-
 import lk.payhere.androidsdk.PHConfigs
-
 import lk.payhere.androidsdk.PHConstants
-
 import lk.payhere.androidsdk.PHMainActivity
-import lk.payhere.androidsdk.model.Item
-import android.app.Activity
-
-import android.R.attr.data
-
-import lk.payhere.androidsdk.model.StatusResponse
-
 import lk.payhere.androidsdk.PHResponse
-import android.R.attr.data
-import android.net.Uri
-import androidx.activity.result.ActivityResult
-import androidx.activity.result.ActivityResultRegistryOwner
-import androidx.activity.result.contract.ActivityResultContracts
+import lk.payhere.androidsdk.model.InitRequest
+import lk.payhere.androidsdk.model.Item
+import lk.payhere.androidsdk.model.StatusResponse
+import org.json.JSONObject
 import project.ceyloninnovationlabs.fastbuy.FastBuy
+import project.ceyloninnovationlabs.fastbuy.R
+import project.ceyloninnovationlabs.fastbuy.data.model.FastBuyResult
+import project.ceyloninnovationlabs.fastbuy.data.model.orderoutput.PastOrder
 import project.ceyloninnovationlabs.fastbuy.services.listeners.OnBackListener
+import project.ceyloninnovationlabs.fastbuy.services.perfrences.AppPrefs
+import project.ceyloninnovationlabs.fastbuy.viewmodels.home.HomeViewModel
 
 
 @AndroidEntryPoint
@@ -355,10 +311,9 @@ class MainActivity : FragmentActivity(), View.OnClickListener {
 
     }
 
-
     private fun handleSignInResult(data: Intent?) {
         try {
-            cl_main.visibility = View.VISIBLE
+           viewmodel.googleSignProgress.value = true
             GoogleSignIn.getSignedInAccountFromIntent(data)
                 .addOnCompleteListener { it ->
                     if (it.isSuccessful) {
@@ -368,7 +323,7 @@ class MainActivity : FragmentActivity(), View.OnClickListener {
                         }
 
                     } else {
-                        cl_main.visibility = View.GONE
+                        viewmodel.googleSignProgress.value = false
                         Toast.makeText(
                             this,
                             "Error in google sign in, Please try again !",
@@ -378,15 +333,16 @@ class MainActivity : FragmentActivity(), View.OnClickListener {
                 }
 
         } catch (e: ApiException) {
-            cl_main.visibility = View.GONE
+            viewmodel.googleSignProgress.value = false
             Toast.makeText(this, "Error in google sign in, Please try again !", Toast.LENGTH_SHORT)
                 .show()
         }
+
     }
 
+
+
     private fun checkUser(email: String) {
-
-
         viewmodel.checkCustomer(email).observe(this, Observer {
             when (it) {
                 is FastBuyResult.Success -> {
@@ -405,17 +361,16 @@ class MainActivity : FragmentActivity(), View.OnClickListener {
                         }
                         appPrefs.setUserPrefs(_user)
                         viewmodel.googleSign.value = _user
-                        viewmodel.googleSignTest.value = 5
-                        cl_main.visibility = View.GONE
+                        viewmodel.googleSignProgress.value = false
                     }
 
                 }
                 is FastBuyResult.ExceptionError.ExError -> {
-                    cl_main.visibility = View.GONE
+                    viewmodel.googleSignProgress.value = false
                     errorAlertDialog("Error", it.exception.toString())
                 }
                 is FastBuyResult.LogicalError.LogError -> {
-                    cl_main.visibility = View.GONE
+                    viewmodel.googleSignProgress.value = false
                     errorAlertDialog("Error", it.exception.toString())
                 }
 
@@ -449,7 +404,7 @@ class MainActivity : FragmentActivity(), View.OnClickListener {
         viewmodel.addCustomer(userDetails).observe(this, Observer {
             when (it) {
                 is FastBuyResult.Success -> {
-                    cl_main.visibility = View.GONE
+                    viewmodel.googleSignProgress.value = false
                     var _user = it.data
 
                     if (socialMediaLoginType == "G") {
@@ -461,11 +416,11 @@ class MainActivity : FragmentActivity(), View.OnClickListener {
                     viewmodel.googleSign.value = _user
                 }
                 is FastBuyResult.ExceptionError.ExError -> {
-                    cl_main.visibility = View.GONE
+                    viewmodel.googleSignProgress.value = false
                     errorAlertDialog("Error", it.exception.toString())
                 }
                 is FastBuyResult.LogicalError.LogError -> {
-                    cl_main.visibility = View.GONE
+                    viewmodel.googleSignProgress.value = false
                     errorAlertDialog("Error", it.exception.toString())
                 }
 
@@ -549,8 +504,8 @@ class MainActivity : FragmentActivity(), View.OnClickListener {
     fun payhereCall(order: PastOrder) {
 
         val req = InitRequest()
-        req.merchantId = "214383"
-        req.merchantSecret = "MS55bnNuZ2tqOWJh"
+        req.merchantId = getMerchant()
+        req.merchantSecret = getMerchantSecret()
         req.currency = "LKR"
         req.amount = order.total.toDouble()
         req.orderId = order.id.toString()

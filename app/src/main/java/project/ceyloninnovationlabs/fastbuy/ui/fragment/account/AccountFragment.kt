@@ -88,6 +88,7 @@ class AccountFragment : Fragment(), View.OnClickListener {
 
         setupSearchBar()
         googleSignObserver()
+        googleSignProgressObserver()
 
 
     }
@@ -138,6 +139,12 @@ class AccountFragment : Fragment(), View.OnClickListener {
         }else{
             NavHostFragment.findNavController(requireParentFragment()).navigate(R.id.fragment_account_to_cart)
         }
+    }
+
+    private fun googleSignProgressObserver() {
+        viewmodel.googleSignProgress.observe(viewLifecycleOwner, Observer {
+            cl_account_progress.isVisible = it
+        })
     }
 
     private fun googleSignObserver() {
