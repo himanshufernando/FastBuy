@@ -5,6 +5,7 @@ import android.app.AlertDialog
 import android.content.DialogInterface
 import android.os.Bundle
 import android.os.SystemClock
+import android.provider.ContactsContract
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -16,9 +17,6 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.NavHostFragment
 import androidx.lifecycle.Observer
-import com.google.gson.Gson
-import com.squareup.moshi.Moshi
-import com.squareup.moshi.Types
 import kotlinx.android.synthetic.main.fragment_account.*
 import kotlinx.android.synthetic.main.fragment_account.appCompatImageView4
 import kotlinx.android.synthetic.main.fragment_account.cl_account
@@ -39,7 +37,6 @@ import kotlinx.android.synthetic.main.fragment_account.txt_cart_count
 import project.ceyloninnovationlabs.fastbuy.R
 import project.ceyloninnovationlabs.fastbuy.data.model.FastBuyResult
 import project.ceyloninnovationlabs.fastbuy.data.model.orderoutput.Billing
-import project.ceyloninnovationlabs.fastbuy.data.model.orderoutput.PastOrder
 import project.ceyloninnovationlabs.fastbuy.data.model.orderoutput.Shipping
 import project.ceyloninnovationlabs.fastbuy.data.model.user.User
 import project.ceyloninnovationlabs.fastbuy.services.perfrences.AppPrefs
@@ -56,6 +53,7 @@ class AccountFragment : Fragment(), View.OnClickListener {
     var appPrefs = AppPrefs
 
     private var mLastClickTime: Long = 0
+    lateinit var user: User
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -85,6 +83,8 @@ class AccountFragment : Fragment(), View.OnClickListener {
         img_navigation.setOnClickListener(this)
         cl_account_cart.setOnClickListener(this)
         cl_facebook.setOnClickListener(this)
+        btn_login.setOnClickListener(this)
+        btn_user_logout.setOnClickListener(this)
 
         setupSearchBar()
         googleSignObserver()
@@ -95,22 +95,55 @@ class AccountFragment : Fragment(), View.OnClickListener {
 
     override fun onResume() {
         super.onResume()
-
         updateCart()
-        var _user = appPrefs.getUserPrefs()
-
-
-
-        if (_user.facebook_id.isNotEmpty() || _user.google_id.isNotEmpty()) {
-            cl_login.visibility = View.GONE
-            cl_account.visibility = View.VISIBLE
-            setAccountDetails()
-        } else {
-            cl_login.visibility = View.VISIBLE
-            cl_account.visibility = View.GONE
-        }
+        getUser()
 
     }
+
+    private fun deleteUser() {
+        viewmodel.deleteUser().observe(viewLifecycleOwner, Observer {
+            when (it) {
+                is FastBuyResult.Success -> {
+                    getUser()
+                }
+                is FastBuyResult.ExceptionError -> {
+                    showToastError(
+                        "Network Error",
+                        resources.getString(R.string.something_went_wrong),
+                        R.color.app_text_red
+                    )
+                }
+            }
+
+        })
+
+    }
+
+
+    private fun getUser() {
+        viewmodel.getUser().observe(viewLifecycleOwner, Observer {
+            when (it) {
+                is FastBuyResult.Success -> {
+                    if(it.data.email.isNullOrEmpty()){
+                        cl_login.visibility = View.VISIBLE
+                        cl_account.visibility = View.GONE
+                    }else{
+                        user = it.data
+                        cl_login.visibility = View.GONE
+                        cl_account.visibility = View.VISIBLE
+                        setAccountDetails(it.data)
+                    }
+                }
+                is FastBuyResult.ExceptionError -> {
+                    cl_login.visibility = View.VISIBLE
+                    cl_account.visibility = View.GONE
+                }
+            }
+
+        })
+
+    }
+
 
     override fun onStop() {
         super.onStop()
@@ -129,15 +162,114 @@ class AccountFragment : Fragment(), View.OnClickListener {
             R.id.img_navigation -> mainActivity.onBackPressed()
             R.id.cl_account_cart -> goToCart()
             R.id.cl_facebook -> mainActivity.facebooklogin()
+            R.id.btn_login -> userLogin()
+            R.id.btn_user_logout -> deleteUser()
         }
     }
 
-    private fun goToCart(){
+    private fun userLogin() {
+        cl_account_progress.visibility = View.VISIBLE
+        var user = User().apply {
+            email = edt_username.text.toString()
+            password = edt_password.text.toString()
+        }
+
+        viewmodel.userLogin(user).observe(viewLifecycleOwner, Observer {
+            when (it) {
+                is FastBuyResult.Success -> {
+                    if (it.data.success) {
+                        getCustomer(user.email)
+                    } else {
+                        showToastError("Error", it.data.data.message, R.color.app_text_red)
+                    }
+                }
+                is FastBuyResult.ExceptionError.ExError -> {
+                    cl_account_progress.visibility = View.GONE
+                    when (it.exception) {
+                        is HttpException -> {
+                            showToastError(
+                                "Error",
+                                " Wrong user credentials",
+                                R.color.app_text_red
+                            )
+                        }
+                        is SocketTimeoutException -> {
+                            showToastError(
+                                "Network Error",
+                                resources.getString(R.string.timeout),
+                                R.color.app_text_red
+                            )
+                        }
+                        else -> {
+                            showToastError(
+                                "Network Error",
+                                resources.getString(R.string.something_went_wrong),
+                                R.color.app_text_red
+                            )
+                        }
+                    }
+                }
+                is FastBuyResult.LogicalError.LogError -> {
+                    cl_account_progress.visibility = View.GONE
+                    showToastError("Error", it.exception.message, R.color.app_text_red)
+                }
+            }
+        })
+    }
+
+    private fun getCustomer(email: String) {
+        viewmodel.getCustomer(email).observe(viewLifecycleOwner, Observer {
+            when (it) {
+                is FastBuyResult.Success -> {
+                    cl_account_progress.visibility = View.GONE
+                    user = it.data
+                    cl_login.visibility = View.GONE
+                    cl_account.visibility = View.VISIBLE
+                    setAccountDetails(it.data)
+                }
+                is FastBuyResult.ExceptionError.ExError -> {
+                    cl_account_progress.visibility = View.GONE
+                    when (it.exception) {
+                        is HttpException -> {
+                            showToastError(
+                                "Error",
+                                " Wrong user credentials",
+                                R.color.app_text_red
+                            )
+                        }
+                        is SocketTimeoutException -> {
+                            showToastError(
+                                "Network Error",
+                                resources.getString(R.string.timeout),
+                                R.color.app_text_red
+                            )
+                        }
+                        else -> {
+                            showToastError(
+                                "Network Error",
+                                resources.getString(R.string.something_went_wrong),
+                                R.color.app_text_red
+                            )
+                        }
+                    }
+                }
+                is FastBuyResult.LogicalError.LogError -> {
+                    cl_account_progress.visibility = View.GONE
+                    showToastError("Error", it.exception.message, R.color.app_text_red)
+                }
+            }
+        })
+    }
+
+
+    private fun goToCart() {
         var cart = appPrefs.getCartItemPrefs()
-        if(cart.product.isEmpty()){
-            Toast.makeText(requireContext(), "Your cart is currently empty !!", Toast.LENGTH_SHORT).show()
-        }else{
-            NavHostFragment.findNavController(requireParentFragment()).navigate(R.id.fragment_account_to_cart)
+        if (cart.product.isEmpty()) {
+            Toast.makeText(requireContext(), "Your cart is currently empty !!", Toast.LENGTH_SHORT)
+                .show()
+        } else {
+            NavHostFragment.findNavController(requireParentFragment())
+                .navigate(R.id.fragment_account_to_cart)
         }
     }
 
@@ -152,9 +284,10 @@ class AccountFragment : Fragment(), View.OnClickListener {
         viewmodel.googleSign.observe(viewLifecycleOwner, Observer {
 
             if (it.facebook_id.isNotEmpty() || it.google_id.isNotEmpty()) {
+                user = it
                 cl_login.visibility = View.GONE
                 cl_account.visibility = View.VISIBLE
-                setAccountDetails()
+                setAccountDetails(it)
             } else {
                 cl_login.visibility = View.VISIBLE
                 cl_account.visibility = View.GONE
@@ -192,7 +325,7 @@ class AccountFragment : Fragment(), View.OnClickListener {
         }
 
         var updateUser = User().apply {
-            id = appPrefs.getUserPrefs().id
+            id = user.id
             first_name = edt_fname.text.toString()
             last_name = edt_lname.text.toString()
             billing = _billing
@@ -205,41 +338,20 @@ class AccountFragment : Fragment(), View.OnClickListener {
             when (it) {
                 is FastBuyResult.Success -> {
                     cl_account_progress.visibility = View.GONE
-                    var _user = it.data
-
-                    if(_user.status){
-                        showToastError("Error",_user.message, R.color.app_text_red)
-                    }else{
-
-                        var values = _user.meta_data[8].value
-                        var jsonVlau = Gson().toJson(values)
-
-                        val moshi = Moshi.Builder().build()
-                        val adapter = moshi.adapter<Map<String, Any>>(
-                            Types.newParameterizedType(
-                                Map::class.java, String::class.java,
-                                Object::class.java
-                            )
-                        )
-                        val yourMap = adapter.fromJson(jsonVlau)
-
-                        _user.google_id = yourMap?.get("identifier").toString()
-                        appPrefs.setUserPrefs(_user)
-
-
-
+                    if (it.data.status) {
+                        println("xxxxxxxxxxxxxxxx 01 : "+ it.data.message)
+                        showToastError("Error", it.data.message, R.color.app_text_red)
+                    } else {
                         Toast.makeText(
                             requireContext(),
                             "Your account update successfully",
                             Toast.LENGTH_SHORT
                         ).show()
-
                     }
-
-
                 }
                 is FastBuyResult.ExceptionError.ExError -> {
                     cl_account_progress.visibility = View.GONE
+                    println("xxxxxxxxxxxxxxxx 02 : "+it.exception)
                     when (it.exception) {
                         is HttpException -> {
                             showToastError(
@@ -266,6 +378,7 @@ class AccountFragment : Fragment(), View.OnClickListener {
                 }
                 is FastBuyResult.LogicalError.LogError -> {
                     cl_account_progress.visibility = View.GONE
+                    println("xxxxxxxxxxxxxxxx 03 : "+it.exception)
                     showToastError(
                         "Error",
                         it.exception.message,
@@ -298,25 +411,11 @@ class AccountFragment : Fragment(), View.OnClickListener {
 
     }
 
-    private fun setAccountDetails() {
-        var _user = appPrefs.getUserPrefs()
+    private fun setAccountDetails(_user: User) {
+
         edt_fname.setText(_user.first_name)
         edt_lname.setText(_user.last_name)
         edt_email_address.setText(_user.email)
-/*
-
-        var values = _user.meta_data[8].value
-        var jsonVlau =  Gson().toJson(values)
-
-        val moshi = Moshi.Builder().build()
-        val adapter = moshi.adapter<Map<String, Any>>(
-                Types.newParameterizedType(Map::class.java, String::class.java,
-                        Object::class.java)
-        )
-        val yourMap =  adapter.fromJson(jsonVlau)
-
-        edt_company.setText(yourMap?.get("display_name").toString())
-*/
 
         if (_user.google_id.isNotEmpty()) {
             cl_social_google.visibility = View.VISIBLE

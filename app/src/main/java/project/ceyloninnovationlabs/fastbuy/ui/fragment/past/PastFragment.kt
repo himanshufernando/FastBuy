@@ -12,6 +12,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.NavHostFragment
 import androidx.paging.LoadState
@@ -28,6 +29,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import project.ceyloninnovationlabs.fastbuy.R
+import project.ceyloninnovationlabs.fastbuy.data.model.FastBuyResult
 import project.ceyloninnovationlabs.fastbuy.data.model.orderoutput.PastOrder
 import project.ceyloninnovationlabs.fastbuy.data.model.past.Orders
 import project.ceyloninnovationlabs.fastbuy.services.perfrences.AppPrefs
@@ -97,32 +99,37 @@ class PastFragment : Fragment() ,View.OnClickListener{
 
         }
     }
-
-
     private fun getOrders() {
-        var _user = appPrefs.getUserPrefs()
-        if(_user.id == 0){
-           val lastorder =  appPrefs.getLastOrderPrefs()
-            if(lastorder.date_created.isNullOrEmpty()){
-               recyclerView_past.visibility = View.GONE
-                txt1.visibility = View.VISIBLE
-            }else{
-                viewmodel.lastOrder.value =lastorder
-                NavHostFragment.findNavController(requireParentFragment()).navigate(R.id.fragment_past_to_last)
-            }
+        viewmodel.getUser().observe(viewLifecycleOwner, Observer {
+            when (it) {
+                is FastBuyResult.Success -> {
+                    if(it.data.id == 0){
+                        val lastorder =  appPrefs.getLastOrderPrefs()
+                        if(lastorder.date_created.isNullOrEmpty()){
+                            recyclerView_past.visibility = View.GONE
+                            txt1.visibility = View.VISIBLE
+                        }else{
+                            viewmodel.lastOrder.value =lastorder
+                            NavHostFragment.findNavController(requireParentFragment()).navigate(R.id.fragment_past_to_last)
+                        }
 
-        }else{
-            if (::ordersJob.isInitialized) {
-                ordersJob.cancel()
-            }
-            ordersJob = lifecycleScope.launch {
-                viewmodel.getCustomersOrders(_user.id).collectLatest {
-                    ordersAdapter.submitData(it)
+                    }else{
+                        if (::ordersJob.isInitialized) {
+                            ordersJob.cancel()
+                        }
+                        ordersJob = lifecycleScope.launch {
+                            viewmodel.getCustomersOrders(it.data.id).collectLatest { it ->
+                                ordersAdapter.submitData(it)
+                            }
+                        }
+                    }
+
                 }
             }
-        }
-    }
 
+        })
+
+    }
 
     private fun initOrdersRecyclerView() {
 

@@ -97,8 +97,6 @@ class HomeFragment : Fragment(), InfoDialog.InfoDialogListener, View.OnClickList
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        println("xxxxxxxxxxxxxxx onViewCreated")
-
         ic_search.setOnClickListener(this)
         txt_onsale_more.setOnClickListener(this)
         txt_featured_more.setOnClickListener(this)

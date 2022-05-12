@@ -4,6 +4,7 @@ import android.content.Context
 import android.util.Log
 import androidx.multidex.MultiDex
 import androidx.multidex.MultiDexApplication
+import com.onesignal.OneSignal
 import dagger.hilt.android.HiltAndroidApp
 import project.ceyloninnovationlabs.fastbuy.services.listeners.OnBackListener
 import project.ceyloninnovationlabs.fastbuy.services.listeners.OnNavigationListener
@@ -30,7 +31,7 @@ class FastBuy : MultiDexApplication() {
         fun setOnNavigationListener(listener: OnNavigationListener) { onNavigationListener = listener }
         fun getOnNavigationListener(): OnNavigationListener? { return onNavigationListener }
 
-
+        const val ONESIGNAL_APP_ID ="943b509c-b6a1-4514-81aa-a318e838a64d"
 
 
     }
@@ -47,6 +48,12 @@ class FastBuy : MultiDexApplication() {
 
     override fun onCreate() {
         super.onCreate()
+
+        OneSignal.setLogLevel(OneSignal.LOG_LEVEL.VERBOSE, OneSignal.LOG_LEVEL.NONE)
+
+        // OneSignal Initialization
+        OneSignal.initWithContext(this)
+        OneSignal.setAppId(ONESIGNAL_APP_ID)
 
     }
 

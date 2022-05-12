@@ -167,7 +167,7 @@
                 android:id="@+id/cl_login"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="150dp"
+                android:layout_marginTop="10dp"
                 tools:visibility="visible"
                 android:visibility="gone">
 
@@ -178,7 +178,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
                     android:singleLine="true"
-                    android:text="Sign up"
+                    android:text="Login"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
@@ -206,15 +206,146 @@
                     tools:visibility="visible" />
 
                 <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/txt_2"
+                    style="@style/app_content_gry_light_14"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="25dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/view_2"
+                    android:text="Welcome back! Sign in to your account." />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/txt_3"
+                    style="@style/app_content_gry_medium_14"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="15dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/txt_2"
+                    android:text="Username or email address *" />
+
+
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/cl_username"
+                    android:layout_width="match_parent"
+                    android:layout_height="35dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="40dp"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/bg_empty_gry_border"
+                    app:layout_constraintTop_toBottomOf="@+id/txt_3">
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+                <androidx.appcompat.widget.AppCompatEditText
+                    android:id="@+id/edt_username"
+                    style="@style/app_content_gry_light_14"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_marginStart="15dp"
+                    android:layout_marginEnd="15dp"
+                    android:background="@color/edittext_background"
+                    android:inputType="text"
+                    android:lines="1"
+                    android:maxLines="1"
+                    android:singleLine="true"
+                    android:textColorHint="@color/app_text_gry"
+                    app:layout_constraintBottom_toBottomOf="@+id/cl_username"
+                    app:layout_constraintEnd_toEndOf="@+id/cl_username"
+                    app:layout_constraintStart_toStartOf="@+id/cl_username"
+                    app:layout_constraintTop_toTopOf="@+id/cl_username" />
+
+
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/txt_4"
+                    style="@style/app_content_gry_medium_14"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="15dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/cl_username"
+                    android:text="Password *" />
+
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/cl_password"
+                    android:layout_width="match_parent"
+                    android:layout_height="35dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="40dp"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/bg_empty_gry_border"
+                    app:layout_constraintTop_toBottomOf="@+id/txt_4">
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+                <androidx.appcompat.widget.AppCompatEditText
+                    android:id="@+id/edt_password"
+                    style="@style/app_content_gry_light_14"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_marginStart="15dp"
+                    android:layout_marginEnd="15dp"
+                    android:background="@color/edittext_background"
+                    android:inputType="textPassword"
+                    android:lines="1"
+                    android:maxLines="1"
+                    android:singleLine="true"
+                    android:textColorHint="@color/app_text_gry"
+                    app:layout_constraintBottom_toBottomOf="@+id/cl_password"
+                    app:layout_constraintEnd_toEndOf="@+id/cl_password"
+                    app:layout_constraintStart_toStartOf="@+id/cl_password"
+                    app:layout_constraintTop_toTopOf="@+id/cl_password" />
+
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/btn_login"
+                    style="@style/app_content_white_light_14"
+                    android:layout_width="150dp"
+                    android:layout_height="40dp"
+                    android:layout_marginTop="30dp"
+                    android:background="@drawable/bg_blue_border"
+                    android:gravity="center"
+                    android:text="Log in"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintStart_toStartOf="@+id/cl_password"
+                    app:layout_constraintTop_toBottomOf="@+id/cl_password"
+                    tools:visibility="visible" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/txt_5"
+                    style="@style/app_content_gry_light_14"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="25dp"
+                    android:padding="5dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/btn_login"
+                    android:text="Lost your password?" />
+
+
+                <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/txt_6"
                     style="@style/app_content_gry_light_14"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
                     android:layout_marginTop="10dp"
-                    android:text="Use a social account for faster login or easy registration."
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/view_2" />
+                    app:layout_constraintTop_toBottomOf="@+id/txt_5"
+                    android:text="Use a social account for faster login or easy registration." />
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/cl_google"
@@ -303,13 +434,13 @@
 
 
 
-
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/cl_account"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                tools:visibility="visible"
                 android:visibility="visible">
 
                 <androidx.appcompat.widget.AppCompatTextView
@@ -470,6 +601,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="20dp"
+                        android:visibility="gone"
                         android:background="@color/app_blue"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent">
@@ -514,6 +646,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="20dp"
                         android:background="@color/app_blue"
+                        android:visibility="gone"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent">
 
@@ -1291,6 +1424,23 @@
                     tools:visibility="visible" />
 
 
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/btn_user_logout"
+                    style="@style/app_content_white_light_14"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:layout_marginStart="40dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginEnd="40dp"
+                    android:background="@drawable/bg_red_border"
+                    android:gravity="center"
+                    android:text="Logout"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/btn_update"
+                    tools:visibility="visible" />
+
+
                 <View
                     android:id="@+id/view_8"
                     android:layout_width="0dp"
@@ -1300,7 +1450,7 @@
                     android:layout_marginBottom="10dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/btn_update" />
+                    app:layout_constraintTop_toBottomOf="@+id/btn_user_logout" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
         </LinearLayout>

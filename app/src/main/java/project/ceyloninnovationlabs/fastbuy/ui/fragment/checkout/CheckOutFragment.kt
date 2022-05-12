@@ -58,7 +58,7 @@ class CheckOutFragment : Fragment(), View.OnClickListener {
     lateinit var order: PastOrder
     var shippingType = "Flat rate"
 
-
+    lateinit var user: User
     var adapter = CheckoutItemsAdapter()
 
     companion object {
@@ -124,9 +124,6 @@ class CheckOutFragment : Fragment(), View.OnClickListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-
-
 
 
         txt_coupon_value.setOnClickListener(this)
@@ -336,35 +333,40 @@ class CheckOutFragment : Fragment(), View.OnClickListener {
     }
 
     private fun setSavedUserData() {
-        var _user = appPrefs.getUserPrefs()
-        if (_user.facebook_id.isNotEmpty() || _user.google_id.isNotEmpty()) {
-            cl_account.visibility = View.GONE
+        viewmodel.getUser().observe(viewLifecycleOwner, Observer {
+            when (it) {
+                is FastBuyResult.Success -> {
+                    user = it.data
+                    if (it.data.facebook_id.isNotEmpty() || it.data.google_id.isNotEmpty()) {
+                        cl_account.visibility = View.GONE
 
-            edt_fname.setText(_user.first_name)
-            edt_lname.setText(_user.last_name)
-            edt_email.setText(_user.email)
+                        edt_fname.setText(it.data.first_name)
+                        edt_lname.setText(it.data.last_name)
+                        edt_email.setText(it.data.email)
 
-        } else {
-            cl_account.visibility = View.VISIBLE
+                    } else {
+                        cl_account.visibility = View.VISIBLE
 
-            edt_fname.setText(_user.billing.first_name)
-            edt_lname.setText(_user.billing.last_name)
-            edt_email.setText(_user.billing.email)
+                        edt_fname.setText(it.data.billing.first_name)
+                        edt_lname.setText(it.data.billing.last_name)
+                        edt_email.setText(it.data.billing.email)
 
-        }
+                    }
 
-        edt_company.setText(_user.billing.company)
-        edt_house_number.setText(_user.billing.address_1)
-        edt_apartment.setText(_user.billing.address_2)
-        edt_city.setText(_user.billing.city)
-        edt_pcode.setText(_user.billing.postcode)
+                    edt_company.setText(it.data.billing.company)
+                    edt_house_number.setText(it.data.billing.address_1)
+                    edt_apartment.setText(it.data.billing.address_2)
+                    edt_city.setText(it.data.billing.city)
+                    edt_pcode.setText(it.data.billing.postcode)
 
-        if (validatePhoneNumber(_user.billing.phone)) {
-            edt_phone.setText(_user.billing.phone)
-        }
-
-
+                    if (validatePhoneNumber(it.data.billing.phone)) {
+                        edt_phone.setText(it.data.billing.phone)
+                    }
+                }
+            }
+        })
     }
+
 
     private fun googleSignObserver() {
 
@@ -504,24 +506,24 @@ class CheckOutFragment : Fragment(), View.OnClickListener {
             shipToDifferent = isChecked
             if (isChecked) {
                 cl_shipping_details.visibility = View.VISIBLE
-                var _user = appPrefs.getUserPrefs()
+
 
                 if (edt_company_shipping.text.toString().isNullOrEmpty()) {
-                    edt_company_shipping.setText(_user.shipping.company)
+                    edt_company_shipping.setText(user.shipping.company)
                 }
 
                 if (edt_house_number_shipping.text.toString().isNullOrEmpty()) {
-                    edt_house_number_shipping.setText(_user.shipping.address_1)
+                    edt_house_number_shipping.setText(user.shipping.address_1)
                 }
                 if (edt_apartment_shipping.text.toString().isNullOrEmpty()) {
-                    edt_apartment_shipping.setText(_user.shipping.address_2)
+                    edt_apartment_shipping.setText(user.shipping.address_2)
                 }
 
                 if (edt_city_shipping.text.toString().isNullOrEmpty()) {
-                    edt_city_shipping.setText(_user.shipping.city)
+                    edt_city_shipping.setText(user.shipping.city)
                 }
                 if (edt_pcode_shipping.text.toString().isNullOrEmpty()) {
-                    edt_pcode_shipping.setText(_user.shipping.postcode)
+                    edt_pcode_shipping.setText(user.shipping.postcode)
                 }
 
             } else {
@@ -545,6 +547,7 @@ class CheckOutFragment : Fragment(), View.OnClickListener {
             company = edt_company.text.toString()
             address_1 = edt_house_number.text.toString()
             address_2 = edt_apartment.text.toString()
+            city = edt_city.text.toString()
             city = edt_city.text.toString()
             postcode = edt_pcode.text.toString()
             email = edt_email.text.toString()

@@ -5,15 +5,22 @@ import android.util.Log
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount
+import com.google.gson.Gson
 import com.google.gson.JsonArray
 import com.google.gson.JsonObject
+import com.squareup.moshi.Moshi
+import com.squareup.moshi.Types
 import kotlinx.coroutines.flow.Flow
+import org.json.JSONObject
 import project.ceyloninnovationlabs.fastbuy.FastBuy
 import project.ceyloninnovationlabs.fastbuy.R
+import project.ceyloninnovationlabs.fastbuy.data.db.UserDao
 import project.ceyloninnovationlabs.fastbuy.data.model.product.Product
 import project.ceyloninnovationlabs.fastbuy.data.model.SliderImage
 import project.ceyloninnovationlabs.fastbuy.data.model.user.User
 import project.ceyloninnovationlabs.fastbuy.data.model.coupon.CouponBase
+import project.ceyloninnovationlabs.fastbuy.data.model.login.AuthRespons
 import project.ceyloninnovationlabs.fastbuy.data.model.orderoutput.PastOrder
 import project.ceyloninnovationlabs.fastbuy.data.model.page.Page
 import project.ceyloninnovationlabs.fastbuy.data.model.past.Orders
@@ -26,11 +33,12 @@ import project.ceyloninnovationlabs.fastbuy.ui.fragment.home.recent.RecentPaging
 import project.ceyloninnovationlabs.fastbuy.ui.fragment.past.PastPagingSource
 import project.ceyloninnovationlabs.fastbuy.ui.fragment.search.MorePagingSource
 import project.ceyloninnovationlabs.fastbuy.ui.fragment.search.SearchPagingSource
+import java.lang.Exception
 
 import java.util.regex.Pattern
 
 
-class HomeRepo(private var client: APIInterface) {
+class HomeRepo(private var client: APIInterface, private var userDao: UserDao) {
 
 
     companion object {
@@ -42,109 +50,102 @@ class HomeRepo(private var client: APIInterface) {
     fun customersOrders(userid: Int): Flow<PagingData<Orders>> {
         return Pager(
             config = PagingConfig(pageSize = NETWORK_PAGE_SIZE, enablePlaceholders = false),
-            pagingSourceFactory = { PastPagingSource(client,userid) }
+            pagingSourceFactory = { PastPagingSource(client, userid) }
         ).flow
     }
-
 
 
     suspend fun getPage(_pageid: Int): Page {
         return client.getPage(pageid = _pageid)
     }
 
-
-    suspend fun checkCustomer(email: String): ArrayList<User>  {
-       return client.checkCustomer(email)
-
+    suspend fun getCustomer(email: String): User {
+        val result = client.checkCustomer(email)
+        return if (result.isEmpty()) {
+            User().apply {
+                status = false
+                message = "No User found please try again!"
+            }
+        } else {
+            var existingUser = result.first()
+            insertUser(existingUser)
+            existingUser
+        }
     }
 
 
+    suspend fun checkCustomer(
+        email: String,
+        socialMediaLoginType: String,
+        account: GoogleSignInAccount,
+        facebookObject: JSONObject
+    ): User {
+        val checkCus = client.checkCustomer(email)
 
-     suspend fun updateCustomer(user: User): User {
 
+        if (checkCus.isEmpty()) {
+            var newUser = User()
+            if (socialMediaLoginType == "G") {
+                newUser.email = account.email!!
+                newUser.first_name = account.givenName!!
+                newUser.last_name = account.familyName!!
+                newUser.google_id = account.id!!
+                if (account.photoUrl != null) {
+                    newUser.picture = account.photoUrl.toString()
+                }
+            } else {
+                newUser.email = facebookObject.getString("email")
+                newUser.first_name = facebookObject.getString("first_name")
+                newUser.last_name = facebookObject.getString("last_name")
+                newUser.facebook_id = facebookObject.getString("id")
+                newUser.picture =
+                    "https://graph.facebook.com/" + facebookObject.getString("id") + "/picture?width=200&height=150"
+            }
+            val user = client.addCustomer(orderInfo = getNewUserJsonData(newUser))
+            if (socialMediaLoginType == "G") {
+                user.google_id = account.id!!
+            } else if (socialMediaLoginType == "F") {
+                user.facebook_id = facebookObject.getString("id")
+            }
 
-      var updateUser = User()
+            insertUser(user)
+            return user
+        } else {
+            var existingUser = checkCus.first()
+            for (item in existingUser.meta_data) {
+                if (socialMediaLoginType == "G") {
+                    if (item.key == "_wc_social_login_google_identifier") {
+                        existingUser.google_id = item.value.toString()
+                    }
+                } else if (socialMediaLoginType == "F") {
+                    if (item.key == "_wc_social_login_facebook_identifier") {
+                        existingUser.facebook_id = item.value.toString()
+                    }
+                }
+            }
 
-        if (user.first_name.isNullOrEmpty()) {
-            updateUser.message = "First name can not be empty"
-            updateUser.status = true
-            return updateUser
+            insertUser(existingUser)
+            return existingUser
         }
-
-        if (user.last_name.isNullOrEmpty()) {
-            updateUser.message = "Last name can not be empty"
-            updateUser.status = true
-            return updateUser
-        }
-
-
-
-
-        var orderJson = JsonObject()
-
-        orderJson.addProperty("first_name", user.first_name)
-        orderJson.addProperty("last_name", user.last_name)
-
-        var billingJson = JsonObject()
-
-        billingJson.addProperty("first_name", user.first_name)
-        billingJson.addProperty("last_name", user.last_name)
-        billingJson.addProperty("company", user.billing.company)
-        billingJson.addProperty("address_1", user.billing.address_1)
-        billingJson.addProperty("address_2", user.billing.address_2)
-        billingJson.addProperty("city", user.billing.city)
-        billingJson.addProperty("state", user.billing.state)
-        billingJson.addProperty("postcode", user.billing.postcode)
-        billingJson.addProperty("country", "LK")
-        billingJson.addProperty("email",  user.billing.email)
-        billingJson.addProperty("phone", user.billing.phone)
-
-        orderJson.add("billing", billingJson)
-
-
-
-        var shippingJson = JsonObject()
-        shippingJson.addProperty("first_name", user.shipping.first_name)
-        shippingJson.addProperty("last_name", user.shipping.last_name)
-        shippingJson.addProperty("company", user.shipping.company)
-        shippingJson.addProperty("address_1", user.shipping.address_1)
-        shippingJson.addProperty("address_2", user.shipping.address_2)
-        shippingJson.addProperty("city", user.shipping.city)
-        shippingJson.addProperty("state", user.shipping.state)
-        shippingJson.addProperty("postcode", user.shipping.postcode)
-        shippingJson.addProperty("country", user.shipping.country)
-        shippingJson.addProperty("phone", user.shipping.phone)
-
-        orderJson.add("shipping", shippingJson)
-         return client.updateCustomer(orderInfo = orderJson,user.id)
 
     }
 
-
-
-    suspend fun addCustomer(user: User): User {
+    private fun getNewUserJsonData(user: User): JsonObject {
         var orderJson = JsonObject()
-
         orderJson.addProperty("email", user.email)
         orderJson.addProperty("first_name", user.first_name)
         orderJson.addProperty("last_name", user.last_name)
         orderJson.addProperty("username", user.email)
 
-        if(user.google_id.isNotEmpty()){
+        if (user.google_id.isNotEmpty()) {
             orderJson.addProperty("password", user.google_id)
-        }else{
+        } else {
             orderJson.addProperty("password", user.facebook_id)
         }
 
-
-
-
-
-
-
         var billingJson = JsonObject()
 
-        if(user.billing.first_name.isNullOrEmpty()){
+        if (user.billing.first_name.isNullOrEmpty()) {
 
             billingJson.addProperty("first_name", user.first_name)
             billingJson.addProperty("last_name", user.last_name)
@@ -155,11 +156,11 @@ class HomeRepo(private var client: APIInterface) {
             billingJson.addProperty("state", user.billing.state)
             billingJson.addProperty("postcode", user.billing.postcode)
             billingJson.addProperty("country", "LK")
-            billingJson.addProperty("email",  user.email)
+            billingJson.addProperty("email", user.email)
             billingJson.addProperty("phone", user.email)
 
 
-        }else{
+        } else {
             billingJson.addProperty("first_name", user.billing.first_name)
             billingJson.addProperty("last_name", user.billing.last_name)
             billingJson.addProperty("company", user.billing.company)
@@ -169,7 +170,7 @@ class HomeRepo(private var client: APIInterface) {
             billingJson.addProperty("state", user.billing.state)
             billingJson.addProperty("postcode", user.billing.postcode)
             billingJson.addProperty("country", "LK")
-            billingJson.addProperty("email",  user.email)
+            billingJson.addProperty("email", user.email)
             billingJson.addProperty("phone", user.billing.phone)
 
         }
@@ -220,7 +221,7 @@ class HomeRepo(private var client: APIInterface) {
         wcemailverifiedJson.addProperty("value", "true")
         meteDataJsonArr.add(wcemailverifiedJson)
 
-        if(user.google_id.isNotEmpty()){
+        if (user.google_id.isNotEmpty()) {
 
             var socialloginJson = JsonObject()
 
@@ -229,7 +230,7 @@ class HomeRepo(private var client: APIInterface) {
 
             socialloginValueJson.addProperty("identifier", user.google_id)
             socialloginValueJson.addProperty("photo_url", user.picture)
-            socialloginValueJson.addProperty("display_name", user.first_name+" "+user.last_name)
+            socialloginValueJson.addProperty("display_name", user.first_name + " " + user.last_name)
             socialloginValueJson.addProperty("first_name", user.first_name)
             socialloginValueJson.addProperty("last_name", user.last_name)
             socialloginValueJson.addProperty("language", "en")
@@ -242,12 +243,18 @@ class HomeRepo(private var client: APIInterface) {
 
 
             var _wc_social_login_google_identifier = JsonObject()
-            _wc_social_login_google_identifier.addProperty("key", "_wc_social_login_google_identifier")
+            _wc_social_login_google_identifier.addProperty(
+                "key",
+                "_wc_social_login_google_identifier"
+            )
             _wc_social_login_google_identifier.addProperty("value", user.google_id)
             meteDataJsonArr.add(_wc_social_login_google_identifier)
 
             var _wc_social_login_google_profile_image = JsonObject()
-            _wc_social_login_google_profile_image.addProperty("key", "_wc_social_login_google_profile_image")
+            _wc_social_login_google_profile_image.addProperty(
+                "key",
+                "_wc_social_login_google_profile_image"
+            )
             _wc_social_login_google_profile_image.addProperty("value", user.picture)
             meteDataJsonArr.add(_wc_social_login_google_profile_image)
 
@@ -258,18 +265,24 @@ class HomeRepo(private var client: APIInterface) {
             meteDataJsonArr.add(_wc_social_login_profile_image)
 
             var _wc_social_login_google_login_timestamp = JsonObject()
-            _wc_social_login_google_login_timestamp.addProperty("key", "_wc_social_login_google_login_timestamp")
+            _wc_social_login_google_login_timestamp.addProperty(
+                "key",
+                "_wc_social_login_google_login_timestamp"
+            )
             _wc_social_login_google_login_timestamp.addProperty("value", ts)
             meteDataJsonArr.add(_wc_social_login_google_login_timestamp)
 
 
             var _wc_social_login_google_login_timestamp_gmt = JsonObject()
-            _wc_social_login_google_login_timestamp_gmt.addProperty("key", "_wc_social_login_google_login_timestamp_gmt")
+            _wc_social_login_google_login_timestamp_gmt.addProperty(
+                "key",
+                "_wc_social_login_google_login_timestamp_gmt"
+            )
             _wc_social_login_google_login_timestamp_gmt.addProperty("value", ts)
             meteDataJsonArr.add(_wc_social_login_google_login_timestamp_gmt)
 
 
-        }else{
+        } else {
 
             var socialloginJson = JsonObject()
 
@@ -278,7 +291,7 @@ class HomeRepo(private var client: APIInterface) {
 
             socialloginValueJson.addProperty("identifier", user.facebook_id)
             socialloginValueJson.addProperty("photo_url", user.picture)
-            socialloginValueJson.addProperty("display_name", user.first_name+" "+user.last_name)
+            socialloginValueJson.addProperty("display_name", user.first_name + " " + user.last_name)
             socialloginValueJson.addProperty("first_name", user.first_name)
             socialloginValueJson.addProperty("last_name", user.last_name)
             socialloginValueJson.addProperty("language", "en")
@@ -291,12 +304,18 @@ class HomeRepo(private var client: APIInterface) {
 
 
             var _wc_social_login_google_identifier = JsonObject()
-            _wc_social_login_google_identifier.addProperty("key", "_wc_social_login_facebook_identifier")
+            _wc_social_login_google_identifier.addProperty(
+                "key",
+                "_wc_social_login_facebook_identifier"
+            )
             _wc_social_login_google_identifier.addProperty("value", user.facebook_id)
             meteDataJsonArr.add(_wc_social_login_google_identifier)
 
             var _wc_social_login_google_profile_image = JsonObject()
-            _wc_social_login_google_profile_image.addProperty("key", "_wc_social_login_facebook_profile_image")
+            _wc_social_login_google_profile_image.addProperty(
+                "key",
+                "_wc_social_login_facebook_profile_image"
+            )
             _wc_social_login_google_profile_image.addProperty("value", user.picture)
             meteDataJsonArr.add(_wc_social_login_google_profile_image)
 
@@ -307,13 +326,339 @@ class HomeRepo(private var client: APIInterface) {
             meteDataJsonArr.add(_wc_social_login_profile_image)
 
             var _wc_social_login_google_login_timestamp = JsonObject()
-            _wc_social_login_google_login_timestamp.addProperty("key", "_wc_social_login_facebook_login_timestamp")
+            _wc_social_login_google_login_timestamp.addProperty(
+                "key",
+                "_wc_social_login_facebook_login_timestamp"
+            )
             _wc_social_login_google_login_timestamp.addProperty("value", ts)
             meteDataJsonArr.add(_wc_social_login_google_login_timestamp)
 
 
             var _wc_social_login_google_login_timestamp_gmt = JsonObject()
-            _wc_social_login_google_login_timestamp_gmt.addProperty("key", "_wc_social_login_facebook_login_timestamp_gmt")
+            _wc_social_login_google_login_timestamp_gmt.addProperty(
+                "key",
+                "_wc_social_login_facebook_login_timestamp_gmt"
+            )
+            _wc_social_login_google_login_timestamp_gmt.addProperty("value", ts)
+            meteDataJsonArr.add(_wc_social_login_google_login_timestamp_gmt)
+
+
+        }
+
+        var wc_last_activeJson = JsonObject()
+        wc_last_activeJson.addProperty("key", "wc_last_activeJson")
+        wc_last_activeJson.addProperty("value", ts)
+        meteDataJsonArr.add(wc_last_activeJson)
+
+        orderJson.add("meta_data", meteDataJsonArr)
+
+        return orderJson
+    }
+
+
+    suspend fun insertUser(user: User) {
+        userDao.insertUser(user)
+    }
+
+    suspend fun getUser(): User {
+        return userDao.getUser()
+    }
+
+    suspend fun updateCustomer(user: User): User {
+
+
+        var updateUser = User()
+
+        if (user.first_name.isNullOrEmpty()) {
+            updateUser.message = "First name can not be empty"
+            updateUser.status = true
+            return updateUser
+        }
+
+        if (user.last_name.isNullOrEmpty()) {
+            updateUser.message = "Last name can not be empty"
+            updateUser.status = true
+            return updateUser
+        }
+
+
+        var orderJson = JsonObject()
+
+        orderJson.addProperty("first_name", user.first_name)
+        orderJson.addProperty("last_name", user.last_name)
+
+        var billingJson = JsonObject()
+
+        billingJson.addProperty("first_name", user.first_name)
+        billingJson.addProperty("last_name", user.last_name)
+        billingJson.addProperty("company", user.billing.company)
+        billingJson.addProperty("address_1", user.billing.address_1)
+        billingJson.addProperty("address_2", user.billing.address_2)
+        billingJson.addProperty("city", user.billing.city)
+        billingJson.addProperty("state", user.billing.state)
+        billingJson.addProperty("postcode", user.billing.postcode)
+        billingJson.addProperty("country", "LK")
+        billingJson.addProperty("email", user.billing.email)
+        billingJson.addProperty("phone", user.billing.phone)
+
+        orderJson.add("billing", billingJson)
+
+
+        var shippingJson = JsonObject()
+        shippingJson.addProperty("first_name", user.shipping.first_name)
+        shippingJson.addProperty("last_name", user.shipping.last_name)
+        shippingJson.addProperty("company", user.shipping.company)
+        shippingJson.addProperty("address_1", user.shipping.address_1)
+        shippingJson.addProperty("address_2", user.shipping.address_2)
+        shippingJson.addProperty("city", user.shipping.city)
+        shippingJson.addProperty("state", user.shipping.state)
+        shippingJson.addProperty("postcode", user.shipping.postcode)
+        shippingJson.addProperty("country", user.shipping.country)
+        shippingJson.addProperty("phone", user.shipping.phone)
+
+        orderJson.add("shipping", shippingJson)
+        var respons = client.updateCustomer(orderInfo = orderJson, user.id)
+        try {
+            if(!respons.status){
+                var values = respons.meta_data[8].value
+                var jsonVlau = Gson().toJson(values)
+
+                val moshi = Moshi.Builder().build()
+                val adapter = moshi.adapter<Map<String, Any>>(
+                    Types.newParameterizedType(
+                        Map::class.java, String::class.java,
+                        Object::class.java
+                    )
+                )
+                val yourMap = adapter.fromJson(jsonVlau)
+                respons.google_id = yourMap?.get("identifier").toString()
+            }
+
+        }catch (ex : Exception){
+
+        }
+
+
+        return client.updateCustomer(orderInfo = orderJson, user.id)
+
+    }
+
+    suspend fun deleteUser(): Boolean {
+        userDao.deleteUser()
+        return true
+    }
+
+    suspend fun addCustomer(user: User): User {
+        var orderJson = JsonObject()
+
+        orderJson.addProperty("email", user.email)
+        orderJson.addProperty("first_name", user.first_name)
+        orderJson.addProperty("last_name", user.last_name)
+        orderJson.addProperty("username", user.email)
+
+        if (user.google_id.isNotEmpty()) {
+            orderJson.addProperty("password", user.google_id)
+        } else {
+            orderJson.addProperty("password", user.facebook_id)
+        }
+
+
+        var billingJson = JsonObject()
+
+        if (user.billing.first_name.isNullOrEmpty()) {
+
+            billingJson.addProperty("first_name", user.first_name)
+            billingJson.addProperty("last_name", user.last_name)
+            billingJson.addProperty("company", user.billing.company)
+            billingJson.addProperty("address_1", user.billing.address_1)
+            billingJson.addProperty("address_2", user.billing.address_2)
+            billingJson.addProperty("city", user.billing.city)
+            billingJson.addProperty("state", user.billing.state)
+            billingJson.addProperty("postcode", user.billing.postcode)
+            billingJson.addProperty("country", "LK")
+            billingJson.addProperty("email", user.email)
+            billingJson.addProperty("phone", user.email)
+
+
+        } else {
+            billingJson.addProperty("first_name", user.billing.first_name)
+            billingJson.addProperty("last_name", user.billing.last_name)
+            billingJson.addProperty("company", user.billing.company)
+            billingJson.addProperty("address_1", user.billing.address_1)
+            billingJson.addProperty("address_2", user.billing.address_2)
+            billingJson.addProperty("city", user.billing.city)
+            billingJson.addProperty("state", user.billing.state)
+            billingJson.addProperty("postcode", user.billing.postcode)
+            billingJson.addProperty("country", "LK")
+            billingJson.addProperty("email", user.email)
+            billingJson.addProperty("phone", user.billing.phone)
+
+        }
+
+
+
+
+        orderJson.add("billing", billingJson)
+
+
+        var shippingJson = JsonObject()
+        shippingJson.addProperty("first_name", user.shipping.first_name)
+        shippingJson.addProperty("last_name", user.shipping.last_name)
+        shippingJson.addProperty("company", user.shipping.company)
+        shippingJson.addProperty("address_1", user.shipping.address_1)
+        shippingJson.addProperty("address_2", user.shipping.address_2)
+        shippingJson.addProperty("city", user.shipping.city)
+        shippingJson.addProperty("state", user.shipping.state)
+        shippingJson.addProperty("postcode", user.shipping.postcode)
+        shippingJson.addProperty("country", user.shipping.country)
+        shippingJson.addProperty("phone", user.shipping.phone)
+
+        orderJson.add("shipping", shippingJson)
+
+        val tsLong = System.currentTimeMillis() / 1000
+        val ts = tsLong.toString()
+
+        val meteDataJsonArr = JsonArray()
+
+        var pointsbalanceJson = JsonObject()
+        pointsbalanceJson.addProperty("key", "wc_points_balance")
+        pointsbalanceJson.addProperty("value", "101")
+        meteDataJsonArr.add(pointsbalanceJson)
+
+        var wcemailverifiedcodeJson = JsonObject()
+        wcemailverifiedcodeJson.addProperty("key", "wcemailverifiedcode")
+        wcemailverifiedcodeJson.addProperty("value", "0587add09364a270c04de59a60c5cd5f")
+        meteDataJsonArr.add(wcemailverifiedcodeJson)
+
+        var profileupdatedJson = JsonObject()
+        profileupdatedJson.addProperty("key", "_yoast_wpseo_profile_updated")
+        profileupdatedJson.addProperty("value", ts)
+        meteDataJsonArr.add(profileupdatedJson)
+
+
+        var wcemailverifiedJson = JsonObject()
+        wcemailverifiedJson.addProperty("key", "wcemailverifiedJson")
+        wcemailverifiedJson.addProperty("value", "true")
+        meteDataJsonArr.add(wcemailverifiedJson)
+
+        if (user.google_id.isNotEmpty()) {
+
+            var socialloginJson = JsonObject()
+
+            socialloginJson.addProperty("key", "_wc_social_login_google_profile")
+            var socialloginValueJson = JsonObject()
+
+            socialloginValueJson.addProperty("identifier", user.google_id)
+            socialloginValueJson.addProperty("photo_url", user.picture)
+            socialloginValueJson.addProperty("display_name", user.first_name + " " + user.last_name)
+            socialloginValueJson.addProperty("first_name", user.first_name)
+            socialloginValueJson.addProperty("last_name", user.last_name)
+            socialloginValueJson.addProperty("language", "en")
+            socialloginValueJson.addProperty("email", user.email)
+            socialloginValueJson.addProperty("email_verified", user.email)
+
+
+            socialloginJson.add("value", socialloginValueJson)
+            meteDataJsonArr.add(socialloginJson)
+
+
+            var _wc_social_login_google_identifier = JsonObject()
+            _wc_social_login_google_identifier.addProperty(
+                "key",
+                "_wc_social_login_google_identifier"
+            )
+            _wc_social_login_google_identifier.addProperty("value", user.google_id)
+            meteDataJsonArr.add(_wc_social_login_google_identifier)
+
+            var _wc_social_login_google_profile_image = JsonObject()
+            _wc_social_login_google_profile_image.addProperty(
+                "key",
+                "_wc_social_login_google_profile_image"
+            )
+            _wc_social_login_google_profile_image.addProperty("value", user.picture)
+            meteDataJsonArr.add(_wc_social_login_google_profile_image)
+
+
+            var _wc_social_login_profile_image = JsonObject()
+            _wc_social_login_profile_image.addProperty("key", "_wc_social_login_profile_image")
+            _wc_social_login_profile_image.addProperty("value", user.picture)
+            meteDataJsonArr.add(_wc_social_login_profile_image)
+
+            var _wc_social_login_google_login_timestamp = JsonObject()
+            _wc_social_login_google_login_timestamp.addProperty(
+                "key",
+                "_wc_social_login_google_login_timestamp"
+            )
+            _wc_social_login_google_login_timestamp.addProperty("value", ts)
+            meteDataJsonArr.add(_wc_social_login_google_login_timestamp)
+
+
+            var _wc_social_login_google_login_timestamp_gmt = JsonObject()
+            _wc_social_login_google_login_timestamp_gmt.addProperty(
+                "key",
+                "_wc_social_login_google_login_timestamp_gmt"
+            )
+            _wc_social_login_google_login_timestamp_gmt.addProperty("value", ts)
+            meteDataJsonArr.add(_wc_social_login_google_login_timestamp_gmt)
+
+
+        } else {
+
+            var socialloginJson = JsonObject()
+
+            socialloginJson.addProperty("key", "_wc_social_login_facebook_profile")
+            var socialloginValueJson = JsonObject()
+
+            socialloginValueJson.addProperty("identifier", user.facebook_id)
+            socialloginValueJson.addProperty("photo_url", user.picture)
+            socialloginValueJson.addProperty("display_name", user.first_name + " " + user.last_name)
+            socialloginValueJson.addProperty("first_name", user.first_name)
+            socialloginValueJson.addProperty("last_name", user.last_name)
+            socialloginValueJson.addProperty("language", "en")
+            socialloginValueJson.addProperty("email", user.email)
+            socialloginValueJson.addProperty("email_verified", user.email)
+
+
+            socialloginJson.add("value", socialloginValueJson)
+            meteDataJsonArr.add(socialloginJson)
+
+
+            var _wc_social_login_google_identifier = JsonObject()
+            _wc_social_login_google_identifier.addProperty(
+                "key",
+                "_wc_social_login_facebook_identifier"
+            )
+            _wc_social_login_google_identifier.addProperty("value", user.facebook_id)
+            meteDataJsonArr.add(_wc_social_login_google_identifier)
+
+            var _wc_social_login_google_profile_image = JsonObject()
+            _wc_social_login_google_profile_image.addProperty(
+                "key",
+                "_wc_social_login_facebook_profile_image"
+            )
+            _wc_social_login_google_profile_image.addProperty("value", user.picture)
+            meteDataJsonArr.add(_wc_social_login_google_profile_image)
+
+
+            var _wc_social_login_profile_image = JsonObject()
+            _wc_social_login_profile_image.addProperty("key", "_wc_social_login_profile_image")
+            _wc_social_login_profile_image.addProperty("value", user.picture)
+            meteDataJsonArr.add(_wc_social_login_profile_image)
+
+            var _wc_social_login_google_login_timestamp = JsonObject()
+            _wc_social_login_google_login_timestamp.addProperty(
+                "key",
+                "_wc_social_login_facebook_login_timestamp"
+            )
+            _wc_social_login_google_login_timestamp.addProperty("value", ts)
+            meteDataJsonArr.add(_wc_social_login_google_login_timestamp)
+
+
+            var _wc_social_login_google_login_timestamp_gmt = JsonObject()
+            _wc_social_login_google_login_timestamp_gmt.addProperty(
+                "key",
+                "_wc_social_login_facebook_login_timestamp_gmt"
+            )
             _wc_social_login_google_login_timestamp_gmt.addProperty("value", ts)
             meteDataJsonArr.add(_wc_social_login_google_login_timestamp_gmt)
 
@@ -474,14 +819,11 @@ class HomeRepo(private var client: APIInterface) {
         }
 
 
+        var _user = userDao.getUser()
 
-
-
-
-        var _user = appPrefs.getUserPrefs()
-
-        if(_user.id !=0){
-            orderJson.addProperty("customer_id", _user.id)
+        if (_user != null) {
+            if (_user.id != 0)
+                orderJson.addProperty("customer_id", _user.id)
         }
 
         var billingJson = JsonObject()
@@ -526,8 +868,8 @@ class HomeRepo(private var client: APIInterface) {
             productJson.addProperty("product_id", it.id)
             productJson.addProperty("quantity", it.quantity)
 
-            if(it.isGiftWrapping){
-                var tot = it.price.toDouble()+200.00
+            if (it.isGiftWrapping) {
+                var tot = it.price.toDouble() + 200.00
                 productJson.addProperty("total", tot.toString())
             }
 
@@ -536,11 +878,14 @@ class HomeRepo(private var client: APIInterface) {
 
             val itemsMetadataJsonArr = JsonArray()
 
-            if(it.isGiftWrapping){
+            if (it.isGiftWrapping) {
                 var giftObjectJson = JsonObject()
                 giftObjectJson.addProperty("key", "Gift Wrapping for All Products (Rs.200.00)")
                 giftObjectJson.addProperty("value", "Add gift wrapping")
-                giftObjectJson.addProperty("display_key", "Gift Wrapping for All Products (Rs.200.00)")
+                giftObjectJson.addProperty(
+                    "display_key",
+                    "Gift Wrapping for All Products (Rs.200.00)"
+                )
                 giftObjectJson.addProperty("display_value", "Add gift wrapping")
                 itemsMetadataJsonArr.add(giftObjectJson)
             }
@@ -571,7 +916,7 @@ class HomeRepo(private var client: APIInterface) {
         }
 
 
-        if((order.cashOnDeliveryValue != 0.0) && (order.paymentType == "cod")){
+        if ((order.cashOnDeliveryValue != 0.0) && (order.paymentType == "cod")) {
 
             val feeLines = JsonArray()
             var feeLinesJson = JsonObject()
@@ -599,7 +944,7 @@ class HomeRepo(private var client: APIInterface) {
 
         }
 
-        if((order.paymentGatewayValue != 0.0) && (order.paymentType == "payhere")){
+        if ((order.paymentGatewayValue != 0.0) && (order.paymentType == "payhere")) {
 
             val feeLines = JsonArray()
             var feeLinesJson = JsonObject()
@@ -662,14 +1007,41 @@ class HomeRepo(private var client: APIInterface) {
         shippingLineJarray.add(shippingLineJson)
         orderJson.add("shipping_lines", shippingLineJarray)
 
-        Log.i("HOME_REPO",orderJson.toString())
+        Log.i("HOME_REPO", orderJson.toString())
 
         return client.addOrder(orderInfo = orderJson)
 
     }
 
 
-    suspend fun updateOrder(orderid: Int,status :Int): PastOrder {
+    suspend fun loginUser(user: User): AuthRespons {
+        var respons = AuthRespons()
+
+        if (user.email.isNullOrEmpty()) {
+            respons.success = false
+            respons.data.message = "Username or Email is required."
+            return respons
+        }
+        if (user.password.isNullOrEmpty()) {
+            respons.success = false
+            respons.data.message = "The password field is empty"
+            return respons
+        }
+
+
+        respons = if (validateEmailAddress(user.email)) {
+            return client.authenticationEmail(email = user.email, password = user.password)
+        } else {
+            return client.authenticationUserName(username = user.email, password = user.password)
+        }
+
+
+
+        return respons
+    }
+
+
+    suspend fun updateOrder(orderid: Int, status: Int): PastOrder {
 
         var orderJson = JsonObject()
         when (status) {
@@ -684,7 +1056,7 @@ class HomeRepo(private var client: APIInterface) {
             }
         }
 
-        return client.updateOrders(orderJson,orderid)
+        return client.updateOrders(orderJson, orderid)
     }
 
 

@@ -26,31 +26,6 @@ object AppPrefs {
 
 
 
-    fun setUserPrefs(value: User) {
-        val sharedPref = mContext.getSharedPreferences(PREFNAME, Context.MODE_PRIVATE) ?: return
-        with(sharedPref.edit()) {
-            putString(KEY_USER, Gson().toJson(value))
-            commit()
-        }
-    }
-
-
-
-    fun getUserPrefs(): User {
-        val sharedPref = mContext.getSharedPreferences(PREFNAME, Context.MODE_PRIVATE)
-        var user = User()
-
-        return if (sharedPref.getString(KEY_USER, null) == null) {
-            user
-        } else {
-            Gson().fromJson(
-                sharedPref.getString(KEY_USER, null),
-                object : TypeToken<User>() {}.type
-            )
-        }
-    }
-
-
     fun setCartItemPrefs(value: PastOrder) {
         val sharedPref = mContext.getSharedPreferences(PREFNAME, Context.MODE_PRIVATE) ?: return
         with(sharedPref.edit()) {

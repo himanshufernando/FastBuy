@@ -20,6 +20,7 @@ import androidx.lifecycle.Observer
 import kotlinx.android.synthetic.main.fragment_last_order.cl_facebook
 import kotlinx.android.synthetic.main.fragment_last_order.cl_google
 import project.ceyloninnovationlabs.fastbuy.FastBuy
+import project.ceyloninnovationlabs.fastbuy.data.model.user.User
 import project.ceyloninnovationlabs.fastbuy.services.listeners.OnBackListener
 
 class LastOrderFragment : Fragment(),View.OnClickListener, OnBackListener {
@@ -52,7 +53,7 @@ class LastOrderFragment : Fragment(),View.OnClickListener, OnBackListener {
         img_navigation_last_order.setOnClickListener(this)
         FastBuy.setOnBackResponseListener(this)
 
-        saveUserData()
+        getUser()
         googleSignObserver()
 
 
@@ -80,8 +81,23 @@ class LastOrderFragment : Fragment(),View.OnClickListener, OnBackListener {
     }
 
 
-    private fun saveUserData(){
-        viewmodel.saveUserData().observe(viewLifecycleOwner, Observer {_user ->
+
+    private fun getUser() {
+        viewmodel.getUser().observe(viewLifecycleOwner, Observer {
+            when (it) {
+                is FastBuyResult.Success -> {
+                    saveUserData(it.data)
+
+                }
+            }
+
+        })
+
+    }
+
+
+    private fun saveUserData(user: User){
+        viewmodel.saveUserDataFromLastOrder(user).observe(viewLifecycleOwner, Observer {_user ->
             if (_user.facebook_id.isNotEmpty() || _user.google_id.isNotEmpty()) {
                cl_account_last.visibility = View.GONE
             }else{
@@ -103,7 +119,6 @@ class LastOrderFragment : Fragment(),View.OnClickListener, OnBackListener {
 
     override fun onBackListenerResponse(fragment: Int) {
           if(fragment==1){
-              println("xxxxxxxxxxxxxxx 012")
               NavHostFragment.findNavController(requireParentFragment()).navigate(R.id.fragment_last_to_home)
           }
     }

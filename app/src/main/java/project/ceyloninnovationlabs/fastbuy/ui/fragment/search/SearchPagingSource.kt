@@ -18,29 +18,8 @@ class SearchPagingSource (private val service: APIInterface,private val searchQu
         return try {
 
 
-        //    var sortedProlist = service.getRecentProducts(params.loadSize, position)
 
             var sortedProlist = service.searchProducts(params.loadSize, position, search = searchQuery, instock = true)
-
-
-          /*  var response = service.searchProducts(params.loadSize, position, search = searchQuery, instock = true)
-
-            var sortedProlist = ArrayList<Product>()
-            response.map {
-                println("xxxxxxxxxxxxxxxxxxxxxx name "+it.name)
-
-                it.categories.map {cat ->
-                    println("xxxxxxxxxxxxxxxxxxxxxx categories name "+it.name)
-                    if(cat.name == "Laptops"){
-                        sortedProlist.add(it)
-                        println("xxxxxxxxxxxxxxxxxxxxxx add product name "+it.name)
-                    }
-
-                }
-
-
-            }*/
-
 
 
 

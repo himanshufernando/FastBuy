@@ -5,6 +5,7 @@ import com.google.gson.JsonObject
 import project.ceyloninnovationlabs.fastbuy.data.model.SliderImage
 import project.ceyloninnovationlabs.fastbuy.data.model.user.User
 import project.ceyloninnovationlabs.fastbuy.data.model.coupon.Coupon
+import project.ceyloninnovationlabs.fastbuy.data.model.login.AuthRespons
 import project.ceyloninnovationlabs.fastbuy.data.model.orderoutput.PastOrder
 import project.ceyloninnovationlabs.fastbuy.data.model.page.Page
 import project.ceyloninnovationlabs.fastbuy.data.model.past.Orders
@@ -71,8 +72,14 @@ interface APIInterface {
     suspend fun customersOrders(@Query("per_page") pageSize: Int, @Query("page") page: Int,
                                 @Query("customer") customer_id: Int): ArrayList<Orders>
 
-
     @PUT("wp-json/wc/v3/orders/{id}")
     suspend fun updateOrders(@Body orderInfo: JsonObject,@Path("id") orderid: Int): PastOrder
+
+    @POST("?rest_route=/simple-jwt-login/v1/auth")
+    suspend fun authenticationEmail(@Query("email") email: String, @Query("password") password: String): AuthRespons
+
+    @POST("?rest_route=/simple-jwt-login/v1/auth")
+    suspend fun authenticationUserName(@Query("username") username: String, @Query("password") password: String): AuthRespons
+
 
 }

@@ -1,7 +1,6 @@
 package project.ceyloninnovationlabs.fastbuy.ui.activity
 
 
-import android.app.Activity
 import android.app.AlertDialog
 import android.content.DialogInterface
 import android.content.Intent
@@ -20,31 +19,39 @@ import androidx.lifecycle.Observer
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import com.facebook.*
-import com.facebook.login.LoginManager
-import com.facebook.login.LoginResult
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
-import com.google.android.gms.common.api.ApiException
 import com.google.android.material.navigation.NavigationView
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_main.*
+import project.ceyloninnovationlabs.fastbuy.R
+import project.ceyloninnovationlabs.fastbuy.viewmodels.home.HomeViewModel
+import project.ceyloninnovationlabs.fastbuy.data.model.FastBuyResult
+import project.ceyloninnovationlabs.fastbuy.services.perfrences.AppPrefs
+import android.util.Base64.*
+import com.facebook.CallbackManager
+import com.facebook.FacebookCallback
+import com.facebook.FacebookException
+import com.facebook.login.LoginManager
+import java.util.*
+import com.facebook.AccessToken
+import org.json.JSONObject
+import com.facebook.GraphRequest
+import lk.payhere.androidsdk.model.InitRequest
+import project.ceyloninnovationlabs.fastbuy.data.model.orderoutput.PastOrder
 import lk.payhere.androidsdk.PHConfigs
 import lk.payhere.androidsdk.PHConstants
 import lk.payhere.androidsdk.PHMainActivity
-import lk.payhere.androidsdk.PHResponse
-import lk.payhere.androidsdk.model.InitRequest
 import lk.payhere.androidsdk.model.Item
+import android.app.Activity
+import com.facebook.login.LoginResult
+import com.google.android.gms.common.api.ApiException
 import lk.payhere.androidsdk.model.StatusResponse
-import org.json.JSONObject
+import lk.payhere.androidsdk.PHResponse
 import project.ceyloninnovationlabs.fastbuy.FastBuy
-import project.ceyloninnovationlabs.fastbuy.R
-import project.ceyloninnovationlabs.fastbuy.data.model.FastBuyResult
-import project.ceyloninnovationlabs.fastbuy.data.model.orderoutput.PastOrder
 import project.ceyloninnovationlabs.fastbuy.services.listeners.OnBackListener
-import project.ceyloninnovationlabs.fastbuy.services.perfrences.AppPrefs
-import project.ceyloninnovationlabs.fastbuy.viewmodels.home.HomeViewModel
 
 
 @AndroidEntryPoint
@@ -101,8 +108,7 @@ class MainActivity : FragmentActivity(), View.OnClickListener {
             .build()
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso)
 
-
-
+        facebookObject = JSONObject()
 
     }
 
@@ -319,7 +325,7 @@ class MainActivity : FragmentActivity(), View.OnClickListener {
                     if (it.isSuccessful) {
                         it.result?.let {
                             account = it
-                            checkUser(it.email)
+                            checkUser(it.email!!)
                         }
 
                     } else {
@@ -343,91 +349,25 @@ class MainActivity : FragmentActivity(), View.OnClickListener {
 
 
     private fun checkUser(email: String) {
-        viewmodel.checkCustomer(email).observe(this, Observer {
-            when (it) {
-                is FastBuyResult.Success -> {
-                    if (it.data.isEmpty()) {
-                        addCustomer()
-                    } else {
-                        var _user = it.data.first()
-                        var values = _user.meta_data
-
-                        for (item in values){
-                            if (socialMediaLoginType == "G") {
-                                if(item.key == "_wc_social_login_google_identifier"){ _user.google_id = item.value.toString() }
-                            } else {
-                                if(item.key == "_wc_social_login_facebook_identifier"){ _user.facebook_id = item.value.toString() }
-                            }
-                        }
-                        appPrefs.setUserPrefs(_user)
-                        viewmodel.googleSign.value = _user
+        viewmodel.checkCustomer(email, socialMediaLoginType, account, facebookObject)
+            .observe(this, Observer {
+                when (it) {
+                    is FastBuyResult.Success -> {
                         viewmodel.googleSignProgress.value = false
+                        viewmodel.googleSign.value = it.data
+                        cl_main.visibility = View.GONE
+                    }
+                    is FastBuyResult.ExceptionError.ExError -> {
+                        viewmodel.googleSignProgress.value = false
+                        errorAlertDialog("Error", it.exception.toString())
+                    }
+                    is FastBuyResult.LogicalError.LogError -> {
+                        viewmodel.googleSignProgress.value = false
+                        errorAlertDialog("Error", it.exception.toString())
                     }
 
                 }
-                is FastBuyResult.ExceptionError.ExError -> {
-                    viewmodel.googleSignProgress.value = false
-                    errorAlertDialog("Error", it.exception.toString())
-                }
-                is FastBuyResult.LogicalError.LogError -> {
-                    viewmodel.googleSignProgress.value = false
-                    errorAlertDialog("Error", it.exception.toString())
-                }
-
-            }
-
-        })
-
-    }
-
-
-    private fun addCustomer() {
-
-        var userDetails = appPrefs.getUserPrefs()
-        if (socialMediaLoginType == "G") {
-            userDetails.email = account.email
-            userDetails.first_name = account.givenName
-            userDetails.last_name = account.familyName
-            userDetails.google_id = account.id
-            if (account.photoUrl != null) {
-                userDetails.picture = account.photoUrl.toString()
-            }
-        } else {
-            userDetails.email = facebookObject.getString("email")
-            userDetails.first_name = facebookObject.getString("first_name")
-            userDetails.last_name = facebookObject.getString("last_name")
-            userDetails.facebook_id = facebookObject.getString("id")
-            userDetails.picture =
-                "https://graph.facebook.com/" + facebookObject.getString("id") + "/picture?width=200&height=150"
-        }
-
-        viewmodel.addCustomer(userDetails).observe(this, Observer {
-            when (it) {
-                is FastBuyResult.Success -> {
-                    viewmodel.googleSignProgress.value = false
-                    var _user = it.data
-
-                    if (socialMediaLoginType == "G") {
-                        _user.google_id = account.id
-                    } else {
-                        _user.facebook_id = facebookObject.getString("id")
-                    }
-                    appPrefs.setUserPrefs(_user)
-                    viewmodel.googleSign.value = _user
-                }
-                is FastBuyResult.ExceptionError.ExError -> {
-                    viewmodel.googleSignProgress.value = false
-                    errorAlertDialog("Error", it.exception.toString())
-                }
-                is FastBuyResult.LogicalError.LogError -> {
-                    viewmodel.googleSignProgress.value = false
-                    errorAlertDialog("Error", it.exception.toString())
-                }
-
-            }
-
-        })
-
+            })
     }
 
 

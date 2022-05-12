@@ -3,10 +3,15 @@ package project.ceyloninnovationlabs.fastbuy.viewmodels.home
 import androidx.lifecycle.*
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount
+import com.google.gson.Gson
+import com.squareup.moshi.Moshi
+import com.squareup.moshi.Types
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
+import org.json.JSONObject
 import project.ceyloninnovationlabs.fastbuy.data.model.BaseApiModal
 import project.ceyloninnovationlabs.fastbuy.data.model.FastBuyResult
 import project.ceyloninnovationlabs.fastbuy.data.model.user.User
@@ -25,7 +30,7 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeViewModel
 @Inject
-constructor( private val homeRepo: HomeRepo) : ViewModel() {
+constructor(private val homeRepo: HomeRepo) : ViewModel() {
 
 
     val searchQuery: MutableLiveData<String> by lazy {
@@ -91,30 +96,27 @@ constructor( private val homeRepo: HomeRepo) : ViewModel() {
     }
 
 
-
-
     private var onOrdersResult: Flow<PagingData<Orders>>? = null
-    fun setCustomersOrdersResultDefault(){
+    fun setCustomersOrdersResultDefault() {
         onOrdersResult = null
 
     }
+
     fun getCustomersOrders(userid: Int): Flow<PagingData<Orders>> {
         val lastResult = onOrdersResult
         return if (lastResult != null) {
             lastResult
         } else {
-            val newResult: Flow<PagingData<Orders>> = homeRepo.customersOrders(userid).cachedIn(viewModelScope)
+            val newResult: Flow<PagingData<Orders>> =
+                homeRepo.customersOrders(userid).cachedIn(viewModelScope)
             onOrdersResult = newResult
             newResult
         }
     }
 
-
-
-    fun updateCustomer(user: User) = liveData(Dispatchers.IO) {
+    fun deleteUser() = liveData(Dispatchers.IO) {
         try {
-            var respons = homeRepo.updateCustomer(user)
-            emit(FastBuyResult.Success(respons))
+            emit(FastBuyResult.Success(homeRepo.deleteUser()))
         } catch (exception: Exception) {
             emit(FastBuyResult.ExceptionError.ExError(exception))
         } catch (un: UnknownHostException) {
@@ -123,9 +125,49 @@ constructor( private val homeRepo: HomeRepo) : ViewModel() {
     }
 
 
-    fun checkCustomer(email: String) = liveData(Dispatchers.IO) {
+    fun updateCustomer(user: User) = liveData(Dispatchers.IO) {
         try {
-            var respons = homeRepo.checkCustomer(email)
+            var respons = homeRepo.updateCustomer(user)
+            homeRepo.insertUser(respons)
+            emit(FastBuyResult.Success(respons))
+        } catch (exception: Exception) {
+            emit(FastBuyResult.ExceptionError.ExError(exception))
+        } catch (un: UnknownHostException) {
+            emit(FastBuyResult.ExceptionError.ExError(un))
+        }
+    }
+
+    fun getUser() = liveData(Dispatchers.IO) {
+        try {
+            var respons = homeRepo.getUser()
+            emit(FastBuyResult.Success(respons))
+        } catch (exception: Exception) {
+            emit(FastBuyResult.ExceptionError.ExError(exception))
+        } catch (un: UnknownHostException) {
+            emit(FastBuyResult.ExceptionError.ExError(un))
+        }
+    }
+
+    fun checkCustomer(
+        email: String,
+        socialMediaLoginType: String,
+        account: GoogleSignInAccount,
+        facebookObject: JSONObject
+    ) = liveData(Dispatchers.IO) {
+        try {
+            var respons =
+                homeRepo.checkCustomer(email, socialMediaLoginType, account, facebookObject)
+            emit(FastBuyResult.Success(respons))
+        } catch (exception: Exception) {
+            emit(FastBuyResult.ExceptionError.ExError(exception))
+        } catch (un: UnknownHostException) {
+            emit(FastBuyResult.ExceptionError.ExError(un))
+        }
+    }
+
+    fun getCustomer(email: String) = liveData(Dispatchers.IO) {
+        try {
+            var respons = homeRepo.getCustomer(email)
             emit(FastBuyResult.Success(respons))
         } catch (exception: Exception) {
             emit(FastBuyResult.ExceptionError.ExError(exception))
@@ -147,17 +189,16 @@ constructor( private val homeRepo: HomeRepo) : ViewModel() {
     }
 
 
-
     fun newOrder(order: PastOrder) = liveData(Dispatchers.IO) {
         try {
             var respons = homeRepo.newOrder(order)
-            if(respons.errorStatus){
+            if (respons.errorStatus) {
                 var baseApiModal = BaseApiModal().apply {
                     code = 100
                     message = respons.errorMessage
                 }
                 emit(FastBuyResult.LogicalError.LogError(baseApiModal))
-            }else{
+            } else {
                 emit(FastBuyResult.Success(respons))
             }
 
@@ -169,9 +210,9 @@ constructor( private val homeRepo: HomeRepo) : ViewModel() {
     }
 
 
-    fun updateOrder(orderid: Int,status : Int) = liveData(Dispatchers.IO) {
+    fun updateOrder(orderid: Int, status: Int) = liveData(Dispatchers.IO) {
         try {
-            var respons = homeRepo.updateOrder(orderid,status)
+            var respons = homeRepo.updateOrder(orderid, status)
             emit(FastBuyResult.Success(respons))
         } catch (exception: Exception) {
             emit(FastBuyResult.ExceptionError.ExError(exception))
@@ -180,44 +221,38 @@ constructor( private val homeRepo: HomeRepo) : ViewModel() {
         }
     }
 
-    fun getPages(pageid : Int) = liveData(Dispatchers.IO) {
+    fun getPages(pageid: Int) = liveData(Dispatchers.IO) {
         try {
             var respond = homeRepo.getPage(pageid)
             emit(FastBuyResult.Success(respond))
         } catch (exception: Exception) {
             emit(FastBuyResult.ExceptionError.ExError(exception))
-        }catch (un : UnknownHostException) {
+        } catch (un: UnknownHostException) {
             emit(FastBuyResult.ExceptionError.ExError(un))
         }
     }
-
-
-
-
-
 
 
     private var productCatValue: Int? = null
     private var moreProductsResult: Flow<PagingData<Product>>? = null
 
 
-
     fun couponsValidate(_code: String) = liveData(Dispatchers.IO) {
         try {
             var respond = homeRepo.couponsValidate(_code)
-            if(respond.error){
+            if (respond.error) {
                 var baseApiModal = BaseApiModal().apply {
                     error = respond.error
                     message = respond.message
                 }
                 emit(FastBuyResult.LogicalError.LogError(baseApiModal))
-            }else{
+            } else {
                 emit(FastBuyResult.Success(respond))
             }
 
         } catch (exception: Exception) {
             emit(FastBuyResult.ExceptionError.ExError(exception))
-        }catch (un : UnknownHostException) {
+        } catch (un: UnknownHostException) {
             emit(FastBuyResult.ExceptionError.ExError(un))
         }
     }
@@ -230,13 +265,13 @@ constructor( private val homeRepo: HomeRepo) : ViewModel() {
             lastResult
         } else {
             productCatValue = productCat
-            val newResult: Flow<PagingData<Product>> = homeRepo.moreProducts(productCat).cachedIn(viewModelScope)
+            val newResult: Flow<PagingData<Product>> =
+                homeRepo.moreProducts(productCat).cachedIn(viewModelScope)
             moreProductsResult = newResult
             newResult
         }
 
     }
-
 
 
     private var searchQueryValue: String? = null
@@ -248,7 +283,8 @@ constructor( private val homeRepo: HomeRepo) : ViewModel() {
             lastResult
         } else {
             searchQueryValue = searchQuery
-            val newResult: Flow<PagingData<Product>> = homeRepo.searchProducts(searchQuery).cachedIn(viewModelScope)
+            val newResult: Flow<PagingData<Product>> =
+                homeRepo.searchProducts(searchQuery).cachedIn(viewModelScope)
             searchProductsResult = newResult
             newResult
         }
@@ -261,7 +297,8 @@ constructor( private val homeRepo: HomeRepo) : ViewModel() {
         return if (lastResult != null) {
             lastResult
         } else {
-            val newResult: Flow<PagingData<Product>> =homeRepo.getRecentProducts().cachedIn(viewModelScope)
+            val newResult: Flow<PagingData<Product>> =
+                homeRepo.getRecentProducts().cachedIn(viewModelScope)
             onRecentProductsResult = newResult
             newResult
         }
@@ -274,7 +311,7 @@ constructor( private val homeRepo: HomeRepo) : ViewModel() {
             emit(FastBuyResult.Success(respond))
         } catch (exception: Exception) {
             emit(FastBuyResult.ExceptionError.ExError(exception))
-        }catch (un : UnknownHostException) {
+        } catch (un: UnknownHostException) {
             emit(FastBuyResult.ExceptionError.ExError(un))
         }
     }
@@ -286,7 +323,8 @@ constructor( private val homeRepo: HomeRepo) : ViewModel() {
         return if (lastResult != null) {
             lastResult
         } else {
-            val newResult: Flow<PagingData<Product>> =homeRepo.getFeaturedProducts().cachedIn(viewModelScope)
+            val newResult: Flow<PagingData<Product>> =
+                homeRepo.getFeaturedProducts().cachedIn(viewModelScope)
             onFeaturedProductsResult = newResult
             newResult
         }
@@ -299,7 +337,8 @@ constructor( private val homeRepo: HomeRepo) : ViewModel() {
         return if (lastResult != null) {
             lastResult
         } else {
-            val newResult: Flow<PagingData<Product>> =homeRepo.getOnSaleProducts().cachedIn(viewModelScope)
+            val newResult: Flow<PagingData<Product>> =
+                homeRepo.getOnSaleProducts().cachedIn(viewModelScope)
             onSaleProductsResult = newResult
             newResult
         }
@@ -312,7 +351,7 @@ constructor( private val homeRepo: HomeRepo) : ViewModel() {
             emit(FastBuyResult.Success(respond))
         } catch (exception: Exception) {
             emit(FastBuyResult.ExceptionError.ExError(exception))
-        }catch (un : UnknownHostException) {
+        } catch (un: UnknownHostException) {
             emit(FastBuyResult.ExceptionError.ExError(un))
         }
     }
@@ -324,13 +363,24 @@ constructor( private val homeRepo: HomeRepo) : ViewModel() {
             emit(FastBuyResult.Success(respond))
         } catch (exception: Exception) {
             emit(FastBuyResult.ExceptionError.ExError(exception))
-        }catch (un : UnknownHostException) {
+        } catch (un: UnknownHostException) {
             emit(FastBuyResult.ExceptionError.ExError(un))
         }
     }
 
-     fun saveUserData() = liveData(Dispatchers.IO) {
-        var _user =appPrefs.getUserPrefs()
+
+    fun userLogin(user: User) = liveData(Dispatchers.IO) {
+        try {
+            var respond = homeRepo.loginUser(user)
+            emit(FastBuyResult.Success(respond))
+        } catch (exception: Exception) {
+            emit(FastBuyResult.ExceptionError.ExError(exception))
+        } catch (un: UnknownHostException) {
+            emit(FastBuyResult.ExceptionError.ExError(un))
+        }
+    }
+
+    fun saveUserDataFromLastOrder(_user: User) = liveData(Dispatchers.IO) {
         if (_user.facebook_id.isNotEmpty() || _user.google_id.isNotEmpty()) {
             lastOrder.value?.let {
                 _user.shipping = it.shipping
@@ -338,16 +388,15 @@ constructor( private val homeRepo: HomeRepo) : ViewModel() {
             }
         } else {
             lastOrder.value?.let {
-                _user.email =it.billing.email
+                _user.email = it.billing.email
                 _user.first_name = it.billing.first_name
                 _user.last_name = it.billing.last_name
                 _user.shipping = it.shipping
                 _user.billing = it.billing
             }
         }
-
-        appPrefs.setUserPrefs(_user)
-         emit(_user)
+        homeRepo.insertUser(_user)
+        emit(_user)
     }
 
 
