@@ -10,7 +10,7 @@
 
         <variable
             name="product"
-            type="project.ceyloninnovationlabs.fastbuy.data.model.orderoutput.LineItem" />
+            type="project.superuniqueit.fastbuy.data.model.orderoutput.LineItem" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

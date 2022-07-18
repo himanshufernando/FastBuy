@@ -1,32 +1,33 @@
- {
+{
   "project_info": {
     "project_number": "678484600111",
+    "firebase_url": "https://fastbuyapp-7ca83-default-rtdb.firebaseio.com",
     "project_id": "fastbuyapp-7ca83",
     "storage_bucket": "fastbuyapp-7ca83.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:678484600111:android:4ac16038900329cd8aadda",
+        "mobilesdk_app_id": "1:678484600111:android:c5fb492933b1f97b8aadda",
         "android_client_info": {
-          "package_name": "project.ceyloninnovationlabs.fastbuy"
+          "package_name": "project.superuniqueit.fastbuy"
         }
       },
       "oauth_client": [
         {
-          "client_id": "678484600111-76f369bph2kbjjquf27koblgmbr5eg6v.apps.googleusercontent.com",
+          "client_id": "678484600111-771gla8vtofvkpqflk5h6o64natan0sc.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "project.ceyloninnovationlabs.fastbuy",
-            "certificate_hash": "b001e90a6b794b0197e5d61329365efc0bef2cee"
+            "package_name": "project.superuniqueit.fastbuy",
+            "certificate_hash": "f6f8b184a5b15611d328f775fb626d44cd5d3249"
           }
         },
         {
-          "client_id": "678484600111-hvlrstpd5qagnkaftf3s8n3cgag9b6q2.apps.googleusercontent.com",
+          "client_id": "678484600111-jshgphqcp9olkson30jhsrleak3l537t.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "project.ceyloninnovationlabs.fastbuy",
-            "certificate_hash": "26c1a55d7fd3f5156d3d33714b9ad9a3a8d73fdf"
+            "package_name": "project.superuniqueit.fastbuy",
+            "certificate_hash": "0af7359a92994a1a8b7b8f8c8f8b93b7e8ff769e"
           }
         },
         {
@@ -36,7 +37,7 @@
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyDiNJMokeVG4dTOL02NnloonDERlGgPqog"
+          "current_key": "AIzaSyBmG4LEt8GdvYIz_4zIBdQExrp3ZDDiPA0"
         }
       ],
       "services": {

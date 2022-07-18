@@ -9,10 +9,10 @@
 
         <variable
             name="home_view_model"
-            type="project.ceyloninnovationlabs.fastbuy.viewmodels.home.HomeViewModel"/>
+            type="project.superuniqueit.fastbuy.viewmodels.home.HomeViewModel"/>
         <variable
             name="product"
-            type="project.ceyloninnovationlabs.fastbuy.data.model.product.Product" />
+            type="project.superuniqueit.fastbuy.data.model.product.Product" />
 
     </data>
 
@@ -266,7 +266,7 @@
                         app:layout_constraintTop_toBottomOf="@+id/txt_cat"
                         tools:text="Eternal Soul -by Wewalage Himanshu Fernando  " />
 
-                    <project.ceyloninnovationlabs.fastbuy.ui.customview.ColorRatingBar
+                    <project.superuniqueit.fastbuy.ui.customview.ColorRatingBar
                         android:id="@+id/rb_customer_rating"
                         style="?android:attr/ratingBarStyleSmall"
                         android:layout_width="wrap_content"

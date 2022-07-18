@@ -7,7 +7,7 @@
         <import type="android.view.View"/>
         <variable
             name="order"
-            type="project.ceyloninnovationlabs.fastbuy.data.model.past.Orders" />
+            type="project.superuniqueit.fastbuy.data.model.past.Orders" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

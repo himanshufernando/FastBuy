@@ -71,7 +71,7 @@
 
     <fragment
         android:id="@+id/fragment_splash"
-        android:name="project.ceyloninnovationlabs.fastbuy.ui.fragment.splash.SplashFragment"
+        android:name="project.superuniqueit.fastbuy.ui.fragment.splash.SplashFragment"
         android:label="Splash"
         tools:layout="@layout/fragment_splash">
 
@@ -90,7 +90,7 @@
 
     <fragment
         android:id="@+id/fragment_home"
-        android:name="project.ceyloninnovationlabs.fastbuy.ui.fragment.home.HomeFragment"
+        android:name="project.superuniqueit.fastbuy.ui.fragment.home.HomeFragment"
         android:label="Home"
         tools:layout="@layout/fragment_home">
 
@@ -133,7 +133,7 @@
 
     <fragment
         android:id="@+id/fragment_search"
-        android:name="project.ceyloninnovationlabs.fastbuy.ui.fragment.search.ProductSearchFragment"
+        android:name="project.superuniqueit.fastbuy.ui.fragment.search.ProductSearchFragment"
         android:label="ProductSearch"
         tools:layout="@layout/fragment_product_search">
 
@@ -171,7 +171,7 @@
 
     <fragment
         android:id="@+id/fragment_product_details"
-        android:name="project.ceyloninnovationlabs.fastbuy.ui.fragment.productdetails.ProductDetailsFragment"
+        android:name="project.superuniqueit.fastbuy.ui.fragment.productdetails.ProductDetailsFragment"
         android:label="ProductDetails"
         tools:layout="@layout/fragment_product_details">
 
@@ -207,7 +207,7 @@
 
     <fragment
         android:id="@+id/fragment_cart"
-        android:name="project.ceyloninnovationlabs.fastbuy.ui.fragment.cart.CartFragment"
+        android:name="project.superuniqueit.fastbuy.ui.fragment.cart.CartFragment"
         android:label="Cart"
         tools:layout="@layout/fragment_cart">
 
@@ -255,7 +255,7 @@
 
     <fragment
         android:id="@+id/fragment_account"
-        android:name="project.ceyloninnovationlabs.fastbuy.ui.fragment.account.AccountFragment"
+        android:name="project.superuniqueit.fastbuy.ui.fragment.account.AccountFragment"
         android:label="Account"
         tools:layout="@layout/fragment_account">
 
@@ -282,7 +282,7 @@
 
     <fragment
         android:id="@+id/fragment_about"
-        android:name="project.ceyloninnovationlabs.fastbuy.ui.fragment.about.AboutFragment"
+        android:name="project.superuniqueit.fastbuy.ui.fragment.about.AboutFragment"
         android:label="About"
         tools:layout="@layout/fragment_about">
 
@@ -317,7 +317,7 @@
 
     <fragment
         android:id="@+id/fragment_contact"
-        android:name="project.ceyloninnovationlabs.fastbuy.ui.fragment.contact.ContactFragment"
+        android:name="project.superuniqueit.fastbuy.ui.fragment.contact.ContactFragment"
         android:label="Contact"
         tools:layout="@layout/fragment_contact">
 
@@ -352,7 +352,7 @@
 
     <fragment
         android:id="@+id/fragment_terms"
-        android:name="project.ceyloninnovationlabs.fastbuy.ui.fragment.terms.TermsFragment"
+        android:name="project.superuniqueit.fastbuy.ui.fragment.terms.TermsFragment"
         android:label="Terms"
         tools:layout="@layout/fragment_terms">
 
@@ -388,7 +388,7 @@
 
     <fragment
         android:id="@+id/fragment_returns"
-        android:name="project.ceyloninnovationlabs.fastbuy.ui.fragment.terms.TermsFragment"
+        android:name="project.superuniqueit.fastbuy.ui.fragment.terms.TermsFragment"
         android:label="Returns"
         tools:layout="@layout/fragment_returns">
 
@@ -425,7 +425,7 @@
 
     <fragment
         android:id="@+id/fragment_warranty"
-        android:name="project.ceyloninnovationlabs.fastbuy.ui.fragment.warranty.WarrantyFragment"
+        android:name="project.superuniqueit.fastbuy.ui.fragment.warranty.WarrantyFragment"
         android:label="Warranty"
         tools:layout="@layout/fragment_warranty">
 
@@ -460,7 +460,7 @@
 
     <fragment
         android:id="@+id/fragment_checkout"
-        android:name="project.ceyloninnovationlabs.fastbuy.ui.fragment.checkout.CheckOutFragment"
+        android:name="project.superuniqueit.fastbuy.ui.fragment.checkout.CheckOutFragment"
         android:label="CheckOut"
         tools:layout="@layout/fragment_check_out">
 
@@ -491,7 +491,7 @@
 
     <fragment
         android:id="@+id/fragment_last_order"
-        android:name="project.ceyloninnovationlabs.fastbuy.ui.fragment.lastorder.LastOrderFragment"
+        android:name="project.superuniqueit.fastbuy.ui.fragment.lastorder.LastOrderFragment"
         android:label="LastOrder"
         tools:layout="@layout/fragment_last_order">
 
@@ -509,7 +509,7 @@
 
     <fragment
         android:id="@+id/fragment_past_order_details"
-        android:name="project.ceyloninnovationlabs.fastbuy.ui.fragment.pastorderdetails.PastOrderDetailsFragment"
+        android:name="project.superuniqueit.fastbuy.ui.fragment.pastorderdetails.PastOrderDetailsFragment"
         android:label="PastOrderDetails"
         tools:layout="@layout/fragment_past_order_details">
 
@@ -519,7 +519,7 @@
 
     <fragment
         android:id="@+id/fragment_past"
-        android:name="project.ceyloninnovationlabs.fastbuy.ui.fragment.past.PastFragment"
+        android:name="project.superuniqueit.fastbuy.ui.fragment.past.PastFragment"
         android:label="Past"
         tools:layout="@layout/fragment_past">
 

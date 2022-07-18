@@ -12,7 +12,7 @@
 
         <variable
             name="Image"
-            type="project.ceyloninnovationlabs.fastbuy.data.model.product.Image" />
+            type="project.superuniqueit.fastbuy.data.model.product.Image" />
 
     </data>
 

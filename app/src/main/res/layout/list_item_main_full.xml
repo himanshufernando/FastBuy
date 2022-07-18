@@ -14,7 +14,7 @@
 
         <variable
             name="product"
-            type="project.ceyloninnovationlabs.fastbuy.data.model.product.Product" />
+            type="project.superuniqueit.fastbuy.data.model.product.Product" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

@@ -1,0 +1,2 @@
+storePassword 'GEc6keT3'
+keyAlias 'fastbuy'

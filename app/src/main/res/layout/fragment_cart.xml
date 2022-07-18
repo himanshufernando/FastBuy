@@ -7,6 +7,8 @@
     android:background="@color/white"
     tools:context=".ui.fragment.home.HomeFragment">
 
+
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayout"
         android:layout_width="match_parent"
@@ -424,7 +426,7 @@
                     tools:text="Rs.125000.00" />
 
 
-                <androidx.appcompat.widget.AppCompatTextView
+                <!--<androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/btn_proceed"
                     style="@style/app_content_white_light_14"
                     android:layout_width="0dp"
@@ -454,13 +456,13 @@
                     app:layout_constraintRight_toRightOf="parent"
                     app:layout_constraintStart_toStartOf="@+id/cl_item_qty"
                     app:layout_constraintTop_toBottomOf="@+id/btn_proceed"
-                    tools:visibility="visible" />
+                    tools:visibility="visible" />-->
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="100dp"
-                    app:layout_constraintStart_toStartOf="@+id/btn_order_more"
-                    app:layout_constraintTop_toBottomOf="@+id/btn_order_more">
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/txt8">
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -487,6 +489,36 @@
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/btn_proceed"
+        style="@style/app_content_white_light_14"
+        android:layout_width="150dp"
+        android:layout_height="45dp"
+        android:layout_marginTop="40dp"
+        android:background="@drawable/bg_blue_border_right"
+        android:gravity="center"
+        android:text="Proceed to checkout"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="10dp"
+        tools:visibility="visible" />
+
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/btn_order_more"
+        style="@style/app_content_white_light_14"
+        android:layout_width="150dp"
+        android:layout_height="45dp"
+        android:background="@drawable/bg_blue_border_left"
+        android:gravity="center"
+        android:text="Order more !"
+        android:layout_marginEnd="2dp"
+        app:layout_constraintBottom_toBottomOf="@+id/btn_proceed"
+        app:layout_constraintEnd_toStartOf="@+id/btn_proceed"
+        app:layout_constraintTop_toTopOf="@+id/btn_proceed"
+        tools:visibility="visible" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

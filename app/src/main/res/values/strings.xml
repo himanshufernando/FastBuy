@@ -18,6 +18,9 @@
 
     <string name="facebook_app_id">2946099002125531</string>
     <string name="fb_login_protocol_scheme">fb2946099002125531</string>
+    <string name="facebook_client_token">2752526d7e38e7d71a19c03472986d6b</string>
+
+
 
     <string name="facebook_login_cancel">Facebook login cancel !</string>
 
